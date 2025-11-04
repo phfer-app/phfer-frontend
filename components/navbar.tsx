@@ -66,6 +66,19 @@ export function Navbar() {
     setIsOpen(false)
   }
 
+  const handleContactClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    setCurrentRoute("home")
+    setIsOpen(false)
+    // Aguarda um pouco para garantir que a rota foi atualizada e o componente renderizou
+    setTimeout(() => {
+      const element = document.querySelector("#contact")
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" })
+      }
+    }, 100)
+  }
+
   if (!mounted) return null
 
   return (
@@ -146,7 +159,7 @@ export function Navbar() {
 
                   {/* Contact Button - Highlighted */}
                   <button
-                    onClick={(e) => handleNavClick(e, "home")}
+                    onClick={handleContactClick}
                     className="px-6 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-lg transition-all duration-300 hover:bg-primary/90 cursor-pointer"
                   >
                     {t("nav.contato")}
@@ -202,7 +215,7 @@ export function Navbar() {
                   ))}
                   {/* Contact Link in Mobile */}
                   <button
-                    onClick={(e) => handleNavClick(e, "home")}
+                    onClick={handleContactClick}
                     className="flex items-center w-full px-6 py-4 text-lg font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl transition-all duration-200 cursor-pointer"
                   >
                     {t("nav.contato")}

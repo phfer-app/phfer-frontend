@@ -1,16 +1,35 @@
 "use client"
 
+import type React from "react"
 import { useState, useEffect } from "react"
 import { Github, Linkedin, Mail, MessageSquare, Instagram, Send } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
+import { useNavigation } from "@/components/navigation-provider"
 
 export function Footer() {
   const { t } = useLanguage()
+  const { setCurrentRoute } = useNavigation()
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, route: "home" | "about" | "career" | "blog") => {
+    e.preventDefault()
+    setCurrentRoute(route)
+  }
+
+  const handleContactClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    setCurrentRoute("home")
+    setTimeout(() => {
+      const element = document.querySelector("#contact")
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" })
+      }
+    }, 100)
+  }
 
   if (!mounted) {
     return null
@@ -38,22 +57,47 @@ export function Footer() {
             <h4 className="text-sm font-bold mb-4 text-foreground">{t("footer.links")}</h4>
             <ul className="space-y-3">
               <li>
-                <a href="#home" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <a 
+                  href="#home" 
+                  onClick={(e) => handleNavClick(e, "home")}
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                >
                   {t("nav.inicio")}
                 </a>
               </li>
               <li>
-                <a href="#about" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  {t("footer.about")}
+                <a 
+                  href="#about" 
+                  onClick={(e) => handleNavClick(e, "about")}
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                >
+                  {t("nav.sobre_mim")}
                 </a>
               </li>
               <li>
-                <a href="#projects" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  {t("footer.projects")}
+                <a 
+                  href="#career" 
+                  onClick={(e) => handleNavClick(e, "career")}
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                >
+                  {t("nav.carreira")}
                 </a>
               </li>
               <li>
-                <a href="#contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <a 
+                  href="#blog" 
+                  onClick={(e) => handleNavClick(e, "blog")}
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                >
+                  {t("nav.blog")}
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="#contact" 
+                  onClick={handleContactClick}
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                >
                   {t("nav.contato")}
                 </a>
               </li>
