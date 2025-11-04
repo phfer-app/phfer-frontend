@@ -1,33 +1,18 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Sparkles, ArrowRight } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
+import { SectionCorners } from "@/components/section-corners"
 
 export function ParallaxSection() {
-  const [offset, setOffset] = useState(0)
-  const sectionRef = useRef<HTMLDivElement>(null)
   const { t } = useLanguage()
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (sectionRef.current) {
-        const rect = sectionRef.current.getBoundingClientRect()
-        const scrollProgress = Math.max(0, 1 - rect.top / window.innerHeight)
-        setOffset(scrollProgress * 50)
-      }
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
 
   return (
     <section
-      ref={sectionRef}
       className="relative py-32 overflow-hidden"
     >
+      <SectionCorners />
       {/* Animated gradient background - Dark with accent colors */}
       <div
         className="absolute inset-0 -z-10"

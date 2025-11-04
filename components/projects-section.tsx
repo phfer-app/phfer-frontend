@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { ProjectModal } from "@/components/project-modal"
 import { ArrowRight, Code2, Zap } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
+import { SectionCorners } from "@/components/section-corners"
 
 const projects = [
   {
@@ -84,6 +85,7 @@ export function ProjectsSection() {
       id="projects"
       className="relative py-24 overflow-hidden"
     >
+      <SectionCorners />
       {/* Gradient background */}
       <div className="absolute inset-0 -z-10 bg-linear-to-br from-background via-background to-secondary/5" />
 
@@ -122,7 +124,7 @@ export function ProjectsSection() {
                   transform: `translateY(${offset * (0.1 + index * 0.05)}px)`,
                 }}
               >
-                <div className="group relative h-full rounded-2xl border border-border/50 overflow-hidden backdrop-blur-sm hover:border-primary/50 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 bg-card/30">
+                <div className="group relative h-full rounded-2xl border border-border/50 overflow-hidden backdrop-blur-sm hover:border-primary/50 transition-all duration-300 bg-card/30">
                   {/* Top accent line */}
                   <div className="absolute top-0 left-2 right-2 h-0.5 rounded-t-2xl bg-linear-to-r from-primary to-secondary transition-all duration-300" />
 
@@ -131,7 +133,7 @@ export function ProjectsSection() {
                     <img
                       src={project.image || "/placeholder.svg"}
                       alt={project.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="w-full h-full object-cover transition-transform duration-500"
                     />
                     {/* Gradient overlay */}
                     <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -201,7 +203,7 @@ export function ProjectsSection() {
           >
             <span className="relative z-10 text-white flex items-center gap-2">
               {t("projects.github")}
-              <Code2 className="h-5 w-5 group-hover:scale-110 transition-transform" />
+              <Code2 className="h-5 w-5 transition-transform" />
             </span>
             <div className="absolute inset-0 bg-linear-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
           </a>

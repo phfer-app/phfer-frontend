@@ -16,6 +16,8 @@ const translations = {
   pt: {
     // Navigation
     "nav.inicio": "Início",
+    "nav.carreira": "Carreira",
+    "nav.habilidades": "Habilidades",
     "nav.contato": "Contato",
     
     // Hero
@@ -278,6 +280,8 @@ const translations = {
   en: {
     // Navigation
     "nav.inicio": "Home",
+    "nav.carreira": "Career",
+    "nav.habilidades": "Skills",
     "nav.contato": "Contact",
     
     // Hero

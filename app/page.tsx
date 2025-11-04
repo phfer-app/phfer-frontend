@@ -9,6 +9,7 @@ import { FAQSection } from "@/components/faq-section"
 import { TestimonialsSection } from "@/components/testimonials-section"
 import { FinalCTASection } from "@/components/final-cta-section"
 import { ContactSection } from "@/components/contact-section"
+import { SectionDivider } from "@/components/section-divider"
 
 export default function Home() {
   return (
@@ -17,13 +18,14 @@ export default function Home() {
       <CTAParallaxSection />
       <AboutSection />
       <ProjectsSection />
+      <TestimonialsSection />
       <SkillsSection />
       <ExperienceSection />
       <ParallaxSection />
       <FAQSection />
-      <TestimonialsSection />
       <FinalCTASection />
       <ContactSection />
+      <SectionDivider />
     </main>
   )
 }

@@ -22,7 +22,7 @@ export function StatsSection() {
           {stats.map((stat, index) => {
             const Icon = stat.icon
             return (
-              <Card key={index} className="p-6 text-center hover:shadow-lg transition-shadow">
+              <Card key={index} className="p-6 text-center transition-shadow">
                 <Icon className="h-8 w-8 mx-auto mb-4 text-primary" />
                 <div className="text-3xl font-bold mb-2">{stat.value}</div>
                 <div className="text-sm text-muted-foreground">{stat.label}</div>
@@ -35,7 +35,7 @@ export function StatsSection() {
           {features.map((feature, index) => {
             const Icon = feature.icon
             return (
-              <Card key={index} className="p-6 text-center hover:shadow-lg transition-shadow bg-primary/5">
+              <Card key={index} className="p-6 text-center transition-shadow bg-primary/5">
                 <Icon className="h-10 w-10 mx-auto mb-3 text-primary" />
                 <div className="font-semibold">{feature.label}</div>
               </Card>

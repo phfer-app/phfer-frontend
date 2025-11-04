@@ -1,22 +1,25 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
-import { ChevronDown } from "lucide-react"
+import { useEffect, useState } from "react"
+import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useLanguage } from "@/components/language-provider"
+import { SectionCorners } from "@/components/section-corners"
 
 const rotatingWords = {
-  pt: ["Sistemas", "Software"],
-  en: ["Systems", "Applications"],
+  pt: ["sistemas", "softwares"],
+  en: ["systems", "softwares"],
 }
 
+/* ============================================
+   BACKUP HERO SECTION - COMENTADO
+   ============================================
+   
 export function HeroSection() {
   const { language } = useLanguage()
   const [currentWord, setCurrentWord] = useState(0)
   const [displayText, setDisplayText] = useState("")
   const [isDeleting, setIsDeleting] = useState(false)
-  const [offset, setOffset] = useState(0)
-  const sectionRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const words = rotatingWords[language]
@@ -31,7 +34,7 @@ export function HeroSection() {
           }
         } else {
           if (displayText.length > 0) {
-            setDisplayText(displayText.slice(0, -1))
+            setDisplayText(word.slice(0, -1))
           } else {
             setIsDeleting(false)
             setCurrentWord((prev) => (prev + 1) % words.length)
@@ -44,19 +47,6 @@ export function HeroSection() {
     return () => clearTimeout(timeout)
   }, [displayText, isDeleting, currentWord, language])
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (sectionRef.current) {
-        const rect = sectionRef.current.getBoundingClientRect()
-        const scrollProgress = Math.max(0, 1 - rect.top / window.innerHeight)
-        setOffset(scrollProgress * 20)
-      }
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
-
   const scrollToContact = () => {
     const element = document.querySelector("#about")
     if (element) {
@@ -66,15 +56,12 @@ export function HeroSection() {
 
   return (
     <section 
-      ref={sectionRef}
       id="home" 
       className="min-h-screen flex items-center justify-start relative pt-16 overflow-hidden"
     >
-      {/* Animated background elements */}
       <div className="absolute top-20 left-10 w-96 h-96 bg-primary/10 rounded-full blur-3xl opacity-30 -z-10"></div>
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/10 rounded-full blur-3xl opacity-30 -z-10"></div>
       
-      {/* Grid pattern overlay */}
       <div className="absolute inset-0 -z-10 opacity-[0.02]">
         <svg className="w-full h-full" viewBox="0 0 1000 1000">
           <defs>
@@ -87,12 +74,7 @@ export function HeroSection() {
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        <div 
-          className="space-y-8"
-          style={{
-            transform: `translateY(${offset * 0.2}px)`,
-          }}
-        >
+        <div className="space-y-8">
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-left leading-tight">
             <span className="block">
               {language === "pt" ? "Especialista em" : "Specialist in"}
@@ -142,12 +124,189 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Scroll indicator */}
       <div className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce z-20">
         <div className="flex flex-col items-center gap-2">
           <span className="text-xs text-muted-foreground font-medium">{language === "pt" ? "Desça" : "Scroll"}</span>
           <ChevronDown className="h-5 w-5 text-primary" />
         </div>
+      </div>
+    </section>
+  )
+}
+*/
+
+export function HeroSection() {
+  const { language, t } = useLanguage()
+  const words = rotatingWords[language]
+  const [currentWord, setCurrentWord] = useState(0)
+  const [displayText, setDisplayText] = useState("")
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  // Handle waiting when word is complete
+  useEffect(() => {
+    const word = words[currentWord]
+    if (!word || !word.length) return
+    
+    if (!isDeleting && displayText === word) {
+      const waitTimeout = setTimeout(() => {
+        setIsDeleting(true)
+      }, 2000)
+      return () => clearTimeout(waitTimeout)
+    }
+  }, [displayText, isDeleting, currentWord, words])
+  
+  // Handle typing/deleting animation
+  useEffect(() => {
+    const word = words[currentWord]
+    if (!word || !word.length) return
+    
+    // Skip if word is complete and waiting
+    if (!isDeleting && displayText === word) {
+      return
+    }
+    
+    // Skip if word is empty and finished deleting
+    if (isDeleting && displayText === "") {
+      setIsDeleting(false)
+      setCurrentWord((prev) => (prev + 1) % words.length)
+      return
+    }
+    
+    const timeout = setTimeout(() => {
+      if (!isDeleting) {
+        // Digitando
+        if (displayText.length < word.length) {
+          setDisplayText(word.slice(0, displayText.length + 1))
+        }
+      } else {
+        // Deletando
+        if (displayText.length > 0) {
+          setDisplayText(word.slice(0, displayText.length - 1))
+        }
+      }
+    }, isDeleting ? 50 : 100)
+
+    return () => clearTimeout(timeout)
+  }, [displayText, isDeleting, currentWord, words])
+
+  // Initialize and reset when language changes
+  useEffect(() => {
+    const newWords = rotatingWords[language]
+    if (newWords && newWords[0]) {
+      setDisplayText(newWords[0][0] || "")
+      setCurrentWord(0)
+      setIsDeleting(false)
+    }
+  }, [language])
+
+  const scrollToContact = () => {
+    const element = document.querySelector("#contact")
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
+  const scrollToAbout = () => {
+    const element = document.querySelector("#about")
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
+  return (
+    <section 
+      id="home" 
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+    >
+      <SectionCorners />
+      {/* Background with radial gradient */}
+      <div className="absolute inset-0 bg-background">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-radial-gradient from-primary/15 via-primary/5 to-transparent rounded-full blur-3xl" />
+        <div className="absolute top-1/3 right-1/4 w-[600px] h-[600px] bg-secondary/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] bg-primary/8 rounded-full blur-3xl" />
+      </div>
+
+      {/* Animated circles */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-20 w-32 h-32 border border-primary/10 rounded-full animate-pulse" />
+        <div className="absolute bottom-32 right-32 w-24 h-24 border border-secondary/10 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 right-20 w-16 h-16 border border-primary/10 rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
+      </div>
+
+      {/* Main Content - Centered */}
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="mx-auto text-center">
+          {/* Main Heading */}
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.1] mb-6">
+            <span className="block text-foreground">
+              {language === "pt" ? (
+                <>
+                  Criando{" "}
+                  <span className="bg-linear-to-r from-primary via-secondary to-primary bg-clip-text text-transparent min-h-[1.2em] inline-block">
+                    {displayText || rotatingWords[language][0]}
+                    <span className="animate-pulse text-primary ml-2">|</span>
+                  </span>{" "}
+                  inovadores!
+                </>
+              ) : (
+                <>
+                  Creating{" "}
+                  <span className="bg-linear-to-r from-primary via-secondary to-primary bg-clip-text text-transparent min-h-[1.2em] inline-block">
+                    {displayText || rotatingWords[language][0]}
+                    <span className="animate-pulse text-primary ml-2">|</span>
+                  </span>{" "}
+                  innovative!
+                </>
+              )}
+            </span>
+          </h1>
+
+          {/* Description */}
+          <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-12">
+            {language === "pt" ? (
+              <>
+                Grandes ideias 🕊️ ganham <em className="italic font-semibold text-foreground">asas</em> quando criadas por devs criativos e dedicados.
+              </>
+            ) : (
+              <>
+                Great ideas 🕊️ take <em className="italic font-semibold text-foreground">flight</em> when created by creative and dedicated devs.
+              </>
+            )}
+          </p>
+
+          {/* Action Buttons - New Design */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button
+              onClick={scrollToContact}
+              className="group relative px-6 py-2.5 bg-primary text-primary-foreground font-semibold rounded-lg overflow-hidden transition-all duration-300 text-sm"
+            >
+              <span className="relative z-10 flex items-center gap-2">
+                {t("hero.button2")}
+                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </span>
+              <div className="absolute inset-0 bg-linear-to-r from-primary/90 to-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+            </button>
+
+            <button
+              onClick={scrollToAbout}
+              className="group relative px-6 py-2.5 bg-transparent border-2 border-primary/30 text-foreground font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:border-primary hover:bg-primary/5 text-sm"
+            >
+              <span className="relative z-10 flex items-center gap-2">
+                {t("hero.button1")}
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Scroll indicator - Bottom center */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20">
+        <div className="w-6 h-10 border-2 border-primary/40 rounded-full flex items-start justify-center p-1.5">
+          <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" />
+        </div>
+        <span className="text-xs text-muted-foreground font-medium">
+          {language === "pt" ? "Role para explorar" : "Scroll to explore"}
+        </span>
       </div>
     </section>
   )

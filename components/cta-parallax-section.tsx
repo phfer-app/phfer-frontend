@@ -1,39 +1,22 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
 import { ArrowRight, Sparkles } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
+import { SectionCorners } from "@/components/section-corners"
 
 export function CTAParallaxSection() {
-  const [offset, setOffset] = useState(0)
-  const sectionRef = useRef<HTMLDivElement>(null)
   const { t } = useLanguage()
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (sectionRef.current) {
-        const rect = sectionRef.current.getBoundingClientRect()
-        const scrollProgress = Math.max(0, 1 - rect.top / window.innerHeight)
-        setOffset(scrollProgress * 80)
-      }
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
 
   return (
     <section
-      ref={sectionRef}
-      className="relative py-32 overflow-hidden"
+      className="relative py-16 md:py-24 overflow-hidden"
     >
+      <SectionCorners />
       {/* Animated gradient background */}
       <div
         className="absolute inset-0 -z-10"
         style={{
           background: "linear-gradient(135deg, hsl(260, 75%, 63%) 0%, hsl(67, 100%, 36%) 100%)",
-          transform: `translateY(${offset * 0.5}px)`,
-          transition: "transform 0.1s ease-out",
         }}
       />
 
@@ -52,11 +35,9 @@ export function CTAParallaxSection() {
       {/* Floating blobs */}
       <div
         className="absolute top-10 left-10 w-64 h-64 bg-white/10 rounded-full blur-3xl opacity-50"
-        style={{ transform: `translateY(${offset * 0.3}px)` }}
       />
       <div
         className="absolute bottom-10 right-10 w-96 h-96 bg-white/5 rounded-full blur-3xl opacity-30"
-        style={{ transform: `translateY(${offset * -0.4}px)` }}
       />
 
       <div className="container mx-auto px-4 relative z-10">
@@ -84,9 +65,6 @@ export function CTAParallaxSection() {
               </span>
             </h2>
 
-            <p className="text-lg md:text-xl text-white/95 mb-12 max-w-2xl mx-auto leading-relaxed drop-shadow-sm">
-              {t("cta.transform_ideas")}
-            </p>
           </div>
 
           {/* Stats Container */}

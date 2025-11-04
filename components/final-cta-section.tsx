@@ -1,12 +1,14 @@
 "use client"
 
 import { useLanguage } from "@/components/language-provider"
+import { SectionCorners } from "@/components/section-corners"
 
 export function FinalCTASection() {
   const { t } = useLanguage()
   
   return (
     <section className="relative py-32 overflow-hidden">
+      <SectionCorners />
       {/* Animated gradient background */}
       <div
         className="absolute inset-0 -z-10 bg-linear-to-br from-primary/20 via-background to-secondary/20"

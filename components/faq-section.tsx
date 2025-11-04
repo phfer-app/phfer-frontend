@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import { ChevronDown } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
+import { SectionCorners } from "@/components/section-corners"
 
 export function FAQSection() {
   const [openId, setOpenId] = useState<number | null>(null)
@@ -48,11 +49,12 @@ export function FAQSection() {
 
   return (
     <section id="faq" className="py-24 relative overflow-hidden">
+      <SectionCorners />
       {/* Background blur elements */}
       <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl opacity-20 -z-10"></div>
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-secondary/10 rounded-full blur-3xl opacity-20 -z-10"></div>
 
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 relative">
         {/* Header */}
         <div className="mb-16">
           <Badge className="mb-4 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
@@ -71,7 +73,7 @@ export function FAQSection() {
           {faqs.map((faq) => (
             <div
               key={faq.id}
-              className="group relative p-6 rounded-xl border border-border/50 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10 cursor-pointer"
+              className="group relative p-6 rounded-xl border border-border/50 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 cursor-pointer"
               onClick={() => toggleFAQ(faq.id)}
             >
               {/* Top accent line */}

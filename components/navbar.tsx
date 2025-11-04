@@ -16,12 +16,15 @@ import { useLanguage } from "@/components/language-provider"
 
 const navLinks = [
   { href: "#home", labelKey: "nav.inicio" },
-  { href: "#contact", labelKey: "nav.contato" },
+  { href: "#experience", labelKey: "nav.carreira" },
+  { href: "#skills", labelKey: "nav.habilidades" },
 ]
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isVisible, setIsVisible] = useState(true)
+  const [lastScrollY, setLastScrollY] = useState(0)
   const { theme, setTheme } = useTheme()
   const { language, setLanguage, t } = useLanguage()
   const [mounted, setMounted] = useState(false)
@@ -29,11 +32,30 @@ export function Navbar() {
   useEffect(() => {
     setMounted(true)
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20)
+      const currentScrollY = window.scrollY
+      
+      // Verifica se está scrollado o suficiente para aplicar estilos
+      setIsScrolled(currentScrollY > 20)
+      
+      // Mostra navbar ao scrollar para cima, esconde ao scrollar para baixo
+      if (currentScrollY < lastScrollY) {
+        // Scrolling up
+        setIsVisible(true)
+      } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down e passou de 100px
+        setIsVisible(false)
+      }
+      
+      // Se estiver no topo, sempre mostra
+      if (currentScrollY < 10) {
+        setIsVisible(true)
+      }
+      
+      setLastScrollY(currentScrollY)
     }
-    window.addEventListener("scroll", handleScroll)
+    window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+  }, [lastScrollY])
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault()
@@ -48,50 +70,62 @@ export function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-1/2 -translate-x-1/2 md:left-1/2 md:top-4 md:-translate-x-1/2 z-50 w-full md:w-fit transition-all duration-300 bg-background/95 backdrop-blur-md md:bg-transparent ${
+      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
+        isVisible 
+          ? "translate-y-0 opacity-100" 
+          : "-translate-y-full opacity-0 pointer-events-none"
+      } ${
         isScrolled
-          ? "md:bg-background/90 md:backdrop-blur-xl md:border md:border-primary/20 md:shadow-lg"
-          : "md:bg-background/60 md:backdrop-blur-md md:border md:border-primary/10"
-      } md:rounded-full`}
+          ? "bg-background/80 backdrop-blur-xl border-b border-border/50"
+          : "bg-background/60 backdrop-blur-md border-b border-border/30"
+      }`}
     >
-      <div className="px-6 md:px-6 py-4 md:py-3">
-        <div className="flex items-center justify-between gap-6 md:gap-8">
-          {/* Logo */}
-          <a href="#home" className="text-lg font-bold text-primary whitespace-nowrap shrink-0" onClick={(e) => handleNavClick(e, "#home")}>
-            @initpedro
+      <div className="container mx-auto px-4 md:px-8">
+        <div className="flex items-center justify-between h-16 md:h-14">
+          {/* Logo - Left */}
+          <a 
+            href="#home" 
+            className="text-lg font-bold text-primary whitespace-nowrap shrink-0 relative group" 
+            onClick={(e) => handleNavClick(e, "#home")}
+          >
+            <span className="relative z-10">init</span>
+            <span className="absolute inset-0 bg-primary/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-0"></span>
           </a>
 
-          {/* Desktop Navigation - Centered */}
-          <div className="hidden md:flex items-center gap-2">
+          {/* Desktop Navigation - Center */}
+          <div className="hidden md:flex items-center gap-2 absolute left-1/2 -translate-x-1/2">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-all duration-200"
+                className="px-6 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-all duration-200"
               >
                 {t(link.labelKey)}
               </a>
             ))}
           </div>
 
-          {/* Desktop Controls */}
-          <div className="hidden md:flex items-center gap-2">
-            <div className="w-px h-6 bg-border"></div>
-
+          {/* Desktop Controls - Right */}
+          <div className="hidden md:flex items-center gap-3">
             {/* Language Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="rounded-lg" title={language === "pt" ? "Português" : "English"}>
-                  <Globe className="h-4 w-4" />
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-10 w-10 rounded-lg hover:bg-primary/10 transition-colors" 
+                  title={language === "pt" ? "Português" : "English"}
+                >
+                  <Globe className="h-5 w-5" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setLanguage("pt")} className="flex items-center gap-2">
+              <DropdownMenuContent align="end" className="w-40">
+                <DropdownMenuItem onClick={() => setLanguage("pt")} className="flex items-center gap-2 cursor-pointer">
                   <span className="text-lg">🇧🇷</span>
                   <span>Português</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setLanguage("en")} className="flex items-center gap-2">
+                <DropdownMenuItem onClick={() => setLanguage("en")} className="flex items-center gap-2 cursor-pointer">
                   <span className="text-lg">🇺🇸</span>
                   <span>English</span>
                 </DropdownMenuItem>
@@ -99,9 +133,23 @@ export function Navbar() {
             </DropdownMenu>
 
             {/* Theme Toggle */}
-            <Button variant="ghost" size="sm" className="rounded-lg" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-10 w-10 rounded-lg hover:bg-primary/10 transition-colors" 
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            >
+              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
+
+            {/* Contact Button - Highlighted */}
+            <a
+              href="#contact"
+              onClick={(e) => handleNavClick(e, "#contact")}
+              className="px-6 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-lg transition-all duration-300 hover:bg-primary/90"
+            >
+              {t("nav.contato")}
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -148,6 +196,14 @@ export function Navbar() {
                       <span className="group-hover:translate-x-1 transition-transform">{t(link.labelKey)}</span>
                     </a>
                   ))}
+                  {/* Contact Link in Mobile */}
+                  <a
+                    href="#contact"
+                    onClick={(e) => handleNavClick(e, "#contact")}
+                    className="flex items-center px-6 py-4 text-lg font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl transition-all duration-200"
+                  >
+                    {t("nav.contato")}
+                  </a>
                 </div>
 
                 {/* Controls */}

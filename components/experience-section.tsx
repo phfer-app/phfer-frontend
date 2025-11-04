@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Briefcase, Download, ArrowRight } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
+import { SectionCorners } from "@/components/section-corners"
 
 export function ExperienceSection() {
   const { t } = useLanguage()
@@ -35,11 +36,12 @@ export function ExperienceSection() {
   
   return (
     <section id="experience" className="py-24 relative overflow-hidden">
+      <SectionCorners />
       {/* Background blur elements */}
       <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl opacity-20 -z-10"></div>
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-secondary/10 rounded-full blur-3xl opacity-20 -z-10"></div>
 
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 relative">
         {/* Header */}
         <div className="mb-16 max-w-3xl">
           <Badge className="mb-4 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
@@ -57,7 +59,7 @@ export function ExperienceSection() {
           {experiences.map((exp, index) => (
             <div
               key={index}
-              className="group relative p-6 rounded-xl border border-border/50 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10"
+              className="group relative p-6 rounded-xl border border-border/50 backdrop-blur-sm transition-all duration-300 hover:border-primary/50"
             >
               {/* Top accent line */}
               <div className="absolute top-0 left-2 right-2 h-0.5 rounded-t-xl bg-linear-to-r from-primary to-secondary transition-all duration-300"></div>
@@ -67,7 +69,7 @@ export function ExperienceSection() {
                 <div className="shrink-0">
                   <div className="relative w-14 h-14 rounded-lg bg-linear-to-br from-primary/20 to-secondary/20 flex items-center justify-center group-hover:from-primary/30 group-hover:to-secondary/30 transition-all duration-300">
                     <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 bg-linear-to-br from-primary/20 to-secondary/20 blur-lg"></div>
-                    <Briefcase className="h-6 w-6 text-primary relative z-10 group-hover:scale-110 transition-transform duration-300" />
+                    <Briefcase className="h-6 w-6 text-primary relative z-10 transition-transform duration-300" />
                   </div>
                 </div>
 
@@ -103,7 +105,7 @@ export function ExperienceSection() {
 
                 {/* Arrow */}
                 <div className="shrink-0 hidden lg:block">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-all duration-300">
                     <ArrowRight className="h-5 w-5 text-primary" />
                   </div>
                 </div>

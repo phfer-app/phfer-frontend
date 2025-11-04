@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import { useLanguage } from "@/components/language-provider"
+import { SectionCorners } from "@/components/section-corners"
 
 type SkillCategory = "all" | "front" | "back" | "other"
 
@@ -55,11 +56,12 @@ export function SkillsSection() {
 
   return (
     <section id="skills" className="py-24 relative overflow-hidden">
+      <SectionCorners />
       {/* Background blur elements */}
       <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl opacity-20 -z-10"></div>
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-secondary/10 rounded-full blur-3xl opacity-20 -z-10"></div>
 
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 relative">
         {/* Header */}
         <div className="mb-16">
           <Badge className="mb-4 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
@@ -84,7 +86,7 @@ export function SkillsSection() {
                   onClick={() => setFilter(option.value)}
                   className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
                     filter === option.value
-                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30"
+                      ? "bg-primary text-primary-foreground"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border border-transparent hover:border-border"
                   }`}
                 >
@@ -103,7 +105,6 @@ export function SkillsSection() {
                   onMouseEnter={() => setHoveredSkill(skill.name)}
                   onMouseLeave={() => setHoveredSkill(null)}
                   className={`group relative p-6 rounded-xl border border-border/50 backdrop-blur-sm transition-all duration-300 cursor-pointer hover:border-primary/50
-                    ${hoveredSkill === skill.name ? "shadow-xl shadow-primary/10" : "shadow-md"}
                   `}
                 >
                   {/* Top accent line */}
@@ -117,7 +118,7 @@ export function SkillsSection() {
                       <div className={`absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300
                         ${skill.category === "front" ? "bg-cyan-500/20 blur-lg" : skill.category === "back" ? "bg-purple-500/20 blur-lg" : "bg-amber-500/20 blur-lg"}
                       `}></div>
-                      <i className={`devicon-${skill.icon}-plain colored text-5xl relative z-10 group-hover:scale-110 transition-transform duration-300`}></i>
+                      <i className={`devicon-${skill.icon}-plain colored text-5xl relative z-10 transition-transform duration-300`}></i>
                     </div>
 
                     {/* Skill Info */}

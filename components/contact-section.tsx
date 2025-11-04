@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Mail, Linkedin, Github, MessageSquare, MapPin, Phone, Instagram, Send } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
+import { SectionCorners } from "@/components/section-corners"
 
 export function ContactSection() {
   const { t } = useLanguage()
@@ -31,6 +32,7 @@ export function ContactSection() {
 
   return (
     <section id="contact" className="relative py-24 overflow-hidden">
+      <SectionCorners />
       {/* Background gradient */}
       <div className="absolute inset-0 -z-10 bg-linear-to-br from-background via-background to-primary/5" />
 
@@ -79,7 +81,7 @@ export function ContactSection() {
                 }}
               >
                 <span className="relative z-10 text-white flex items-center gap-2">
-                  <Send className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                  <Send className="h-5 w-5 transition-transform" />
                   {t("contact.whatsapp")}
                 </span>
                 <div className="absolute inset-0 bg-linear-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />

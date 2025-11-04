@@ -29,7 +29,7 @@ export function FloatingActions() {
         href="https://api.whatsapp.com/send/?phone=5534998731732&text=Ol%C3%A1%2C+Pedro%21+Vim+pelo+seu+Website+e+gostaria+de+ter+seu+contato%21&type=phone_number&app_absent=0"
         target="_blank"
         rel="noopener noreferrer"
-        className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
+        className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center transition-all duration-300"
         title="Abrir WhatsApp"
       >
         <MessageCircle className="h-6 w-6" />
@@ -39,7 +39,7 @@ export function FloatingActions() {
       {isScrolled && (
         <button
           onClick={scrollToTop}
-          className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300 animate-in fade-in slide-in-from-bottom-4"
+          className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center transition-all duration-300 animate-in fade-in slide-in-from-bottom-4"
           title="Voltar ao topo"
         >
           <ArrowUp className="h-6 w-6" />

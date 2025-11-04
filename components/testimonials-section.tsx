@@ -3,6 +3,7 @@
 import { Badge } from "@/components/ui/badge"
 import { Star } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
+import { SectionCorners } from "@/components/section-corners"
 
 type Testimonial = {
   name: string
@@ -58,6 +59,7 @@ export function TestimonialsSection() {
   
   return (
     <section id="testimonials" className="py-24 relative overflow-hidden">
+      <SectionCorners />
       {/* Gradient background */}
       <div className="absolute inset-0 -z-10 bg-linear-to-br from-background via-background to-primary/5" />
 

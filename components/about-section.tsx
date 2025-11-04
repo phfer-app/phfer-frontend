@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Zap, Code2, Users, Rocket } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
+import { SectionCorners } from "@/components/section-corners"
 
 export function AboutSection() {
   const [offset, setOffset] = useState(0)
@@ -61,6 +62,7 @@ export function AboutSection() {
       id="about"
       className="relative py-24 overflow-hidden"
     >
+      <SectionCorners />
       {/* Gradient background */}
       <div className="absolute inset-0 -z-10 bg-linear-to-br from-background via-background to-primary/5" />
 

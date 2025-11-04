@@ -30,45 +30,29 @@ export default function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning>
       <head>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if (typeof window !== 'undefined') {
-                const observerOptions = {
-                  threshold: 0.15,
-                  rootMargin: '0px 0px -50px 0px',
-                }
-
-                const observer = new IntersectionObserver((entries) => {
-                  entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                      entry.target.classList.add('active')
-
-                      // Stagger animations for child elements
-                      const revealItems = entry.target.querySelectorAll('.reveal-item')
-                      revealItems.forEach((item, index) => {
-                        setTimeout(() => {
-                          item.classList.add('active', 'delay-' + ((index % 4) + 1))
-                        }, index * 50)
-                      })
-
-                      observer.unobserve(entry.target)
-                    }
-                  })
-                }, observerOptions)
-
-                document.addEventListener('DOMContentLoaded', () => {
-                  const revealElements = document.querySelectorAll('.reveal-section, .reveal-content')
-                  revealElements.forEach((el) => observer.observe(el))
-                })
-              }
-            `,
-          }}
-        />
       </head>
       <body className={`${inter.className} antialiased overflow-x-hidden`} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <LanguageProvider>
+            {/* Page border lines - outside padding */}
+            <div className="fixed inset-0 pointer-events-none z-50">
+              <div className="container mx-auto h-full relative">
+                {/* Top border */}
+                <div className="absolute top-0 left-0 right-0 h-px bg-border/40"></div>
+                {/* Bottom border */}
+                <div className="absolute bottom-0 left-0 right-0 h-px bg-border/40"></div>
+                {/* Left border */}
+                <div className="absolute top-0 bottom-0 left-0 w-px bg-border/40"></div>
+                {/* Right border */}
+                <div className="absolute top-0 bottom-0 right-0 w-px bg-border/40"></div>
+                
+                {/* Additional decorative lines */}
+                <div className="absolute top-0 left-1 right-1 h-px bg-border/20 opacity-60"></div>
+                <div className="absolute bottom-0 left-1 right-1 h-px bg-border/20 opacity-60"></div>
+                <div className="absolute top-1 bottom-1 left-0 w-px bg-border/20 opacity-60"></div>
+                <div className="absolute top-1 bottom-1 right-0 w-px bg-border/20 opacity-60"></div>
+              </div>
+            </div>
             <Navbar />
             {children}
             <FloatingActions />
