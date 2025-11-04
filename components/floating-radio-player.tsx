@@ -4,15 +4,22 @@ import { useState, useRef, useEffect } from "react"
 import { Play, Pause, Volume2, VolumeX, Volume1, Minimize2 } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
 import { useAudio } from "@/components/audio-context"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 export function FloatingRadioPlayer() {
   const { t } = useLanguage()
   const { isPlaying, volume, setVolume, isMuted, setIsMuted, togglePlay } = useAudio()
+  const isMobile = useIsMobile()
   const [isMinimized, setIsMinimized] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [position, setPosition] = useState({ x: 20, y: 80 })
   const dragStartPos = useRef({ x: 0, y: 0 })
   const playerRef = useRef<HTMLDivElement>(null)
+
+  // Initialize minimized state based on screen size
+  useEffect(() => {
+    setIsMinimized(isMobile)
+  }, [isMobile])
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newVolume = parseFloat(e.target.value)
