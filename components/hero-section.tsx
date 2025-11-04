@@ -280,7 +280,7 @@ export function HeroSection() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={scrollToContact}
-              className="group relative px-6 py-2.5 bg-primary text-primary-foreground font-semibold rounded-lg overflow-hidden transition-all duration-300 text-sm min-w-[180px] sm:min-w-[200px]"
+              className="group relative px-6 py-2.5 bg-primary text-primary-foreground font-semibold rounded-lg overflow-hidden transition-all duration-300 text-sm w-[180px] sm:w-[200px] cursor-pointer"
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
                 {t("hero.button2")}
@@ -291,7 +291,7 @@ export function HeroSection() {
 
             <button
               onClick={scrollToAbout}
-              className="group relative px-6 py-2.5 bg-transparent border-2 border-primary/30 text-foreground font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:border-primary hover:bg-primary/5 text-sm min-w-[180px] sm:min-w-[200px]"
+              className="group relative px-6 py-2.5 bg-transparent border-2 border-primary/30 text-foreground font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:border-primary hover:bg-primary/5 text-sm w-[180px] sm:w-[200px] cursor-pointer"
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
                 {t("hero.button1")}
