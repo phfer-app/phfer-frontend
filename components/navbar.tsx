@@ -13,11 +13,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useLanguage } from "@/components/language-provider"
+import { useNavigation } from "@/components/navigation-provider"
 
 const navLinks = [
-  { href: "#home", labelKey: "nav.inicio" },
-  { href: "#experience", labelKey: "nav.carreira" },
-  { href: "#skills", labelKey: "nav.habilidades" },
+  { route: "home" as const, labelKey: "nav.inicio" },
+  { route: "about" as const, labelKey: "nav.sobre_mim" },
+  { route: "career" as const, labelKey: "nav.carreira" },
+  { route: "blog" as const, labelKey: "nav.blog" },
 ]
 
 export function Navbar() {
@@ -27,6 +29,7 @@ export function Navbar() {
   const [lastScrollY, setLastScrollY] = useState(0)
   const { theme, setTheme } = useTheme()
   const { language, setLanguage, t } = useLanguage()
+  const { currentRoute, setCurrentRoute } = useNavigation()
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -57,13 +60,10 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [lastScrollY])
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleNavClick = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>, route: "home" | "about" | "career" | "blog") => {
     e.preventDefault()
-    const element = document.querySelector(href)
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
-      setIsOpen(false)
-    }
+    setCurrentRoute(route)
+    setIsOpen(false)
   }
 
   if (!mounted) return null
@@ -83,26 +83,28 @@ export function Navbar() {
       <div className="container mx-auto px-4 md:px-8">
         <div className="flex items-center justify-between h-16 md:h-14">
           {/* Logo - Left */}
-          <a 
-            href="#home" 
-            className="text-lg font-bold text-primary whitespace-nowrap shrink-0 relative group" 
-            onClick={(e) => handleNavClick(e, "#home")}
+          <button 
+            onClick={(e) => handleNavClick(e, "home")}
+            className="text-lg font-bold text-primary whitespace-nowrap shrink-0 relative group cursor-pointer"
           >
             <span className="relative z-10">init</span>
             <span className="absolute inset-0 bg-primary/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-0"></span>
-          </a>
+          </button>
 
           {/* Desktop Navigation - Center */}
           <div className="hidden md:flex items-center gap-2 absolute left-1/2 -translate-x-1/2">
             {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={(e) => handleNavClick(e, link.href)}
-                className="px-6 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-all duration-200"
+              <button
+                key={link.route}
+                onClick={(e) => handleNavClick(e, link.route)}
+                className={`px-6 py-2 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer ${
+                  currentRoute === link.route
+                    ? "text-primary bg-primary/10"
+                    : "text-muted-foreground hover:text-primary hover:bg-primary/10"
+                }`}
               >
                 {t(link.labelKey)}
-              </a>
+              </button>
             ))}
           </div>
 
@@ -142,14 +144,13 @@ export function Navbar() {
               {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
 
-            {/* Contact Button - Highlighted */}
-            <a
-              href="#contact"
-              onClick={(e) => handleNavClick(e, "#contact")}
-              className="px-6 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-lg transition-all duration-300 hover:bg-primary/90"
-            >
-              {t("nav.contato")}
-            </a>
+                  {/* Contact Button - Highlighted */}
+                  <button
+                    onClick={(e) => handleNavClick(e, "home")}
+                    className="px-6 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-lg transition-all duration-300 hover:bg-primary/90 cursor-pointer"
+                  >
+                    {t("nav.contato")}
+                  </button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -187,23 +188,25 @@ export function Navbar() {
                 {/* Navigation Links */}
                 <div className="flex-1 px-4 py-8 space-y-3">
                   {navLinks.map((link) => (
-                    <a
-                      key={link.href}
-                      href={link.href}
-                      onClick={(e) => handleNavClick(e, link.href)}
-                      className="flex items-center px-6 py-4 text-lg font-semibold text-primary bg-primary/10 hover:bg-primary/20 rounded-xl transition-all duration-200 group border border-primary/20 hover:border-primary/40"
+                    <button
+                      key={link.route}
+                      onClick={(e) => handleNavClick(e, link.route)}
+                      className={`flex items-center w-full px-6 py-4 text-lg font-semibold rounded-xl transition-all duration-200 group border cursor-pointer ${
+                        currentRoute === link.route
+                          ? "text-primary bg-primary/20 border-primary/40"
+                          : "text-primary bg-primary/10 hover:bg-primary/20 border-primary/20 hover:border-primary/40"
+                      }`}
                     >
                       <span className="group-hover:translate-x-1 transition-transform">{t(link.labelKey)}</span>
-                    </a>
+                    </button>
                   ))}
                   {/* Contact Link in Mobile */}
-                  <a
-                    href="#contact"
-                    onClick={(e) => handleNavClick(e, "#contact")}
-                    className="flex items-center px-6 py-4 text-lg font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl transition-all duration-200"
+                  <button
+                    onClick={(e) => handleNavClick(e, "home")}
+                    className="flex items-center w-full px-6 py-4 text-lg font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl transition-all duration-200 cursor-pointer"
                   >
                     {t("nav.contato")}
-                  </a>
+                  </button>
                 </div>
 
                 {/* Controls */}

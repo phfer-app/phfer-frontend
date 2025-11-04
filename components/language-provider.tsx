@@ -16,8 +16,9 @@ const translations = {
   pt: {
     // Navigation
     "nav.inicio": "Início",
+    "nav.sobre_mim": "Sobre mim",
     "nav.carreira": "Carreira",
-    "nav.habilidades": "Habilidades",
+    "nav.blog": "Blog",
     "nav.contato": "Contato",
     
     // Hero
@@ -276,12 +277,33 @@ const translations = {
     // Footer CTA Section
     "footer.cta_title": "Pronto para o",
     "footer.cta_title2": "próximo passo?",
+    
+    // Blog Section
+    "blog.badge": "Blog",
+    "blog.title": "Meu",
+    "blog.title2": "Blog",
+    "blog.description": "Acompanhe meus pensamentos, aprendizados e insights sobre desenvolvimento, tecnologia e carreira.",
+    "blog.linkedin_title": "Conecte-se no LinkedIn",
+    "blog.linkedin_description": "Siga-me no LinkedIn para acompanhar minhas publicações, insights e atualizações sobre desenvolvimento e tecnologia.",
+    "blog.view_linkedin": "Ver perfil no LinkedIn",
+    "blog.content_title": "Temas Principais",
+    "blog.content_description": "Artigos sobre desenvolvimento, tecnologia e inovação.",
+    "blog.topic1": "Desenvolvimento Full-Stack",
+    "blog.topic2": "Arquitetura de Software",
+    "blog.topic3": "Tecnologias Modernas",
+    "blog.coming_soon": "Blog posts em breve...",
+    "blog.radio_message": "Enquanto isso, escute uma das minhas rádios preferidas (não me responsabilizo pelas músicas 😅)",
+    "blog.radio_title": "Rádio ao Vivo",
+    "blog.radio_subtitle": "Ouça nossa programação",
+    "blog.radio_playing": "Ao vivo",
+    "blog.radio_paused": "Pausado",
   },
   en: {
     // Navigation
     "nav.inicio": "Home",
+    "nav.sobre_mim": "Research",
     "nav.carreira": "Career",
-    "nav.habilidades": "Skills",
+    "nav.blog": "Blog",
     "nav.contato": "Contact",
     
     // Hero
@@ -540,6 +562,26 @@ const translations = {
     // Footer CTA Section
     "footer.cta_title": "Ready for the",
     "footer.cta_title2": "next step?",
+    
+    // Blog Section
+    "blog.badge": "Blog",
+    "blog.title": "My",
+    "blog.title2": "Blog",
+    "blog.description": "Follow my thoughts, learnings, and insights about development, technology, and career.",
+    "blog.linkedin_title": "Connect on LinkedIn",
+    "blog.linkedin_description": "Follow me on LinkedIn to stay updated with my posts, insights, and updates about development and technology.",
+    "blog.view_linkedin": "View LinkedIn Profile",
+    "blog.content_title": "Main Topics",
+    "blog.content_description": "Articles about development, technology, and innovation.",
+    "blog.topic1": "Full-Stack Development",
+    "blog.topic2": "Software Architecture",
+    "blog.topic3": "Modern Technologies",
+    "blog.coming_soon": "Blog posts coming soon...",
+    "blog.radio_message": "Meanwhile, listen to one of my favorite radios (I'm not responsible for the music 😅)",
+    "blog.radio_title": "Live Radio",
+    "blog.radio_subtitle": "Listen to our programming",
+    "blog.radio_playing": "Live",
+    "blog.radio_paused": "Paused",
   },
 }
 

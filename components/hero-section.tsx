@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useLanguage } from "@/components/language-provider"
+import { useNavigation } from "@/components/navigation-provider"
 import { SectionCorners } from "@/components/section-corners"
 
 const rotatingWords = {
@@ -137,6 +138,7 @@ export function HeroSection() {
 
 export function HeroSection() {
   const { language, t } = useLanguage()
+  const { setCurrentRoute } = useNavigation()
   const words = rotatingWords[language]
   const [currentWord, setCurrentWord] = useState(0)
   const [displayText, setDisplayText] = useState("")
@@ -200,17 +202,17 @@ export function HeroSection() {
   }, [language])
 
   const scrollToContact = () => {
-    const element = document.querySelector("#contact")
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
-    }
+    setCurrentRoute("home")
+    setTimeout(() => {
+      const element = document.querySelector("#contact")
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" })
+      }
+    }, 100)
   }
 
   const scrollToAbout = () => {
-    const element = document.querySelector("#about")
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
-    }
+    setCurrentRoute("about")
   }
 
   return (
@@ -278,9 +280,9 @@ export function HeroSection() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={scrollToContact}
-              className="group relative px-6 py-2.5 bg-primary text-primary-foreground font-semibold rounded-lg overflow-hidden transition-all duration-300 text-sm"
+              className="group relative px-6 py-2.5 bg-primary text-primary-foreground font-semibold rounded-lg overflow-hidden transition-all duration-300 text-sm min-w-[180px] sm:min-w-[200px]"
             >
-              <span className="relative z-10 flex items-center gap-2">
+              <span className="relative z-10 flex items-center justify-center gap-2">
                 {t("hero.button2")}
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </span>
@@ -289,9 +291,9 @@ export function HeroSection() {
 
             <button
               onClick={scrollToAbout}
-              className="group relative px-6 py-2.5 bg-transparent border-2 border-primary/30 text-foreground font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:border-primary hover:bg-primary/5 text-sm"
+              className="group relative px-6 py-2.5 bg-transparent border-2 border-primary/30 text-foreground font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:border-primary hover:bg-primary/5 text-sm min-w-[180px] sm:min-w-[200px]"
             >
-              <span className="relative z-10 flex items-center gap-2">
+              <span className="relative z-10 flex items-center justify-center gap-2">
                 {t("hero.button1")}
               </span>
             </button>

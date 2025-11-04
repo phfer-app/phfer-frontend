@@ -7,6 +7,9 @@ import { LanguageProvider } from "@/components/language-provider"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { FloatingActions } from "@/components/floating-actions"
+import { FloatingRadioPlayer } from "@/components/floating-radio-player"
+import { AudioProvider } from "@/components/audio-context"
+import { NavigationProvider } from "@/components/navigation-provider"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
@@ -34,13 +37,15 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased overflow-x-hidden`} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <LanguageProvider>
+            <AudioProvider>
+            <NavigationProvider>
             {/* Page border lines - outside padding */}
             <div className="fixed inset-0 pointer-events-none z-50">
               <div className="container mx-auto h-full relative">
                 {/* Top border */}
                 <div className="absolute top-0 left-0 right-0 h-px bg-border/40"></div>
-                {/* Bottom border */}
-                <div className="absolute bottom-0 left-0 right-0 h-px bg-border/40"></div>
+                {/* Bottom border - hidden on mobile */}
+                <div className="absolute bottom-0 left-0 right-0 h-px bg-border/40 hidden md:block"></div>
                 {/* Left border */}
                 <div className="absolute top-0 bottom-0 left-0 w-px bg-border/40"></div>
                 {/* Right border */}
@@ -48,7 +53,8 @@ export default function RootLayout({
                 
                 {/* Additional decorative lines */}
                 <div className="absolute top-0 left-1 right-1 h-px bg-border/20 opacity-60"></div>
-                <div className="absolute bottom-0 left-1 right-1 h-px bg-border/20 opacity-60"></div>
+                {/* Bottom decorative line - hidden on mobile */}
+                <div className="absolute bottom-0 left-1 right-1 h-px bg-border/20 opacity-60 hidden md:block"></div>
                 <div className="absolute top-1 bottom-1 left-0 w-px bg-border/20 opacity-60"></div>
                 <div className="absolute top-1 bottom-1 right-0 w-px bg-border/20 opacity-60"></div>
               </div>
@@ -56,8 +62,11 @@ export default function RootLayout({
             <Navbar />
             {children}
             <FloatingActions />
+            <FloatingRadioPlayer />
             <Footer />
             <Analytics />
+            </NavigationProvider>
+            </AudioProvider>
           </LanguageProvider>
         </ThemeProvider>
       </body>
