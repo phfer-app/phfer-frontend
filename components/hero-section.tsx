@@ -280,9 +280,9 @@ export function HeroSection() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={scrollToContact}
-              className="group relative px-6 py-2.5 bg-primary text-primary-foreground font-semibold rounded-lg overflow-hidden transition-all duration-300 text-sm w-[180px] sm:w-[200px] cursor-pointer"
+              className="group relative px-6 py-2.5 bg-primary text-primary-foreground font-semibold rounded-lg overflow-hidden transition-all duration-300 text-sm w-[200px] sm:w-[240px] cursor-pointer"
             >
-              <span className="relative z-10 flex items-center justify-center gap-2">
+              <span className="relative z-10 flex items-center justify-center gap-2 whitespace-nowrap">
                 {t("hero.button2")}
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </span>
@@ -291,9 +291,9 @@ export function HeroSection() {
 
             <button
               onClick={scrollToAbout}
-              className="group relative px-6 py-2.5 bg-transparent border-2 border-primary/30 text-foreground font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:border-primary hover:bg-primary/5 text-sm w-[180px] sm:w-[200px] cursor-pointer"
+              className="group relative px-6 py-2.5 bg-transparent border-2 border-primary/30 text-foreground font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:border-primary hover:bg-primary/5 text-sm w-[200px] sm:w-[240px] cursor-pointer"
             >
-              <span className="relative z-10 flex items-center justify-center gap-2">
+              <span className="relative z-10 flex items-center justify-center gap-2 whitespace-nowrap">
                 {t("hero.button1")}
               </span>
             </button>
