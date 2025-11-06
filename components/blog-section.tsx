@@ -49,7 +49,7 @@ export function BlogSection() {
                 <h2 className="text-lg md:text-xl font-bold mb-4">
                   {t("blog.linkedin_title")}
                 </h2>
-                <p className="text-muted-foreground mb-8 leading-relaxed">
+                <p className="text-muted-foreground mb-8 text-sm leading-relaxed">
                   {t("blog.linkedin_description")}
                 </p>
               </div>
@@ -179,12 +179,12 @@ function RadioPlayer() {
         <Button
           onClick={togglePlay}
           size="lg"
-          className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full w-12 h-12 p-0"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full w-12 h-12 p-0 cursor-pointer"
         >
           {isPlaying ? (
-            <Pause className="h-5 w-5" />
+            <Pause className="h-5 w-5 cursor-pointer" />
           ) : (
-            <Play className="h-5 w-5" />
+            <Play className="h-5 w-5 cursor-pointer" />
           )}
         </Button>
 

@@ -239,7 +239,7 @@ export function HeroSection() {
       <div className="container mx-auto px-4 relative z-10">
         <div className="mx-auto text-center">
           {/* Main Heading */}
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-[1.1] mb-6">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-[1.1] mb-3">
             <span className="block text-foreground">
               {language === "pt" ? (
                 <>
@@ -264,7 +264,7 @@ export function HeroSection() {
           </h1>
 
           {/* Description */}
-          <p className="text-sm md:text-base lg:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-12">
+          <p className="text-sm md:text-base lg:text-lg text-muted-foreground leading-relaxed mx-auto mb-12">
             {language === "pt" ? (
               <>
                 Grandes ideias 🕊️ ganham <em className="italic font-semibold text-foreground">asas</em> quando criadas por devs criativos e dedicados.

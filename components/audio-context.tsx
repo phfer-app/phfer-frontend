@@ -18,7 +18,7 @@ const AudioContext = createContext<AudioContextType | undefined>(undefined)
 export function AudioProvider({ children }: { children: React.ReactNode }) {
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
-  const [volume, setVolume] = useState(1)
+  const [volume, setVolume] = useState(0.5)
   const [isMuted, setIsMuted] = useState(false)
   const radioUrl = "https://stream.truesecurity.com.br/8014/stream/"
 

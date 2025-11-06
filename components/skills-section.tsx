@@ -98,13 +98,13 @@ export function SkillsSection() {
 
           {/* Right Skills Grid */}
           <div className="flex-1">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {displayedSkills.map((skill) => (
                 <div
                   key={skill.name}
                   onMouseEnter={() => setHoveredSkill(skill.name)}
                   onMouseLeave={() => setHoveredSkill(null)}
-                  className={`group relative p-6 rounded-xl border border-border/50 backdrop-blur-sm transition-all duration-300 cursor-pointer hover:border-primary/50
+                  className={`group relative p-4 rounded-xl border border-border/50 backdrop-blur-sm transition-all duration-300 cursor-pointer hover:border-primary/50
                   `}
                 >
                   {/* Top accent line */}
@@ -112,19 +112,19 @@ export function SkillsSection() {
                     skill.category === "front" ? "bg-linear-to-r from-cyan-500 to-blue-500" : skill.category === "back" ? "bg-linear-to-r from-purple-500 to-pink-500" : "bg-linear-to-r from-amber-500 to-orange-500"
                   }`}></div>
 
-                  <div className="flex flex-col items-center gap-4 h-full justify-between">
+                  <div className="flex flex-col items-center gap-3 h-full justify-between">
                     {/* Icon Container */}
-                    <div className="relative w-20 h-20 flex items-center justify-center">
+                    <div className="relative w-16 h-16 flex items-center justify-center">
                       <div className={`absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300
                         ${skill.category === "front" ? "bg-cyan-500/20 blur-lg" : skill.category === "back" ? "bg-purple-500/20 blur-lg" : "bg-amber-500/20 blur-lg"}
                       `}></div>
-                      <i className={`devicon-${skill.icon}-plain colored text-5xl relative z-10 transition-transform duration-300`}></i>
+                      <i className={`devicon-${skill.icon}-plain colored text-4xl relative z-10 transition-transform duration-300`}></i>
                     </div>
 
                     {/* Skill Info */}
                     <div className="text-center w-full">
-                      <h3 className="font-bold text-lg mb-3">{skill.name}</h3>
-                      <p className="text-sm text-muted-foreground">{t(`skill.${skill.icon.toLowerCase()}`)}</p>
+                      <h3 className="font-bold text-base mb-2">{skill.name}</h3>
+                      <p className="text-xs text-muted-foreground">{t(`skill.${skill.icon.toLowerCase()}`)}</p>
                     </div>
 
                     {/* Category Badge */}
@@ -155,7 +155,7 @@ export function SkillsSection() {
               <div className="flex justify-center mt-8">
                 <button
                   onClick={() => setIsExpanded(!isExpanded)}
-                  className="group relative px-10 py-5 rounded-full font-bold text-lg transition-all duration-300 flex items-center gap-2 overflow-hidden shadow-2xl active:scale-95 cursor-pointer"
+                  className="group relative px-8 py-3 rounded-lg font-semibold text-base transition-all duration-300 flex items-center gap-2 overflow-hidden shadow-2xl active:scale-95 cursor-pointer"
                   style={{
                     background: "linear-gradient(135deg, hsl(260, 75%, 60%) 0%, hsl(67, 100%, 45%) 100%)",
                   }}

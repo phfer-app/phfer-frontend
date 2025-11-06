@@ -104,14 +104,14 @@ export function CTAParallaxSection() {
               href="https://wa.me/5534998731732?text=Olá, Pedro! Vim pelo seu Website e gostaria de ter seu contato!"
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative px-10 py-5 rounded-full font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2 overflow-hidden shadow-2xl"
+              className="group relative px-8 py-3 rounded-lg font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 overflow-hidden shadow-2xl cursor-pointer"
               style={{
                 background: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)",
               }}
             >
               <span className="relative z-10 text-white flex items-center gap-2">
                 {t("cta.open_whatsapp")}
-                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </span>
               <div className="absolute inset-0 bg-linear-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
             </a>

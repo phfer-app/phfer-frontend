@@ -1,7 +1,8 @@
 "use client"
 
+import { useState, useEffect, useRef } from "react"
 import { Badge } from "@/components/ui/badge"
-import { Star } from "lucide-react"
+import { Star, ChevronLeft, ChevronRight } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
 import { SectionCorners } from "@/components/section-corners"
 
@@ -15,8 +16,10 @@ type Testimonial = {
 
 export function TestimonialsSection() {
   const { t } = useLanguage()
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const intervalRef = useRef<NodeJS.Timeout | null>(null)
   
-  const originalTestimonials = [
+  const testimonials = [
     {
       name: "Victor Hugo",
       role: t("testimonial1.role"),
@@ -54,8 +57,42 @@ export function TestimonialsSection() {
     },
   ]
 
-  // Triple the testimonials for smooth loop
-  const testimonials = [...originalTestimonials, ...originalTestimonials, ...originalTestimonials]
+  const resetInterval = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current)
+    }
+    intervalRef.current = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % testimonials.length)
+    }, 4000)
+  }
+
+  const nextTestimonial = () => {
+    setCurrentIndex((prev) => (prev + 1) % testimonials.length)
+    resetInterval()
+  }
+
+  const prevTestimonial = () => {
+    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)
+    resetInterval()
+  }
+
+  const goToTestimonial = (index: number) => {
+    setCurrentIndex(index)
+    resetInterval()
+  }
+
+  // Auto-rotate testimonials
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % testimonials.length)
+    }, 4000) // Change every 4 seconds
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+      }
+    }
+  }, [testimonials.length])
   
   return (
     <section id="testimonials" className="py-24 relative overflow-hidden">
@@ -82,44 +119,44 @@ export function TestimonialsSection() {
         </div>
 
         {/* Carousel Container */}
-        <div className="relative overflow-hidden">
-          {/* Gradient fade on sides */}
-          <div className="absolute left-0 top-0 bottom-0 w-12 md:w-24 bg-linear-to-r from-background to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-12 md:w-24 bg-linear-to-l from-background to-transparent z-10 pointer-events-none" />
+        <div className="relative max-w-2xl mx-auto">
+          {/* Navigation Buttons */}
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <button
+              onClick={prevTestimonial}
+              className="p-2 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary transition-all duration-300 cursor-pointer"
+              aria-label="Depoimento anterior"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            
+            <div className="flex gap-2">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToTestimonial(index)}
+                  className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                    index === currentIndex
+                      ? "w-8 bg-primary"
+                      : "w-2 bg-muted hover:bg-primary/50"
+                  }`}
+                  aria-label={`Ir para depoimento ${index + 1}`}
+                />
+              ))}
+            </div>
 
-          {/* Scrolling Container */}
-          <style>{`
-            @keyframes scroll-testimonials {
-              0% {
-                transform: translateX(0);
-              }
-              100% {
-                transform: translateX(-66.666%);
-              }
-            }
-            
-            .testimonials-scroll {
-              animation: scroll-testimonials 24s linear infinite;
-              display: flex;
-              gap: 2rem;
-            }
-            
-            .testimonials-scroll:hover {
-              animation-play-state: paused;
-            }
-            
-            @media (max-width: 768px) {
-              .testimonials-scroll {
-                animation: scroll-testimonials 16s linear infinite;
-              }
-            }
-          `}</style>
+            <button
+              onClick={nextTestimonial}
+              className="p-2 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary transition-all duration-300 cursor-pointer"
+              aria-label="Próximo depoimento"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </div>
 
-          <div className="testimonials-scroll">
-            {/* All testimonials repeated for smooth infinite loop */}
-            {testimonials.map((testimonial, index) => (
-              <TestimonialCard key={`testimonial-${index}`} testimonial={testimonial} />
-            ))}
+          {/* Testimonial Card */}
+          <div className="transition-all duration-300">
+            <TestimonialCard testimonial={testimonials[currentIndex]} />
           </div>
         </div>
       </div>
@@ -129,28 +166,28 @@ export function TestimonialsSection() {
 
 function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   return (
-    <div className="relative p-8 rounded-2xl border border-border/50 backdrop-blur-sm bg-card/30 hover:border-primary/50 transition-all duration-300 group min-w-[400px] md:min-w-[450px]">
+    <div className="relative p-6 rounded-xl border border-border/50 backdrop-blur-sm bg-card/30 hover:border-primary/50 transition-all duration-300 group">
       {/* Top accent line */}
-      <div className="absolute top-0 left-2 right-2 h-0.5 rounded-t-2xl bg-linear-to-r from-primary to-secondary" />
+      <div className="absolute top-0 left-2 right-2 h-0.5 rounded-t-xl bg-linear-to-r from-primary to-secondary" />
 
       {/* Stars */}
-      <div className="flex gap-1 mb-4">
+      <div className="flex gap-1 mb-3">
         {[...Array(5)].map((_, i) => (
-          <Star key={i} className="h-4 w-4 fill-primary text-primary" />
+          <Star key={i} className="h-3 w-3 fill-primary text-primary" />
         ))}
       </div>
 
       {/* Quote */}
-      <p className="text-muted-foreground mb-6 leading-relaxed italic">"{testimonial.content}"</p>
+      <p className="text-sm text-muted-foreground mb-4 leading-relaxed italic">"{testimonial.content}"</p>
 
       {/* Divider */}
-      <div className="h-px bg-border/30 mb-6" />
+      <div className="h-px bg-border/30 mb-4" />
 
       {/* Author */}
-      <div className="flex items-center gap-4">
-        <div className="text-3xl">{testimonial.avatar}</div>
+      <div className="flex items-center gap-3">
+        <div className="text-2xl">{testimonial.avatar}</div>
         <div>
-          <h3 className="font-bold text-foreground">{testimonial.name}</h3>
+          <h3 className="text-sm font-bold text-foreground">{testimonial.name}</h3>
           <p className="text-xs text-muted-foreground">{testimonial.role}</p>
           <p className="text-xs text-primary font-medium">{testimonial.company}</p>
         </div>

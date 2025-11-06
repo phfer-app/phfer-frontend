@@ -20,6 +20,8 @@ const translations = {
     "nav.carreira": "Carreira",
     "nav.blog": "Blog",
     "nav.contato": "Contato",
+    "nav.login": "Entrar",
+    "nav.cadastre_se": "Cadastre-se",
     
     // Hero
     "hero.title1": "Especialista em",
@@ -305,6 +307,8 @@ const translations = {
     "nav.carreira": "Career",
     "nav.blog": "Blog",
     "nav.contato": "Contact",
+    "nav.login": "Sign In",
+    "nav.cadastre_se": "Sign Up",
     
     // Hero
     "hero.title1": "Specialist in",

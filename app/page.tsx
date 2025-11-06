@@ -38,8 +38,8 @@ function AboutPage() {
 function CareerPage() {
   return (
     <>
-      <ExperienceSection />
       <ProjectsSection />
+      <ExperienceSection />
     </>
   )
 }

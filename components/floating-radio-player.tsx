@@ -130,10 +130,10 @@ export function FloatingRadioPlayer() {
           <div className="flex items-center gap-1">
             <button
               onClick={() => setIsMinimized(true)}
-              className="p-1 hover:bg-primary/10 rounded transition-colors"
+              className="p-1 hover:bg-primary/10 rounded transition-colors cursor-pointer"
               aria-label="Minimize"
             >
-              <Minimize2 className="h-4 w-4" />
+              <Minimize2 className="h-4 w-4 cursor-pointer" />
             </button>
           </div>
         </div>
@@ -144,12 +144,12 @@ export function FloatingRadioPlayer() {
           <div className="flex items-center justify-center">
             <button
               onClick={togglePlay}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full w-12 h-12 flex items-center justify-center transition-all shadow-lg"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full w-12 h-12 flex items-center justify-center transition-all shadow-lg cursor-pointer"
             >
               {isPlaying ? (
-                <Pause className="h-5 w-5" />
+                <Pause className="h-5 w-5 cursor-pointer" />
               ) : (
-                <Play className="h-5 w-5 ml-0.5" />
+                <Play className="h-5 w-5 ml-0.5 cursor-pointer" />
               )}
             </button>
           </div>

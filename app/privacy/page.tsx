@@ -8,7 +8,7 @@ export default function PrivacyPage() {
   const isPt = language === "pt"
 
   return (
-    <main className="container mx-auto px-4 py-16">
+    <main className="container mx-auto px-4 pt-24 pb-16">
       <div className="max-w-3xl mx-auto space-y-6">
         <h1 className="text-3xl md:text-4xl font-bold">
           {isPt ? "Política de Privacidade" : "Privacy Policy"}

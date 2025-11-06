@@ -8,7 +8,7 @@ export default function SoonPage() {
   const isPt = language === "pt"
 
   return (
-    <main className="container mx-auto px-4 py-24">
+    <main className="container mx-auto px-4 pt-24 pb-24">
       <div className="max-w-xl mx-auto text-center space-y-6">
         <h1 className="text-3xl md:text-4xl font-bold">
           {isPt ? "Em construção" : "Under construction"}

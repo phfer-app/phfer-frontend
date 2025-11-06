@@ -100,7 +100,7 @@ export function ExperienceSection() {
                   </p>
 
                   {/* Description */}
-                  <p className="text-muted-foreground leading-relaxed">{exp.description}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{exp.description}</p>
                 </div>
 
                 {/* Arrow */}
@@ -119,12 +119,12 @@ export function ExperienceSection() {
             href="https://drive.google.com/drive/folders/1uxyglnsnpw3eLQLCb_xpqVoffd-lLT3I"
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2 relative px-10 py-5 rounded-full font-bold text-lg transition-all duration-300 overflow-hidden shadow-2xl cursor-pointer active:scale-95"
+            className="group inline-flex items-center gap-2 relative px-8 py-3 rounded-lg font-semibold text-base transition-all duration-300 overflow-hidden shadow-2xl cursor-pointer active:scale-95"
             style={{
               background: "linear-gradient(135deg, hsl(260, 75%, 60%) 0%, hsl(67, 100%, 45%) 100%)",
             }}
           >
-            <Download className="h-5 w-5 group-hover:animate-bounce" />
+            <Download className="h-4 w-4 group-hover:animate-bounce" />
             <span className="relative z-10 text-white">{t("experience.resume")}</span>
             <div className="absolute inset-0 bg-linear-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
           </a>

@@ -51,9 +51,9 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 z-10 w-10 h-10 rounded-full bg-primary/20 hover:bg-primary/30 flex items-center justify-center transition-all duration-300"
+          className="absolute top-6 right-6 z-10 w-10 h-10 rounded-full bg-primary/20 hover:bg-primary/30 flex items-center justify-center transition-all duration-300 cursor-pointer"
         >
-          <X className="h-5 w-5 text-primary" />
+          <X className="h-5 w-5 text-primary cursor-pointer" />
         </button>
 
         {/* Left: Image - Smaller width */}
@@ -128,7 +128,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             )}
             <button
               onClick={onClose}
-              className="w-full px-4 py-2 rounded-lg text-muted-foreground hover:text-foreground bg-muted/30 hover:bg-muted/50 transition-all duration-300 text-sm"
+              className="w-full px-4 py-2 rounded-lg text-muted-foreground hover:text-foreground bg-muted/30 hover:bg-muted/50 transition-all duration-300 text-sm cursor-pointer"
             >
               {t("project_modal.close")}
             </button>

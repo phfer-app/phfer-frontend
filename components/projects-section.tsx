@@ -178,7 +178,7 @@ export function ProjectsSection() {
                     {/* Button */}
                     <button
                       onClick={() => setSelectedProject(project)}
-                      className="w-full px-4 py-3 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary font-semibold transition-all duration-300 flex items-center justify-center gap-2 group/btn"
+                      className="w-full px-4 py-3 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary font-semibold transition-all duration-300 flex items-center justify-center gap-2 group/btn cursor-pointer"
                     >
                       {t("projects.details")}
                       <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -196,14 +196,14 @@ export function ProjectsSection() {
             href="https://github.com/initpedro"
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative px-10 py-5 rounded-full font-bold text-lg transition-all duration-300 flex items-center gap-2 overflow-hidden shadow-2xl"
+            className="group relative px-8 py-3 rounded-lg font-semibold text-base transition-all duration-300 flex items-center gap-2 overflow-hidden shadow-2xl cursor-pointer"
             style={{
               background: "linear-gradient(135deg, #333 0%, #171717 100%)",
             }}
           >
             <span className="relative z-10 text-white flex items-center gap-2">
               {t("projects.github")}
-              <Code2 className="h-5 w-5 transition-transform" />
+              <Code2 className="h-4 w-4 transition-transform" />
             </span>
             <div className="absolute inset-0 bg-linear-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
           </a>

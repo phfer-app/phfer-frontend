@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
-import { Menu, X, Moon, Sun, Globe } from "lucide-react"
+import { Menu, X, Moon, Sun, Globe, ChevronDown } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import {
@@ -25,6 +25,7 @@ const navLinks = [
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
+  const [isMobileMenuExpanded, setIsMobileMenuExpanded] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
@@ -145,10 +146,10 @@ export function Navbar() {
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="h-10 w-10 rounded-lg hover:bg-primary/10 transition-colors" 
+                  className="h-10 w-10 rounded-lg hover:bg-primary/10 transition-colors cursor-pointer" 
                   title={language === "pt" ? "Português" : "English"}
                 >
-                  <Globe className="h-5 w-5" />
+                  <Globe className="h-5 w-5 cursor-pointer" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40">
@@ -167,24 +168,42 @@ export function Navbar() {
             <Button 
               variant="ghost" 
               size="sm" 
-              className="h-10 w-10 rounded-lg hover:bg-primary/10 transition-colors" 
+              className="h-10 w-10 rounded-lg hover:bg-primary/10 transition-colors cursor-pointer" 
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             >
-              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              {theme === "dark" ? <Sun className="h-5 w-5 cursor-pointer" /> : <Moon className="h-5 w-5 cursor-pointer" />}
             </Button>
 
-                  {/* Contact Button - Highlighted */}
-                  <button
-                    onClick={handleContactClick}
-                    className="px-6 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-lg transition-all duration-300 hover:bg-primary/90 cursor-pointer"
-                  >
-                    {t("nav.contato")}
-                  </button>
+            {/* Login Button */}
+            <button
+              onClick={() => router.push("/soon")}
+              className="px-6 py-2 text-sm font-semibold rounded-lg transition-all duration-300 hover:bg-primary/10 border border-border/50 hover:border-primary/50 cursor-pointer"
+            >
+              {t("nav.login")}
+            </button>
+
+            {/* Cadastre-se Button - Highlighted */}
+            <button
+              onClick={() => router.push("/soon")}
+              className="px-6 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-lg transition-all duration-300 hover:bg-primary/90 cursor-pointer"
+            >
+              {t("nav.cadastre_se")}
+            </button>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
-            <Button variant="ghost" size="sm" className="rounded-lg" onClick={() => setIsOpen(!isOpen)}>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="rounded-lg" 
+              onClick={() => {
+                setIsOpen(!isOpen)
+                if (isOpen) {
+                  setIsMobileMenuExpanded(false)
+                }
+              }}
+            >
               {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
           </div>
@@ -196,7 +215,10 @@ export function Navbar() {
             {/* Backdrop to close menu */}
             <div 
               className="md:hidden fixed inset-0 z-30 bg-black/40"
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                setIsOpen(false)
+                setIsMobileMenuExpanded(false)
+              }}
             />
             
             {/* Menu Drawer from Right */}
@@ -208,19 +230,56 @@ export function Navbar() {
                     variant="ghost" 
                     size="sm" 
                     className="rounded-lg" 
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => {
+                      setIsOpen(false)
+                      setIsMobileMenuExpanded(false)
+                    }}
                   >
                     <X className="h-5 w-5" />
                   </Button>
                 </div>
 
                 {/* Navigation Links */}
-                <div className="flex-1 px-4 py-8 space-y-3">
-                  {navLinks.map((link) => (
+                <div className="flex-1 px-4 py-8 space-y-3 overflow-y-auto">
+                  {/* Inicio Button - Expandable */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between w-full px-6 py-4 text-lg font-semibold rounded-xl transition-all duration-200 border text-primary bg-primary/10 hover:bg-primary/20 border-primary/20 hover:border-primary/40">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleNavClick(e, "home")
+                        }}
+                        className="flex-1 text-left cursor-pointer"
+                      >
+                        {t("nav.inicio")}
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setIsMobileMenuExpanded(!isMobileMenuExpanded)
+                        }}
+                        className="ml-2 p-1 hover:bg-primary/20 rounded transition-colors cursor-pointer"
+                        aria-label={isMobileMenuExpanded ? "Recolher menu" : "Expandir menu"}
+                      >
+                        <ChevronDown 
+                          className={`h-5 w-5 transition-transform duration-200 ${
+                            isMobileMenuExpanded ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+                    </div>
+                    
+                    {/* Expanded Menu Items */}
+                    <div 
+                      className={`overflow-hidden transition-all duration-300 space-y-2 ${
+                        isMobileMenuExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                      }`}
+                    >
+                      {navLinks.filter(link => link.route !== "home").map((link) => (
                     <button
                       key={link.route}
                       onClick={(e) => handleNavClick(e, link.route)}
-                      className={`flex items-center w-full px-6 py-4 text-lg font-semibold rounded-xl transition-all duration-200 group border cursor-pointer ${
+                          className={`flex items-center w-full px-6 py-4 text-lg font-semibold rounded-xl transition-all duration-200 group border cursor-pointer ml-4 ${
                         currentRoute === link.route
                           ? "text-primary bg-primary/20 border-primary/40"
                           : "text-primary bg-primary/10 hover:bg-primary/20 border-primary/20 hover:border-primary/40"
@@ -229,13 +288,30 @@ export function Navbar() {
                       <span className="group-hover:translate-x-1 transition-transform">{t(link.labelKey)}</span>
                     </button>
                   ))}
-                  {/* Contact Link in Mobile */}
-                  <button
-                    onClick={handleContactClick}
-                    className="flex items-center w-full px-6 py-4 text-lg font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl transition-all duration-200 cursor-pointer"
-                  >
-                    {t("nav.contato")}
-                  </button>
+                    </div>
+                  </div>
+
+                  {/* Login and Cadastre-se Buttons */}
+                  <div className="space-y-2 pt-2">
+                    <button
+                      onClick={() => {
+                        setIsOpen(false)
+                        router.push("/soon")
+                      }}
+                      className="flex items-center w-full px-6 py-4 text-lg font-semibold rounded-xl transition-all duration-200 border cursor-pointer text-primary bg-primary/10 hover:bg-primary/20 border-primary/20 hover:border-primary/40"
+                    >
+                      {t("nav.login")}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsOpen(false)
+                        router.push("/soon")
+                      }}
+                      className="flex items-center w-full px-6 py-4 text-lg font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl transition-all duration-200 cursor-pointer"
+                    >
+                      {t("nav.cadastre_se")}
+                    </button>
+                  </div>
                 </div>
 
                 {/* Controls */}
@@ -245,7 +321,7 @@ export function Navbar() {
                     <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide px-2">{language === "pt" ? "Idioma" : "Language"}</p>
                     <button
                       onClick={() => setLanguage("pt")}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer ${
                         language === "pt"
                           ? "bg-primary/20 text-primary border border-primary/50"
                           : "text-muted-foreground hover:bg-muted border border-transparent"
@@ -256,7 +332,7 @@ export function Navbar() {
                     </button>
                     <button
                       onClick={() => setLanguage("en")}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer ${
                         language === "en"
                           ? "bg-primary/20 text-primary border border-primary/50"
                           : "text-muted-foreground hover:bg-muted border border-transparent"
@@ -273,10 +349,10 @@ export function Navbar() {
                     <Button 
                       variant="ghost" 
                       size="sm" 
-                      className="rounded-lg" 
+                      className="rounded-lg cursor-pointer" 
                       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                     >
-                      {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                      {theme === "dark" ? <Sun className="h-4 w-4 cursor-pointer" /> : <Moon className="h-4 w-4 cursor-pointer" />}
                     </Button>
                   </div>
                 </div>
