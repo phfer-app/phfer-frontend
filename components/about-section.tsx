@@ -82,10 +82,10 @@ export function AboutSection() {
           <Badge className="mb-4 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
             {t("about.badge")}
           </Badge>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-balance">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-balance">
             {t("about.title")} <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">{t("about.title2")}</span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl text-lg">
+          <p className="text-muted-foreground max-w-2xl text-sm md:text-base">
             {t("about.description")}
           </p>
         </div>
@@ -119,7 +119,7 @@ export function AboutSection() {
                               <span className="inline-block px-4 py-1 rounded-full bg-primary/20 text-primary text-sm font-bold mb-2">
                                 {item.year}
                               </span>
-                              <h3 className="text-2xl font-bold mb-3">{item.title}</h3>
+                              <h3 className="text-lg font-bold mb-3">{item.title}</h3>
                               <p className="text-muted-foreground leading-relaxed">{item.description}</p>
                             </div>
                           </div>
@@ -152,7 +152,7 @@ export function AboutSection() {
                               <span className="inline-block px-4 py-1 rounded-full bg-primary/20 text-primary text-sm font-bold mb-2">
                                 {item.year}
                               </span>
-                              <h3 className="text-2xl font-bold mb-3">{item.title}</h3>
+                              <h3 className="text-lg font-bold mb-3">{item.title}</h3>
                               <p className="text-muted-foreground leading-relaxed">{item.description}</p>
                             </div>
                           </div>
@@ -181,7 +181,7 @@ export function AboutSection() {
                         <span className="inline-block px-3 py-1 rounded-full bg-primary/20 text-primary text-xs font-bold mb-2">
                           {item.year}
                         </span>
-                        <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                        <h3 className="text-base font-bold mb-2">{item.title}</h3>
                         <p className="text-muted-foreground text-sm leading-relaxed">{item.description}</p>
                       </div>
                     </div>
@@ -196,7 +196,7 @@ export function AboutSection() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               {/* Text */}
               <div>
-                <p className="text-lg leading-relaxed text-foreground">
+                <p className="text-sm md:text-base leading-relaxed text-foreground">
                   {t("about.final_message")}
                 </p>
           </div>
@@ -225,7 +225,7 @@ export function AboutSection() {
                     box-shadow: 0 0 25px hsl(260, 75%, 63%), inset 0 0 20px hsl(260, 75%, 63%, 0.3);
                   }
                 `}</style>
-                <div className="relative w-56 h-56 md:w-64 md:h-64">
+                <div className="relative w-48 h-48 md:w-56 md:h-56">
                   {/* Gradient border with flowing animation */}
                   <div className="border-glow absolute inset-0 rounded-2xl p-0.5">
                     {/* Image container */}

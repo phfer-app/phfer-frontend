@@ -60,10 +60,10 @@ export function FAQSection() {
           <Badge className="mb-4 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
             {t("faq.badge")}
           </Badge>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-balance">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-balance">
             {t("faq.title")} <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">{t("faq.title2")}</span> {t("faq.title3")}
           </h2>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-muted-foreground text-base">
             {t("faq.description")}
           </p>
         </div>

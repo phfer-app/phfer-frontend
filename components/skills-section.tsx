@@ -67,10 +67,10 @@ export function SkillsSection() {
           <Badge className="mb-4 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
             {t("skills.badge")}
           </Badge>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-balance">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-balance">
             {t("skills.title")} & <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">{t("skills.title2")}</span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl text-lg">
+          <p className="text-muted-foreground max-w-2xl text-sm md:text-base">
             {t("skills.description")}
           </p>
         </div>
@@ -146,7 +146,7 @@ export function SkillsSection() {
             {/* Empty State */}
             {filteredSkills.length === 0 && (
               <div className="text-center py-12">
-                <p className="text-muted-foreground text-lg">{t("skills.no_skills_found")}</p>
+                <p className="text-muted-foreground text-base">{t("skills.no_skills_found")}</p>
               </div>
             )}
 

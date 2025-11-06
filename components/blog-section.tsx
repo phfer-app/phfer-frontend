@@ -28,10 +28,10 @@ export function BlogSection() {
           <Badge className="mb-4 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
             {t("blog.badge")}
           </Badge>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-balance">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-balance">
             {t("blog.title")} <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">{t("blog.title2")}</span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl text-lg">
+          <p className="text-muted-foreground max-w-2xl text-sm md:text-base">
             {t("blog.description")}
           </p>
         </div>
@@ -46,7 +46,7 @@ export function BlogSection() {
               </div>
               
               <div className="flex-1">
-                <h2 className="text-2xl md:text-3xl font-bold mb-4">
+                <h2 className="text-lg md:text-xl font-bold mb-4">
                   {t("blog.linkedin_title")}
                 </h2>
                 <p className="text-muted-foreground mb-8 leading-relaxed">
@@ -79,7 +79,7 @@ export function BlogSection() {
                 <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center mb-3">
                   <span className="text-xl">💡</span>
                 </div>
-                <h2 className="text-xl md:text-2xl font-bold mb-3">
+                <h2 className="text-base md:text-lg font-bold mb-3">
                   {t("blog.content_title")}
                 </h2>
                 <p className="text-muted-foreground text-sm leading-relaxed mb-4">

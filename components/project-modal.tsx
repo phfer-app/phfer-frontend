@@ -73,7 +73,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             {/* Header */}
             <div>
               <h2 className="text-2xl md:text-3xl font-bold mb-4">{t(`project${project.id}.title`)}</h2>
-              <p className="text-muted-foreground text-sm md:text-base leading-relaxed">{t(`project${project.id}.fullDescription`)}</p>
+              <p className="text-muted-foreground text-xs md:text-sm leading-relaxed">{t(`project${project.id}.fullDescription`)}</p>
             </div>
 
             {/* Technologies */}
@@ -98,7 +98,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             {/* Description */}
             <div>
               <h3 className="text-lg font-semibold mb-2">{t("project_modal.about_project")}</h3>
-              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+              <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
                 {t(`project${project.id}.description`)}
               </p>
             </div>

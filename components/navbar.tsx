@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
+import { useRouter, usePathname } from "next/navigation"
 import { Menu, X, Moon, Sun, Globe } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
@@ -31,6 +32,8 @@ export function Navbar() {
   const { language, setLanguage, t } = useLanguage()
   const { currentRoute, setCurrentRoute } = useNavigation()
   const [mounted, setMounted] = useState(false)
+  const router = useRouter()
+  const pathname = usePathname()
 
   useEffect(() => {
     setMounted(true)
@@ -62,21 +65,34 @@ export function Navbar() {
 
   const handleNavClick = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>, route: "home" | "about" | "career" | "blog") => {
     e.preventDefault()
-    setCurrentRoute(route)
+    if (pathname !== "/") {
+      router.push("/")
+      // aguarda a navegação para garantir render da home
+      setTimeout(() => setCurrentRoute(route), 50)
+    } else {
+      setCurrentRoute(route)
+    }
     setIsOpen(false)
   }
 
   const handleContactClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    setCurrentRoute("home")
-    setIsOpen(false)
-    // Aguarda um pouco para garantir que a rota foi atualizada e o componente renderizou
-    setTimeout(() => {
-      const element = document.querySelector("#contact")
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "start" })
-      }
-    }, 100)
+    const go = () => {
+      setCurrentRoute("home")
+      setIsOpen(false)
+      setTimeout(() => {
+        const element = document.querySelector("#contact")
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "start" })
+        }
+      }, 150)
+    }
+    if (pathname !== "/") {
+      router.push("/")
+      setTimeout(go, 50)
+    } else {
+      go()
+    }
   }
 
   if (!mounted) return null

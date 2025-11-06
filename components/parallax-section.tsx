@@ -58,11 +58,11 @@ export function ParallaxSection() {
             </Badge>
           </div>
 
-          <h2 className="text-4xl md:text-6xl font-bold mb-6 text-white text-balance">
+          <h2 className="text-2xl md:text-4xl font-bold mb-6 text-white text-balance">
             {t("parallax.title")} <span className="bg-linear-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">{t("parallax.title2")}</span>
           </h2>
 
-          <p className="text-lg md:text-xl text-gray-300 mb-10 leading-relaxed">
+          <p className="text-sm md:text-base text-gray-300 mb-10 leading-relaxed">
             {t("parallax.description")}
           </p>
 
@@ -77,7 +77,7 @@ export function ParallaxSection() {
                 <div key={index} className="flex items-center">
                   {/* Feature content */}
                   <div className="px-8 md:px-12 py-6 text-center">
-                    <h3 className="text-xl md:text-2xl font-bold text-white mb-2">{feature.title}</h3>
+                    <h3 className="text-base md:text-lg font-bold text-white mb-2">{feature.title}</h3>
                     <p className="text-sm md:text-base text-gray-300">{feature.desc}</p>
                   </div>
                   

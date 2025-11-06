@@ -33,7 +33,7 @@ export function FinalCTASection() {
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center">
           {/* Main message */}
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 leading-tight">
             {t("final.title")} <br className="hidden md:block" />
             <span className="bg-linear-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
               {t("final.title2")}
@@ -41,7 +41,7 @@ export function FinalCTASection() {
           </h2>
 
           {/* Description */}
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-8">
+          <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-8">
             {t("final.description")}
           </p>
 

@@ -46,10 +46,10 @@ export function ContactSection() {
           <Badge className="mb-4 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
             {t("contact.badge")}
           </Badge>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-balance">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-balance">
             {t("contact.title")} <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">{t("contact.title2")}</span>
           </h2>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-muted-foreground text-sm md:text-base">
             {t("contact.description")}
           </p>
         </div>
@@ -62,12 +62,12 @@ export function ContactSection() {
               {/* Top accent line */}
               <div className="absolute top-0 left-2 right-2 h-0.5 rounded-t-2xl bg-linear-to-r from-primary to-secondary" />
 
-              <h3 className="text-2xl font-bold mb-8 flex items-center gap-2">
+              <h3 className="text-lg font-bold mb-8 flex items-center gap-2">
                 <Mail className="h-6 w-6 text-primary" />
                 {t("contact.whatsapp_title")} {t("contact.whatsapp_title2")}
               </h3>
 
-              <p className="text-muted-foreground mb-8 text-lg leading-relaxed">
+              <p className="text-muted-foreground mb-8 text-base leading-relaxed">
                 {t("contact.whatsapp_description")}
               </p>
 
@@ -149,7 +149,7 @@ export function ContactSection() {
               {/* Top accent line */}
               <div className="absolute top-0 left-2 right-2 h-0.5 rounded-t-2xl bg-linear-to-r from-primary to-secondary" />
 
-              <h3 className="text-2xl font-bold mb-4 text-center">
+              <h3 className="text-lg font-bold mb-4 text-center">
                 {t("contact.chart_title")}
               </h3>
 

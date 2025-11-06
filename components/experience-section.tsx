@@ -47,10 +47,10 @@ export function ExperienceSection() {
           <Badge className="mb-4 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
             {t("experience.badge")}
           </Badge>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-balance">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-balance">
             {t("experience.title")} <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">{t("experience.title2")}</span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl text-lg">
+          <p className="text-muted-foreground max-w-2xl text-sm md:text-base">
             {t("experience.description")}
           </p>
         </div>
@@ -77,7 +77,7 @@ export function ExperienceSection() {
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
                     <div>
-                      <h3 className="text-xl font-bold mb-1">{exp.title}</h3>
+                      <h3 className="text-base font-bold mb-1">{exp.title}</h3>
                       <p className="text-primary font-medium">{exp.company}</p>
                     </div>
                     <Badge

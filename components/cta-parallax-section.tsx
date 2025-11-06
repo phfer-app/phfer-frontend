@@ -51,7 +51,7 @@ export function CTAParallaxSection() {
               <span className="text-white font-semibold text-sm">{t("cta.next_level")}</span>
             </div>
 
-            <h2 className="text-4xl md:text-6xl font-bold mb-6 text-balance">
+            <h2 className="text-2xl md:text-4xl font-bold mb-6 text-balance">
               <span className="bg-linear-to-r from-white via-white to-white/90 bg-clip-text text-transparent">
                 {t("cta.ready_to_level_up")}
               </span>{" "}
@@ -78,7 +78,7 @@ export function CTAParallaxSection() {
                 <div key={index} className="flex items-center">
                   {/* Stat content */}
                   <div className="px-8 md:px-12 py-6 text-center">
-                    <div className="text-4xl md:text-5xl font-bold bg-linear-to-br from-white via-cyan-100 to-blue-100 bg-clip-text text-transparent mb-2 drop-shadow-sm">
+                    <div className="text-2xl md:text-3xl font-bold bg-linear-to-br from-white via-cyan-100 to-blue-100 bg-clip-text text-transparent mb-2 drop-shadow-sm">
                       {stat.number}
                     </div>
                     <div className="text-base md:text-lg text-white font-medium drop-shadow-sm">

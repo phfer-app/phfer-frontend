@@ -105,10 +105,10 @@ export function ProjectsSection() {
           <Badge className="mb-4 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
             {t("projects.badge")}
           </Badge>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-balance">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-balance">
             {t("projects.title")} <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">{t("projects.title2")}</span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl text-lg">
+          <p className="text-muted-foreground max-w-2xl text-sm md:text-base">
             {t("projects.description")}
           </p>
         </div>
@@ -150,7 +150,7 @@ export function ProjectsSection() {
                   {/* Content */}
                   <div className="p-6 flex flex-col h-[calc(100%-12rem)]">
                     <div className="flex-1">
-                      <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors duration-300">
+                      <h3 className="text-base font-bold mb-2 group-hover:text-primary transition-colors duration-300">
                         {t(`project${project.id}.title`)}
                       </h3>
                       <p className="text-muted-foreground text-sm mb-4 line-clamp-2">

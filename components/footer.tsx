@@ -7,7 +7,7 @@ import { useLanguage } from "@/components/language-provider"
 import { useNavigation } from "@/components/navigation-provider"
 
 export function Footer() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const { setCurrentRoute } = useNavigation()
   const [mounted, setMounted] = useState(false)
 
@@ -44,18 +44,62 @@ export function Footer() {
       <div className="container mx-auto px-4 py-20">
         {/* Main Grid */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-          {/* Brand */}
-          <div>
-            <h3 className="text-lg font-bold mb-4 bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">@initpedro</h3>
-            <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-              {t("footer.description")}
-            </p>
+          {/* Brand + Social + Copyright */}
+          <div className="flex flex-col">
+            <div>
+              <h3 className="font-bold mb-2">@initpedro</h3>
+              <p className="text-sm text-muted-foreground mb-4 leading-normal">📍 Uberlândia, MG</p>
+            </div>
+
+            {/* Social icons (moved here) */}
+            <div className="mt-10">
+              <div className="flex flex-wrap gap-3 mb-4">
+                <a
+                  href="https://linkedin.com/in/initpedro"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg bg-muted/50 hover:bg-primary/20 text-muted-foreground hover:text-primary transition-all duration-300"
+                  title="LinkedIn"
+                >
+                  <Linkedin className="h-5 w-5" />
+                </a>
+                <a
+                  href="https://github.com/initpedro"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg bg-muted/50 hover:bg-primary/20 text-muted-foreground hover:text-primary transition-all duration-300"
+                  title="GitHub"
+                >
+                  <Github className="h-5 w-5" />
+                </a>
+                
+                <a
+                  href="https://instagram.com/initpedro"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg bg-muted/50 hover:bg-primary/20 text-muted-foreground hover:text-primary transition-all duration-300"
+                  title="Instagram"
+                >
+                  <Instagram className="h-5 w-5" />
+                </a>
+                <a
+                  href="https://wa.me/5534998731732?text=Olá, Pedro! Vim pelo seu Website e gostaria de ter seu contato!"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg bg-muted/50 hover:bg-primary/20 text-muted-foreground hover:text-primary transition-all duration-300"
+                  title="WhatsApp"
+                >
+                  <Send className="h-5 w-5" />
+                </a>
+              </div>
+              <p className="text-xs text-muted-foreground">© 2025 @initpedro</p>
+            </div>
           </div>
 
           {/* Navigation */}
           <div>
             <h4 className="text-sm font-bold mb-4 text-foreground">{t("footer.links")}</h4>
-            <ul className="space-y-3">
+            <ul className="space-y-2">
               <li>
                 <a 
                   href="#home" 
@@ -107,86 +151,55 @@ export function Footer() {
           {/* Legal */}
           <div>
             <h4 className="text-sm font-bold mb-4 text-foreground">{t("footer.legal")}</h4>
-            <ul className="space-y-3">
+            <ul className="space-y-2">
               <li>
-                <a href="https://www.intuit.com/legal/" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <a href="/terms" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   {t("footer.terms")}
                 </a>
               </li>
               <li>
-                <a href="https://www.intuit.com/privacy/statement/" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <a href="/privacy" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   {t("footer.privacy")}
+                </a>
+              </li>
+              <li>
+                <a href="/cookies" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  Cookies
                 </a>
               </li>
             </ul>
           </div>
 
-          {/* Conecte-se Comigo */}
+          {/* Access + Support */}
           <div>
-            <h4 className="text-sm font-bold mb-4 text-foreground">{t("footer.socials")}</h4>
-            <div className="flex flex-wrap gap-3">
-              <a
-                href="https://linkedin.com/in/initpedro"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-muted/50 hover:bg-primary/20 text-muted-foreground hover:text-primary transition-all duration-300"
-                title="LinkedIn"
-              >
-                <Linkedin className="h-5 w-5" />
-              </a>
-              <a
-                href="https://github.com/initpedro"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-muted/50 hover:bg-primary/20 text-muted-foreground hover:text-primary transition-all duration-300"
-                title="GitHub"
-              >
-                <Github className="h-5 w-5" />
-              </a>
-              <a
-                href="mailto:pedro16hf@gmail.com"
-                className="p-2 rounded-lg bg-muted/50 hover:bg-primary/20 text-muted-foreground hover:text-primary transition-all duration-300"
-                title="Email"
-              >
-                <Mail className="h-5 w-5" />
-              </a>
-              <a
-                href="https://discord.com/users/683063659638816800"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-muted/50 hover:bg-primary/20 text-muted-foreground hover:text-primary transition-all duration-300"
-                title="Discord"
-              >
-                <MessageSquare className="h-5 w-5" />
-              </a>
-              <a
-                href="https://instagram.com/initpedro"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-muted/50 hover:bg-primary/20 text-muted-foreground hover:text-primary transition-all duration-300"
-                title="Instagram"
-              >
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a
-                href="https://wa.me/5534998731732?text=Olá, Pedro! Vim pelo seu Website e gostaria de ter seu contato!"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-muted/50 hover:bg-primary/20 text-muted-foreground hover:text-primary transition-all duration-300"
-                title="WhatsApp"
-              >
-                <Send className="h-5 w-5" />
-              </a>
-            </div>
+            <h4 className="text-sm font-bold mb-4 text-foreground">{language === "pt" ? "Acesso" : "Access"}</h4>
+            <ul className="space-y-2">
+              <li>
+                <a href="/soon" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  {language === "pt" ? "Criar conta" : "Create account"}
+                </a>
+              </li>
+              <li>
+                <a href="/soon" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  {language === "pt" ? "Login" : "Login"}
+                </a>
+              </li>
+            </ul>
+            <div className="h-6" />
+            <h4 className="text-sm font-bold mb-4 text-foreground">{language === "pt" ? "Suporte" : "Support"}</h4>
+            <ul className="space-y-2">
+              <li>
+                <a href="mailto:pedro16hf@gmail.com" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  pedro16hf@gmail.com
+                </a>
+              </li>
+            </ul>
           </div>
+
+          {/* removed social column (moved to brand) */}
         </div>
 
-        {/* Bottom */}
-        <div className="pt-8 border-t border-border/30 text-center">
-          <p className="text-sm text-muted-foreground">
-            {t("footer.copyright")}
-          </p>
-        </div>
+        {/* Bottom removed; copyright moved to first column */}
       </div>
     </footer>
   )
