@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { useLanguage } from "@/components/language-provider"
 import { useNavigation } from "@/components/navigation-provider"
 import { SectionCorners } from "@/components/section-corners"
+import { IntegratedChatbot } from "@/components/integrated-chatbot"
 
 const rotatingWords = {
   pt: ["sistemas", "softwares"],
@@ -218,7 +219,7 @@ export function HeroSection() {
   return (
     <section 
       id="home" 
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative py-24 flex flex-col items-center justify-center overflow-hidden"
     >
       <SectionCorners />
       {/* Background with radial gradient */}
@@ -297,6 +298,11 @@ export function HeroSection() {
                 {t("hero.button1")}
               </span>
             </button>
+          </div>
+
+          {/* Integrated Chatbot */}
+          <div className="w-full mt-12 px-4">
+            <IntegratedChatbot />
           </div>
         </div>
       </div>
