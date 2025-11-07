@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Lock, Eye, EyeOff, ArrowRight, CheckCircle, AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -10,8 +10,7 @@ import { Label } from "@/components/ui/label"
 import { useLanguage } from "@/components/language-provider"
 import { useToast } from "@/hooks/use-toast"
 import { isAuthenticated } from "@/lib/auth"
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'
+import { supabase } from "@/lib/supabase"
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState("")
@@ -22,10 +21,9 @@ export default function ResetPasswordPage() {
   const [isSuccess, setIsSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
-  const [token, setToken] = useState<string | null>(null)
+  const [hasToken, setHasToken] = useState(false)
   const { t } = useLanguage()
   const router = useRouter()
-  const searchParams = useSearchParams()
   const { toast } = useToast()
 
   // Verificar se o usuário já está logado
@@ -36,21 +34,24 @@ export default function ResetPasswordPage() {
     }
   }, [router])
 
-  // Extrair token da URL
+  // Verificar se há token no hash da URL (Supabase envia o token no hash)
   useEffect(() => {
     if (mounted) {
-      const urlToken = searchParams.get('token') || searchParams.get('access_token')
-      const hashToken = window.location.hash.match(/access_token=([^&]+)/)?.[1]
+      // O Supabase envia o token no hash: #access_token=...&type=recovery
+      const hash = window.location.hash
+      const hasAccessToken = hash.includes('access_token=')
+      const isRecoveryType = hash.includes('type=recovery')
       
-      if (urlToken) {
-        setToken(urlToken)
-      } else if (hashToken) {
-        setToken(hashToken)
+      if (hasAccessToken && isRecoveryType) {
+        setHasToken(true)
+        // O Supabase processa automaticamente o hash quando detectSessionInUrl está true
+        // Não precisamos extrair o token manualmente
       } else {
         setError("Token de recuperação não encontrado. Por favor, solicite um novo link de recuperação.")
+        setHasToken(false)
       }
     }
-  }, [mounted, searchParams])
+  }, [mounted])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -72,7 +73,7 @@ export default function ResetPasswordPage() {
       return
     }
 
-    if (!token) {
+    if (!hasToken) {
       setError("Token de recuperação inválido. Por favor, solicite um novo link.")
       return
     }
@@ -80,45 +81,53 @@ export default function ResetPasswordPage() {
     setIsLoading(true)
 
     try {
-      // O Supabase gerencia o reset de senha através do token
-      // Precisamos enviar o token e a nova senha para o backend
-      const response = await fetch(`${API_URL}/auth/reset-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          token,
-          password 
-        }),
+      // O Supabase gerencia o reset de senha através do token no hash
+      // Quando o usuário acessa o link, o Supabase processa automaticamente o hash
+      // e cria uma sessão temporária. Podemos usar updateUser para atualizar a senha.
+      
+      // Verificar se há uma sessão válida (criada pelo token no hash)
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+      
+      if (sessionError || !session) {
+        throw new Error("Token inválido ou expirado. Por favor, solicite um novo link de recuperação.")
+      }
+
+      // Atualizar a senha usando o Supabase
+      const { data: updateData, error: updateError } = await supabase.auth.updateUser({
+        password: password
       })
 
-      const result = await response.json()
-
-      if (response.ok && result.success) {
-        setIsSuccess(true)
-        toast({
-          title: "Senha redefinida!",
-          description: "Sua senha foi redefinida com sucesso. Você pode fazer login agora.",
-        })
-        
-        // Redirecionar para login após 2 segundos
-        setTimeout(() => {
-          router.push("/login")
-        }, 2000)
-      } else {
-        setError(result.error || "Erro ao redefinir senha. O link pode ter expirado.")
-        toast({
-          title: "Erro ao redefinir senha",
-          description: result.error || "O link pode ter expirado. Por favor, solicite um novo link.",
-          variant: "destructive",
-        })
+      if (updateError) {
+        console.error('Erro ao redefinir senha:', updateError)
+        throw new Error(
+          updateError.message === 'Invalid token' || updateError.message === 'JWT expired'
+            ? 'Token inválido ou expirado. Por favor, solicite um novo link de recuperação.'
+            : updateError.message || 'Erro ao redefinir senha'
+        )
       }
+
+      if (!updateData.user) {
+        throw new Error('Erro ao redefinir senha')
+      }
+
+      // Fazer logout para limpar a sessão temporária
+      await supabase.auth.signOut()
+
+      setIsSuccess(true)
+      toast({
+        title: "Senha redefinida!",
+        description: "Sua senha foi redefinida com sucesso. Você pode fazer login agora.",
+      })
+      
+      // Redirecionar para login após 2 segundos
+      setTimeout(() => {
+        router.push("/login")
+      }, 2000)
     } catch (err: any) {
       setError(err.message || "Erro ao redefinir senha. Tente novamente.")
       toast({
         title: "Erro ao redefinir senha",
-        description: err.message || "Erro ao conectar ao servidor. Tente novamente.",
+        description: err.message || "Erro ao redefinir senha. Tente novamente.",
         variant: "destructive",
       })
     } finally {
@@ -195,7 +204,7 @@ export default function ResetPasswordPage() {
                     placeholder="Digite sua nova senha"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    disabled={isLoading || !token}
+                    disabled={isLoading || !hasToken}
                     className="pr-10"
                     required
                     minLength={6}
@@ -225,7 +234,7 @@ export default function ResetPasswordPage() {
                     placeholder="Confirme sua nova senha"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    disabled={isLoading || !token}
+                    disabled={isLoading || !hasToken}
                     className="pr-10"
                     required
                     minLength={6}
