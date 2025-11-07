@@ -11,6 +11,7 @@ import { FloatingRadioPlayer } from "@/components/floating-radio-player"
 import { AudioProvider } from "@/components/audio-context"
 import { NavigationProvider } from "@/components/navigation-provider"
 import { CookieConsent } from "@/components/cookie-consent"
+import { Toaster } from "@/components/ui/toaster"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
@@ -66,6 +67,7 @@ export default function RootLayout({
             <FloatingRadioPlayer />
             <CookieConsent />
             <Footer />
+            <Toaster />
             <Analytics />
             </NavigationProvider>
             </AudioProvider>

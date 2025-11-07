@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
-import { Menu, X, Languages, Palette, ChevronDown } from "lucide-react"
+import { Menu, X, Languages, Palette, ChevronDown, User, LogOut, Ticket, Briefcase, Shield } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import {
@@ -12,9 +12,13 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import { useLanguage } from "@/components/language-provider"
 import { useNavigation } from "@/components/navigation-provider"
+import { getUser, isAuthenticated, logout, refreshAdminStatus, updateUserData } from "@/lib/auth"
+import { useToast } from "@/hooks/use-toast"
+import { checkAdmin } from "@/lib/admin"
 
 const navLinks = [
   { route: "home" as const, labelKey: "nav.inicio" },
@@ -35,8 +39,12 @@ export function Navbar() {
   const { language, setLanguage, t } = useLanguage()
   const { currentRoute, setCurrentRoute } = useNavigation()
   const [mounted, setMounted] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
+  const [isAdmin, setIsAdmin] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
+  const { toast } = useToast()
 
   useEffect(() => {
     setMounted(true)
@@ -65,6 +73,76 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [lastScrollY])
+
+  // Verificar autenticação
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = isAuthenticated()
+      setIsLoggedIn(authenticated)
+      if (authenticated) {
+        const user = getUser()
+        const token = localStorage.getItem('token')
+        setUserEmail(user?.email || null)
+        
+        // Verificar se é admin apenas se tiver token
+        if (token) {
+          try {
+            const adminResult = await checkAdmin()
+            if (adminResult.success) {
+              const isAdminUser = adminResult.isAdmin || false
+              setIsAdmin(isAdminUser)
+              
+              // Atualizar localStorage com os dados de admin
+              updateUserData({
+                is_admin: isAdminUser,
+                is_owner: adminResult.isOwner || false
+              })
+            } else {
+              // Se não for admin ou erro, definir como false
+              // Mas não atualizar localStorage se for erro de rede
+              if (adminResult.error && !adminResult.error.includes('conectar ao servidor')) {
+                setIsAdmin(false)
+                updateUserData({
+                  is_admin: false,
+                  is_owner: false
+                })
+              } else {
+                // Se for erro de rede, usar dados do localStorage se existirem
+                setIsAdmin(user?.is_admin || false)
+              }
+            }
+          } catch (error) {
+            // Em caso de erro, usar dados do localStorage se existirem
+            console.error('Erro ao verificar admin:', error)
+            setIsAdmin(user?.is_admin || false)
+          }
+        } else {
+          // Se não tiver token, usar dados do localStorage
+          setIsAdmin(user?.is_admin || false)
+        }
+      } else {
+        setUserEmail(null)
+        setIsAdmin(false)
+      }
+    }
+
+    checkAuth()
+
+    // Listener para mudanças no localStorage
+    const handleStorageChange = () => {
+      checkAuth()
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+    
+    // Verificar periodicamente (para mudanças na mesma aba)
+    const interval = setInterval(checkAuth, 2000)
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      clearInterval(interval)
+    }
+  }, [])
 
   const handleNavClick = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>, route: "home" | "about" | "career" | "blog") => {
     e.preventDefault()
@@ -121,6 +199,26 @@ export function Navbar() {
     }
   }
 
+  const handleLogout = async () => {
+    try {
+      await logout()
+      setIsLoggedIn(false)
+      setUserEmail(null)
+      toast({
+        title: "Logout realizado",
+        description: "Você foi desconectado com sucesso.",
+      })
+      router.push("/")
+      setIsOpen(false)
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message || "Erro ao fazer logout",
+        variant: "destructive",
+      })
+    }
+  }
+
   if (!mounted) return null
 
   return (
@@ -148,19 +246,86 @@ export function Navbar() {
 
           {/* Desktop Navigation - Center */}
           <div className="hidden md:flex items-center gap-2 absolute left-1/2 -translate-x-1/2">
-            {navLinks.map((link) => (
-              <button
-                key={link.route}
-                onClick={(e) => handleNavClick(e, link.route)}
-                className={`px-6 py-2 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer ${
-                  currentRoute === link.route
-                    ? "text-primary bg-primary/10"
-                    : "text-muted-foreground hover:text-primary hover:bg-muted/80"
-                }`}
-              >
-                {t(link.labelKey)}
-              </button>
-            ))}
+            {isLoggedIn ? (
+              <>
+                {/* Rota atual com Dropdown quando logado */}
+                <div className="relative inline-flex items-center group">
+                  <button
+                    onClick={(e) => {
+                      const currentLink = navLinks.find(l => l.route === currentRoute)
+                      if (currentLink) {
+                        handleNavClick(e, currentLink.route)
+                      }
+                    }}
+                    className={`px-6 py-2 text-sm font-medium rounded-l-lg transition-all duration-200 cursor-pointer ${
+                      currentRoute === "home" || currentRoute === "about" || currentRoute === "career" || currentRoute === "blog"
+                        ? "text-primary bg-primary/10"
+                        : "text-muted-foreground hover:text-primary hover:bg-muted/80"
+                    }`}
+                  >
+                    {t(navLinks.find(l => l.route === currentRoute)?.labelKey || "nav.inicio")}
+                  </button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        className={`h-[36px] w-8 p-0 rounded-r-lg rounded-l-none border-l border-border/30 transition-all duration-200 flex items-center justify-center ${
+                          currentRoute === "home" || currentRoute === "about" || currentRoute === "career" || currentRoute === "blog"
+                            ? "bg-primary/10 hover:bg-primary/15 text-primary"
+                            : "hover:bg-muted/80 text-muted-foreground hover:text-primary"
+                        }`}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <ChevronDown className="h-3.5 w-3.5" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="center" className="w-52 bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-xl p-2">
+                      {navLinks
+                        .filter(link => link.route !== currentRoute)
+                        .map((link) => (
+                          <DropdownMenuItem 
+                            key={link.route}
+                            onClick={(e) => handleNavClick(e, link.route)}
+                            className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-primary/10 hover:text-primary transition-all duration-200 rounded-lg m-1"
+                          >
+                            <span className="font-medium">{t(link.labelKey)}</span>
+                          </DropdownMenuItem>
+                        ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+                {/* Meus Chamados */}
+                <button
+                  onClick={() => router.push("/chamados")}
+                  className="px-6 py-2 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer text-muted-foreground hover:text-primary hover:bg-muted/80 flex items-center gap-2"
+                >
+                  <Ticket className="h-4 w-4" />
+                  {t("nav.meus_chamados")}
+                </button>
+                {/* Solicitar Serviços */}
+                <button
+                  onClick={() => router.push("/solicitar-servicos")}
+                  className="px-6 py-2 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer text-muted-foreground hover:text-primary hover:bg-muted/80 flex items-center gap-2"
+                >
+                  <Briefcase className="h-4 w-4" />
+                  {t("nav.solicitar_servicos")}
+                </button>
+              </>
+            ) : (
+              // Links normais quando não logado
+              navLinks.map((link) => (
+                <button
+                  key={link.route}
+                  onClick={(e) => handleNavClick(e, link.route)}
+                  className={`px-6 py-2 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer ${
+                    currentRoute === link.route
+                      ? "text-primary bg-primary/10"
+                      : "text-muted-foreground hover:text-primary hover:bg-muted/80"
+                  }`}
+                >
+                  {t(link.labelKey)}
+                </button>
+              ))
+            )}
           </div>
 
           {/* Desktop Controls - Right */}
@@ -270,21 +435,68 @@ export function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Login Button */}
-            <button
-              onClick={() => router.push("/soon")}
-              className="px-6 py-2 text-sm font-semibold rounded-lg transition-all duration-300 hover:bg-primary/10 border border-border/50 hover:border-primary/50 cursor-pointer"
-            >
-              {t("nav.login")}
-            </button>
+            {/* Auth Buttons or User Dropdown */}
+            {isLoggedIn && userEmail ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-10 px-4 rounded-lg hover:bg-muted/80 transition-colors cursor-pointer flex items-center gap-2 border border-border/50" 
+                  >
+                    <User className="h-4 w-4" />
+                    <span className="text-sm font-medium max-w-[120px] truncate">{userEmail}</span>
+                    <ChevronDown className="h-3 w-3 opacity-60" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl">
+                  <div className="px-3 py-2">
+                    <p className="text-sm font-medium">{userEmail}</p>
+                    <p className="text-xs text-muted-foreground">Usuário logado</p>
+                  </div>
+                  <DropdownMenuSeparator />
+                  {isAdmin && (
+                    <>
+                      <DropdownMenuItem 
+                        onClick={() => {
+                          router.push("/admin")
+                        }}
+                        className="flex items-center gap-2 px-4 py-3 cursor-pointer hover:bg-primary/10 text-primary hover:text-primary transition-colors rounded-lg m-1"
+                      >
+                        <Shield className="h-4 w-4" />
+                        <span>Painel Administrativo</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                    </>
+                  )}
+                  <DropdownMenuItem 
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 px-4 py-3 cursor-pointer hover:bg-destructive/10 text-destructive hover:text-destructive transition-colors rounded-lg m-1"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>Desconectar</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                {/* Login Button */}
+                <button
+                  onClick={() => router.push("/login")}
+                  className="px-6 py-2 text-sm font-semibold rounded-lg transition-all duration-300 hover:bg-primary/10 border border-border/50 hover:border-primary/50 cursor-pointer"
+                >
+                  {t("nav.login")}
+                </button>
 
-            {/* Cadastre-se Button - Highlighted */}
-            <button
-              onClick={() => router.push("/soon")}
-              className="px-6 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-lg transition-all duration-300 hover:bg-primary/90 cursor-pointer"
-            >
-              {t("nav.cadastre_se")}
-            </button>
+                {/* Cadastre-se Button - Highlighted */}
+                <button
+                  onClick={() => router.push("/cadastro")}
+                  className="px-6 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-lg transition-all duration-300 hover:bg-primary/90 cursor-pointer"
+                >
+                  {t("nav.cadastre_se")}
+                </button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -354,26 +566,10 @@ export function Navbar() {
 
                 {/* Navigation Links */}
                 <div className="flex-1 px-4 py-4 space-y-1.5 overflow-y-auto">
-                  {/* Botão Principal - Mostra o item selecionado ou Início */}
-                  <div className="space-y-1.5">
-                    {currentRoute === "home" ? (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setIsMobileMenuExpanded(!isMobileMenuExpanded)
-                        }}
-                        className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 text-primary border-primary/50 bg-transparent hover:bg-primary/5 cursor-pointer"
-                      >
-                        <span>{t("nav.inicio")}</span>
-                        <ChevronDown 
-                          className={`h-3.5 w-3.5 transition-transform duration-300 ${
-                            isMobileMenuExpanded ? "rotate-180" : ""
-                          }`}
-                        />
-                      </button>
-                    ) : (
-                      <>
-                        {/* Mostra o botão selecionado no topo */}
+                  {isLoggedIn ? (
+                    <>
+                      {/* Rota atual com Dropdown quando logado */}
+                      <div className="space-y-1.5">
                         <button
                           onClick={(e) => {
                             e.stopPropagation()
@@ -388,47 +584,166 @@ export function Navbar() {
                             }`}
                           />
                         </button>
+                        
+                        {/* Expanded Menu Items */}
+                        <div 
+                          className={`overflow-hidden transition-all duration-300 space-y-1.5 pl-3 ${
+                            isMobileMenuExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                          }`}
+                        >
+                          {navLinks
+                            .filter(link => link.route !== currentRoute)
+                            .map((link) => (
+                              <button
+                                key={link.route}
+                                onClick={(e) => {
+                                  handleNavClick(e, link.route)
+                                  setIsOpen(false)
+                                }}
+                                className="flex items-center w-full px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 group border-2 cursor-pointer text-foreground border-transparent hover:border-border/30 hover:text-primary"
+                              >
+                                <span className="group-hover:translate-x-1 transition-transform">{t(link.labelKey)}</span>
+                              </button>
+                            ))}
+                        </div>
+                      </div>
+                      
+                      {/* Meus Chamados */}
+                      <button
+                        onClick={() => {
+                          setIsOpen(false)
+                          router.push("/chamados")
+                        }}
+                        className="flex items-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-foreground border-border/30 hover:border-primary/30 bg-transparent hover:bg-muted/30"
+                      >
+                        <Ticket className="h-4 w-4" />
+                        {t("nav.meus_chamados")}
+                      </button>
+                      
+                      {/* Solicitar Serviços */}
+                      <button
+                        onClick={() => {
+                          setIsOpen(false)
+                          router.push("/solicitar-servicos")
+                        }}
+                        className="flex items-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-foreground border-border/30 hover:border-primary/30 bg-transparent hover:bg-muted/30"
+                      >
+                        <Briefcase className="h-4 w-4" />
+                        {t("nav.solicitar_servicos")}
+                      </button>
+                    </>
+                  ) : (
+                    // Links normais quando não logado
+                    <div className="space-y-1.5">
+                      {currentRoute === "home" ? (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setIsMobileMenuExpanded(!isMobileMenuExpanded)
+                          }}
+                          className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 text-primary border-primary/50 bg-transparent hover:bg-primary/5 cursor-pointer"
+                        >
+                          <span>{t("nav.inicio")}</span>
+                          <ChevronDown 
+                            className={`h-3.5 w-3.5 transition-transform duration-300 ${
+                              isMobileMenuExpanded ? "rotate-180" : ""
+                            }`}
+                          />
+                        </button>
+                      ) : (
+                        <>
+                          {/* Mostra o botão selecionado no topo */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setIsMobileMenuExpanded(!isMobileMenuExpanded)
+                            }}
+                            className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 text-primary border-primary/50 bg-transparent hover:bg-primary/5 cursor-pointer"
+                          >
+                            <span>{t(navLinks.find(l => l.route === currentRoute)?.labelKey || "nav.inicio")}</span>
+                            <ChevronDown 
+                              className={`h-3.5 w-3.5 transition-transform duration-300 ${
+                                isMobileMenuExpanded ? "rotate-180" : ""
+                              }`}
+                            />
+                          </button>
+                        </>
+                      )}
+                      
+                      {/* Expanded Menu Items */}
+                      <div 
+                        className={`overflow-hidden transition-all duration-300 space-y-1.5 pl-3 ${
+                          isMobileMenuExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                        }`}
+                      >
+                        {navLinks.filter(link => link.route !== currentRoute).map((link) => (
+                          <button
+                            key={link.route}
+                            onClick={(e) => handleNavClick(e, link.route)}
+                            className="flex items-center w-full px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 group border-2 cursor-pointer text-foreground border-transparent hover:border-border/30 hover:text-primary"
+                          >
+                            <span className="group-hover:translate-x-1 transition-transform">{t(link.labelKey)}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Auth Buttons or User Info */}
+                  <div className="space-y-1.5 pt-2">
+                    {isLoggedIn && userEmail ? (
+                      <>
+                        <div className="px-3 py-3 rounded-lg border-2 border-border/30 bg-muted/20">
+                          <div className="flex items-center gap-2 mb-2">
+                            <User className="h-4 w-4 text-primary" />
+                            <span className="text-xs font-medium text-muted-foreground">Usuário logado</span>
+                          </div>
+                          <p className="text-sm font-medium text-foreground truncate">{userEmail}</p>
+                        {isAdmin && (
+                          <button
+                            onClick={() => {
+                              setIsOpen(false)
+                              router.push("/admin")
+                            }}
+                            className="mt-2 flex items-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-primary border-primary/30 hover:border-primary/50 bg-primary/10 hover:bg-primary/20"
+                          >
+                            <Shield className="h-4 w-4" />
+                            Painel Administrativo
+                          </button>
+                        )}
+                        </div>
+                        <button
+                          onClick={() => {
+                            handleLogout()
+                          }}
+                          className="flex items-center justify-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-destructive border-destructive/30 hover:border-destructive/50 bg-transparent hover:bg-destructive/10"
+                        >
+                          <LogOut className="h-4 w-4" />
+                          Desconectar
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => {
+                            setIsOpen(false)
+                            router.push("/login")
+                          }}
+                          className="flex items-center justify-center w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-foreground border-border/30 hover:border-primary/30 bg-transparent hover:bg-muted/30"
+                        >
+                          {t("nav.login")}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setIsOpen(false)
+                            router.push("/cadastro")
+                          }}
+                          className="flex items-center justify-center w-full px-3 py-2 text-sm font-semibold bg-linear-to-r from-primary to-primary/90 text-primary-foreground hover:from-primary/90 hover:to-primary rounded-lg transition-all duration-200 cursor-pointer shadow-md shadow-primary/20"
+                        >
+                          {t("nav.cadastre_se")}
+                        </button>
                       </>
                     )}
-                    
-                    {/* Expanded Menu Items */}
-                    <div 
-                      className={`overflow-hidden transition-all duration-300 space-y-1.5 pl-3 ${
-                        isMobileMenuExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-                      }`}
-                    >
-                      {navLinks.filter(link => link.route !== currentRoute).map((link) => (
-                        <button
-                          key={link.route}
-                          onClick={(e) => handleNavClick(e, link.route)}
-                          className="flex items-center w-full px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 group border-2 cursor-pointer text-foreground border-transparent hover:border-border/30 hover:text-primary"
-                        >
-                          <span className="group-hover:translate-x-1 transition-transform">{t(link.labelKey)}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Login and Cadastre-se Buttons */}
-                  <div className="space-y-1.5 pt-2">
-                    <button
-                      onClick={() => {
-                        setIsOpen(false)
-                        router.push("/soon")
-                      }}
-                      className="flex items-center justify-center w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-foreground border-border/30 hover:border-primary/30 bg-transparent hover:bg-muted/30"
-                    >
-                      {t("nav.login")}
-                    </button>
-                    <button
-                      onClick={() => {
-                        setIsOpen(false)
-                        router.push("/soon")
-                      }}
-                      className="flex items-center justify-center w-full px-3 py-2 text-sm font-semibold bg-linear-to-r from-primary to-primary/90 text-primary-foreground hover:from-primary/90 hover:to-primary rounded-lg transition-all duration-200 cursor-pointer shadow-md shadow-primary/20"
-                    >
-                      {t("nav.cadastre_se")}
-                    </button>
                   </div>
                 </div>
 
