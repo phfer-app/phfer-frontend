@@ -464,7 +464,7 @@ export function Navbar() {
                         className="flex items-center gap-2 px-4 py-3 cursor-pointer hover:bg-primary/10 text-primary hover:text-primary transition-colors rounded-lg m-1"
                       >
                         <Shield className="h-4 w-4" />
-                        <span>Painel Administrativo</span>
+                        <span>{t("nav.painel_administrativo")}</span>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                     </>
@@ -474,7 +474,7 @@ export function Navbar() {
                     className="flex items-center gap-2 px-4 py-3 cursor-pointer hover:bg-destructive/10 text-destructive hover:text-destructive transition-colors rounded-lg m-1"
                   >
                     <LogOut className="h-4 w-4" />
-                    <span>Desconectar</span>
+                    <span>{t("nav.desconectar")}</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -710,7 +710,7 @@ export function Navbar() {
                             className="flex items-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-primary border-primary/30 hover:border-primary/50 bg-primary/10 hover:bg-primary/20"
                           >
                             <Shield className="h-4 w-4" />
-                            Painel Administrativo
+                            {t("nav.painel_administrativo")}
                           </button>
                         )}
                         <button
@@ -720,7 +720,7 @@ export function Navbar() {
                           className="flex items-center justify-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-destructive border-destructive/30 hover:border-destructive/50 bg-transparent hover:bg-destructive/10"
                         >
                           <LogOut className="h-4 w-4" />
-                          Desconectar
+                          {t("nav.desconectar")}
                         </button>
                       </>
                     ) : (

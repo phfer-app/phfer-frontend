@@ -24,6 +24,8 @@ const translations = {
     "nav.cadastre_se": "Cadastre-se",
     "nav.meus_chamados": "Meus Chamados",
     "nav.solicitar_servicos": "Solicitar Serviços",
+    "nav.painel_administrativo": "Painel Administrativo",
+    "nav.desconectar": "Desconectar",
     
     // Hero
     "hero.title1": "Especialista em",
@@ -340,6 +342,10 @@ const translations = {
     "auth.forgot.success_message": "Verifique seu e-mail para redefinir sua senha.",
     "auth.forgot.error": "Erro ao enviar",
     "auth.forgot.error_message": "Não foi possível enviar o link de recuperação. Verifique se o e-mail está correto.",
+    
+    // Admin Panel
+    "admin.title": "Painel Administrativo",
+    "admin.subtitle": "Gerencie usuários, tickets e administradores",
   },
   en: {
     // Navigation
@@ -352,6 +358,8 @@ const translations = {
     "nav.cadastre_se": "Sign Up",
     "nav.meus_chamados": "My Tickets",
     "nav.solicitar_servicos": "Request Services",
+    "nav.painel_administrativo": "Admin Panel",
+    "nav.desconectar": "Logout",
     
     // Hero
     "hero.title1": "Specialist in",
@@ -668,6 +676,10 @@ const translations = {
     "auth.forgot.success_message": "Check your email to reset your password.",
     "auth.forgot.error": "Error sending",
     "auth.forgot.error_message": "Could not send recovery link. Please check if the email is correct.",
+    
+    // Admin Panel
+    "admin.title": "Admin Panel",
+    "admin.subtitle": "Manage users, tickets and administrators",
   },
 }
 

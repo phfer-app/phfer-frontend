@@ -347,10 +347,10 @@ export default function AdminPage() {
             </div>
             <div>
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-linear-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
-                Painel Administrativo
+                {t("admin.title")}
               </h1>
               <p className="text-sm md:text-base text-muted-foreground">
-                Gerencie usuários, tickets e administradores
+                {t("admin.subtitle")}
               </p>
             </div>
           </div>
