@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
-import { Menu, X, Moon, Sun, Globe, ChevronDown } from "lucide-react"
+import { Menu, X, Languages, Palette, ChevronDown } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import {
@@ -130,7 +130,7 @@ export function Navbar() {
                 className={`px-6 py-2 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer ${
                   currentRoute === link.route
                     ? "text-primary bg-primary/10"
-                    : "text-muted-foreground hover:text-primary hover:bg-primary/10"
+                    : "text-muted-foreground hover:text-primary hover:bg-muted/80"
                 }`}
               >
                 {t(link.labelKey)}
@@ -146,33 +146,104 @@ export function Navbar() {
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="h-10 w-10 rounded-lg hover:bg-primary/10 transition-colors cursor-pointer" 
+                  className="h-10 px-3 rounded-lg hover:bg-muted/80 transition-colors cursor-pointer flex items-center gap-2" 
                   title={language === "pt" ? "Português" : "English"}
                 >
-                  <Globe className="h-5 w-5 cursor-pointer" />
+                  <Languages className="h-5 w-5 cursor-pointer" />
+                  <ChevronDown className="h-3 w-3 cursor-pointer opacity-60" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-40">
-                <DropdownMenuItem onClick={() => setLanguage("pt")} className="flex items-center gap-2 cursor-pointer">
-                  <span className="text-lg">🇧🇷</span>
-                  <span>Português</span>
+              <DropdownMenuContent align="end" className="w-48 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl">
+                <DropdownMenuItem 
+                  onClick={() => setLanguage("pt")} 
+                  className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-slate-800/50 dark:hover:bg-slate-700/50 transition-colors rounded-lg m-1"
+                >
+                  <span className="text-xl">🇧🇷</span>
+                  <div className="flex flex-col">
+                    <span className="font-medium">Português</span>
+                    <span className="text-xs text-muted-foreground">Portuguese</span>
+                  </div>
+                  {language === "pt" && (
+                    <div className="ml-auto w-2 h-2 rounded-full bg-primary" />
+                  )}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setLanguage("en")} className="flex items-center gap-2 cursor-pointer">
-                  <span className="text-lg">🇺🇸</span>
-                  <span>English</span>
+                <DropdownMenuItem 
+                  onClick={() => setLanguage("en")} 
+                  className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-slate-800/50 dark:hover:bg-slate-700/50 transition-colors rounded-lg m-1"
+                >
+                  <span className="text-xl">🇺🇸</span>
+                  <div className="flex flex-col">
+                    <span className="font-medium">English</span>
+                    <span className="text-xs text-muted-foreground">Inglês</span>
+                  </div>
+                  {language === "en" && (
+                    <div className="ml-auto w-2 h-2 rounded-full bg-primary" />
+                  )}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Theme Toggle */}
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-10 w-10 rounded-lg hover:bg-primary/10 transition-colors cursor-pointer" 
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            >
-              {theme === "dark" ? <Sun className="h-5 w-5 cursor-pointer" /> : <Moon className="h-5 w-5 cursor-pointer" />}
-            </Button>
+            {/* Theme Toggle - Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-10 px-3 rounded-lg hover:bg-muted/80 transition-colors cursor-pointer flex items-center gap-2" 
+                  title={theme === "dark" ? "Tema escuro" : theme === "light" ? "Tema claro" : "Tema do sistema"}
+                >
+                  <Palette className="h-5 w-5 cursor-pointer" />
+                  <ChevronDown className="h-3 w-3 cursor-pointer opacity-60" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl">
+                <DropdownMenuItem 
+                  onClick={() => setTheme("light")} 
+                  className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-slate-800/50 dark:hover:bg-slate-700/50 transition-colors rounded-lg m-1"
+                >
+                  <div className="w-5 h-5 rounded-full bg-yellow-400 border border-yellow-500/30 flex items-center justify-center">
+                    <span className="text-xs">☀️</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="font-medium">Claro</span>
+                    <span className="text-xs text-muted-foreground">Light</span>
+                  </div>
+                  {theme === "light" && (
+                    <div className="ml-auto w-2 h-2 rounded-full bg-primary" />
+                  )}
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => setTheme("dark")} 
+                  className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-slate-800/50 dark:hover:bg-slate-700/50 transition-colors rounded-lg m-1"
+                >
+                  <div className="w-5 h-5 rounded-full bg-slate-700 border border-slate-600/30 flex items-center justify-center">
+                    <span className="text-xs">🌙</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="font-medium">Escuro</span>
+                    <span className="text-xs text-muted-foreground">Dark</span>
+                  </div>
+                  {theme === "dark" && (
+                    <div className="ml-auto w-2 h-2 rounded-full bg-primary" />
+                  )}
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => setTheme("system")} 
+                  className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-slate-800/50 dark:hover:bg-slate-700/50 transition-colors rounded-lg m-1"
+                >
+                  <div className="w-5 h-5 rounded-full bg-linear-to-br from-yellow-400 to-slate-700 border border-border/30 flex items-center justify-center">
+                    <span className="text-xs">💻</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="font-medium">Sistema</span>
+                    <span className="text-xs text-muted-foreground">System</span>
+                  </div>
+                  {theme === "system" && (
+                    <div className="ml-auto w-2 h-2 rounded-full bg-primary" />
+                  )}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {/* Login Button */}
             <button
@@ -327,8 +398,11 @@ export function Navbar() {
                           : "text-muted-foreground hover:bg-muted border border-transparent"
                       }`}
                     >
-                      <span className="text-lg">🇧🇷</span>
-                      <span>Português</span>
+                      <span className="text-xl">🇧🇷</span>
+                      <div className="flex flex-col">
+                        <span className="font-medium">Português</span>
+                        <span className="text-xs text-muted-foreground">Portuguese</span>
+                      </div>
                     </button>
                     <button
                       onClick={() => setLanguage("en")}
@@ -338,22 +412,65 @@ export function Navbar() {
                           : "text-muted-foreground hover:bg-muted border border-transparent"
                       }`}
                     >
-                      <span className="text-lg">🇺🇸</span>
-                      <span>English</span>
+                      <span className="text-xl">🇺🇸</span>
+                      <div className="flex flex-col">
+                        <span className="font-medium">English</span>
+                        <span className="text-xs text-muted-foreground">Inglês</span>
+                      </div>
                     </button>
                   </div>
 
                   {/* Theme Toggle */}
-                  <div className="flex items-center justify-between px-4 py-3 rounded-lg bg-muted/50 border border-border/30">
-                    <span className="text-sm font-medium">{theme === "dark" ? "🌙 Escuro" : "☀️ Claro"}</span>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="rounded-lg cursor-pointer" 
-                      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  <div className="space-y-2">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide px-2">{language === "pt" ? "Tema" : "Theme"}</p>
+                    <button
+                      onClick={() => setTheme("light")}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer ${
+                        theme === "light"
+                          ? "bg-primary/20 text-primary border border-primary/50"
+                          : "text-muted-foreground hover:bg-muted border border-transparent"
+                      }`}
                     >
-                      {theme === "dark" ? <Sun className="h-4 w-4 cursor-pointer" /> : <Moon className="h-4 w-4 cursor-pointer" />}
-                    </Button>
+                      <div className="w-5 h-5 rounded-full bg-yellow-400 border border-yellow-500/30 flex items-center justify-center">
+                        <span className="text-xs">☀️</span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-medium">Claro</span>
+                        <span className="text-xs text-muted-foreground">Light</span>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => setTheme("dark")}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer ${
+                        theme === "dark"
+                          ? "bg-primary/20 text-primary border border-primary/50"
+                          : "text-muted-foreground hover:bg-muted border border-transparent"
+                      }`}
+                    >
+                      <div className="w-5 h-5 rounded-full bg-slate-700 border border-slate-600/30 flex items-center justify-center">
+                        <span className="text-xs">🌙</span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-medium">Escuro</span>
+                        <span className="text-xs text-muted-foreground">Dark</span>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => setTheme("system")}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer ${
+                        theme === "system"
+                          ? "bg-primary/20 text-primary border border-primary/50"
+                          : "text-muted-foreground hover:bg-muted border border-transparent"
+                      }`}
+                    >
+                      <div className="w-5 h-5 rounded-full bg-linear-to-br from-yellow-400 to-slate-700 border border-border/30 flex items-center justify-center">
+                        <span className="text-xs">💻</span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-medium">Sistema</span>
+                        <span className="text-xs text-muted-foreground">System</span>
+                      </div>
+                    </button>
                   </div>
                 </div>
               </div>

@@ -219,21 +219,30 @@ export function HeroSection() {
   return (
     <section 
       id="home" 
-      className="relative py-24 flex flex-col items-center justify-center overflow-hidden"
+      className="relative pt-56 pb-24 flex flex-col items-center justify-center overflow-hidden"
     >
       <SectionCorners />
-      {/* Background with radial gradient */}
+      {/* Background with radial gradient - Mais intenso e espalhado */}
       <div className="absolute inset-0 bg-background">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-radial-gradient from-primary/15 via-primary/5 to-transparent rounded-full blur-3xl" />
-        <div className="absolute top-1/3 right-1/4 w-[600px] h-[600px] bg-secondary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] bg-primary/8 rounded-full blur-3xl" />
+        {/* Gradientes principais - mais intensos */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-radial-gradient from-primary/25 via-primary/10 to-transparent rounded-full blur-3xl" />
+        <div className="absolute top-1/3 right-1/4 w-[600px] h-[600px] bg-secondary/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] bg-primary/15 rounded-full blur-3xl" />
+        
+        {/* Gradientes adicionais - mais espalhados */}
+        <div className="absolute top-1/4 left-1/3 w-[700px] h-[700px] bg-primary/12 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/3 right-1/3 w-[550px] h-[550px] bg-secondary/15 rounded-full blur-3xl" />
+        <div className="absolute top-2/3 left-1/5 w-[400px] h-[400px] bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/5 right-1/5 w-[450px] h-[450px] bg-secondary/12 rounded-full blur-3xl" />
       </div>
 
-      {/* Animated circles */}
+      {/* Animated circles - mais intensos */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-20 w-32 h-32 border border-primary/10 rounded-full animate-pulse" />
-        <div className="absolute bottom-32 right-32 w-24 h-24 border border-secondary/10 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 right-20 w-16 h-16 border border-primary/10 rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-20 left-20 w-32 h-32 border border-primary/20 rounded-full animate-pulse" />
+        <div className="absolute bottom-32 right-32 w-24 h-24 border border-secondary/20 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 right-20 w-16 h-16 border border-primary/20 rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-1/3 left-1/4 w-20 h-20 border border-primary/15 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
+        <div className="absolute bottom-1/4 right-1/4 w-28 h-28 border border-secondary/15 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }} />
       </div>
 
       {/* Main Content - Centered */}
@@ -301,7 +310,7 @@ export function HeroSection() {
           </div>
 
           {/* Integrated Chatbot */}
-          <div className="w-full mt-12 px-4">
+          <div className="w-full mt-12 mb-24 px-4">
             <IntegratedChatbot />
           </div>
         </div>

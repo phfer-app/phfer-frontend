@@ -50,9 +50,17 @@ export function FAQSection() {
   return (
     <section id="faq" className="py-24 relative overflow-hidden">
       <SectionCorners />
-      {/* Background blur elements */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl opacity-20 -z-10"></div>
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-secondary/10 rounded-full blur-3xl opacity-20 -z-10"></div>
+      {/* Background blur elements - Padrão vertical */}
+      <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl opacity-40 -z-10"></div>
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-secondary/20 rounded-full blur-3xl opacity-40 -z-10"></div>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-primary/15 rounded-full blur-3xl opacity-30 -z-10"></div>
+      <div className="absolute top-1/4 right-1/3 w-[450px] h-[450px] bg-secondary/15 rounded-full blur-3xl opacity-30 -z-10"></div>
+      <div className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] bg-primary/12 rounded-full blur-3xl opacity-25 -z-10"></div>
+      
+      {/* Círculos animados verticais */}
+      <div className="absolute top-1/3 left-1/4 w-24 h-24 border border-primary/20 rounded-full animate-pulse -z-10" />
+      <div className="absolute bottom-1/3 right-1/4 w-20 h-20 border border-secondary/20 rounded-full animate-pulse -z-10" style={{ animationDelay: '1.5s' }} />
+      <div className="absolute top-2/3 left-1/5 w-16 h-16 border border-primary/15 rounded-full animate-pulse -z-10" style={{ animationDelay: '0.5s' }} />
 
       <div className="container mx-auto px-4 relative">
         {/* Header */}

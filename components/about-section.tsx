@@ -66,15 +66,27 @@ export function AboutSection() {
       {/* Gradient background */}
       <div className="absolute inset-0 -z-10 bg-linear-to-br from-background via-background to-primary/5" />
 
-      {/* Animated blobs */}
+      {/* Animated blobs - Padrão diagonal */}
       <div
-        className="absolute -top-40 -left-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl opacity-50"
+        className="absolute -top-40 -left-40 w-96 h-96 bg-primary/20 rounded-full blur-3xl opacity-60"
         style={{ transform: `translateY(${offset * 0.3}px)` }}
       />
       <div
-        className="absolute -bottom-40 -right-40 w-96 h-96 bg-secondary/10 rounded-full blur-3xl opacity-50"
+        className="absolute -bottom-40 -right-40 w-96 h-96 bg-secondary/20 rounded-full blur-3xl opacity-60"
         style={{ transform: `translateY(${offset * -0.3}px)` }}
       />
+      <div
+        className="absolute top-1/2 left-1/4 w-[500px] h-[500px] bg-primary/15 rounded-full blur-3xl opacity-50"
+        style={{ transform: `translateX(${offset * 0.2}px)` }}
+      />
+      <div
+        className="absolute bottom-1/3 right-1/3 w-[400px] h-[400px] bg-secondary/15 rounded-full blur-3xl opacity-50"
+        style={{ transform: `translateX(${offset * -0.2}px)` }}
+      />
+      
+      {/* Círculos animados */}
+      <div className="absolute top-1/4 right-1/5 w-24 h-24 border border-primary/20 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
+      <div className="absolute bottom-1/4 left-1/5 w-20 h-20 border border-secondary/20 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
