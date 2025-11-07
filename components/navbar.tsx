@@ -699,19 +699,20 @@ export function Navbar() {
                             <span className="text-xs font-medium text-muted-foreground">Usuário logado</span>
                           </div>
                           <p className="text-sm font-medium text-foreground truncate">{userEmail}</p>
+                        </div>
+                        {/* Painel Administrativo - Separado para melhor visibilidade */}
                         {isAdmin && (
                           <button
                             onClick={() => {
                               setIsOpen(false)
                               router.push("/admin")
                             }}
-                            className="mt-2 flex items-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-primary border-primary/30 hover:border-primary/50 bg-primary/10 hover:bg-primary/20"
+                            className="flex items-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-primary border-primary/30 hover:border-primary/50 bg-primary/10 hover:bg-primary/20"
                           >
                             <Shield className="h-4 w-4" />
                             Painel Administrativo
                           </button>
                         )}
-                        </div>
                         <button
                           onClick={() => {
                             handleLogout()
