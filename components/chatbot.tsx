@@ -112,7 +112,7 @@ export function Chatbot() {
       {!isOpen && (
         <Button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50 hover:scale-110 transition-transform"
+          className="fixed bottom-4 right-4 md:bottom-6 md:right-6 h-14 w-14 rounded-full shadow-lg z-50 hover:scale-110 transition-transform"
           size="lg"
           aria-label="Abrir chatbot"
         >
@@ -122,7 +122,7 @@ export function Chatbot() {
 
       {/* Chat Window */}
       {isOpen && (
-        <Card className="fixed bottom-6 right-6 w-[calc(100vw-3rem)] max-w-md h-[600px] flex flex-col shadow-2xl z-50 border-2">
+        <Card className="fixed bottom-4 right-4 md:bottom-6 md:right-6 w-[calc(100vw-1rem)] md:w-[calc(100vw-4rem)] max-w-lg h-[600px] flex flex-col shadow-2xl z-50 border-2">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b bg-primary/5">
             <div className="flex items-center gap-2">

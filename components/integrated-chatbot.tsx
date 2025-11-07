@@ -52,11 +52,8 @@ export function IntegratedChatbot() {
     return () => clearTimeout(timer)
   }, [messages])
 
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus()
-    }
-  }, [])
+  // Removido auto-focus para não interferir na navegação
+  // O foco será aplicado apenas quando o usuário interagir com o chatbot
 
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return

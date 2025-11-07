@@ -68,10 +68,33 @@ export function Navbar() {
 
   const handleNavClick = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>, route: "home" | "about" | "career" | "blog") => {
     e.preventDefault()
+    
+    // Se for home, garantir scroll para o topo e remover foco
+    if (route === "home") {
+      // Remove foco de qualquer elemento ativo
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur()
+      }
+      
+      // Scroll para o topo imediatamente
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    }
+    
     if (pathname !== "/") {
       router.push("/")
       // aguarda a navegação para garantir render da home
-      setTimeout(() => setCurrentRoute(route), 50)
+      setTimeout(() => {
+        setCurrentRoute(route)
+        // Se for home, garantir scroll novamente após navegação
+        if (route === "home") {
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: "smooth" })
+            if (document.activeElement instanceof HTMLElement) {
+              document.activeElement.blur()
+            }
+          }, 100)
+        }
+      }, 50)
     } else {
       setCurrentRoute(route)
     }
@@ -410,7 +433,7 @@ export function Navbar() {
                 </div>
 
                 {/* Controls com Dropdowns */}
-                <div className="px-4 py-3 border-t border-border/30 space-y-2 bg-background/50">
+                <div className="px-4 pt-3 pb-4 border-t border-border/30 space-y-2 bg-background/50">
                   {/* Language Dropdown */}
                   <div className="space-y-1.5">
                     <button

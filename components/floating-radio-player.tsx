@@ -37,7 +37,7 @@ export function FloatingRadioPlayer() {
     return <Volume2 className="h-4 w-4" />
   }
 
-  // Drag functionality
+  // Drag functionality for mouse
   const handleMouseDown = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest('button, input')) return
     setIsDragging(true)
@@ -47,42 +47,74 @@ export function FloatingRadioPlayer() {
     }
   }
 
+  // Drag functionality for touch (mobile)
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if ((e.target as HTMLElement).closest('button, input')) return
+    const touch = e.touches[0]
+    setIsDragging(true)
+    dragStartPos.current = {
+      x: touch.clientX - position.x,
+      y: touch.clientY - position.y,
+    }
+    e.preventDefault() // Prevent scrolling while dragging
+  }
+
+  const updatePosition = (clientX: number, clientY: number) => {
+    if (!playerRef.current) return
+
+    const rect = playerRef.current.getBoundingClientRect()
+    const playerWidth = rect.width
+    const playerHeight = rect.height
+    
+    let newX = clientX - dragStartPos.current.x
+    let newY = clientY - dragStartPos.current.y
+
+    // Constrain to viewport bounds
+    const maxX = window.innerWidth - playerWidth
+    const maxY = window.innerHeight - playerHeight
+
+    newX = Math.max(0, Math.min(newX, maxX))
+    newY = Math.max(0, Math.min(newY, maxY))
+
+    setPosition({
+      x: newX,
+      y: newY,
+    })
+  }
+
   useEffect(() => {
     if (!isDragging) return
 
     const handleMouseMove = (e: MouseEvent) => {
-      if (!playerRef.current) return
+      updatePosition(e.clientX, e.clientY)
+    }
 
-      const rect = playerRef.current.getBoundingClientRect()
-      const playerWidth = rect.width
-      const playerHeight = rect.height
-      
-      let newX = e.clientX - dragStartPos.current.x
-      let newY = e.clientY - dragStartPos.current.y
-
-      // Constrain to viewport bounds
-      const maxX = window.innerWidth - playerWidth
-      const maxY = window.innerHeight - playerHeight
-
-      newX = Math.max(0, Math.min(newX, maxX))
-      newY = Math.max(0, Math.min(newY, maxY))
-
-      setPosition({
-        x: newX,
-        y: newY,
-      })
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0]
+        updatePosition(touch.clientX, touch.clientY)
+        e.preventDefault() // Prevent scrolling while dragging
+      }
     }
 
     const handleMouseUp = () => {
       setIsDragging(false)
     }
 
+    const handleTouchEnd = () => {
+      setIsDragging(false)
+    }
+
     window.addEventListener("mousemove", handleMouseMove, { passive: true })
     window.addEventListener("mouseup", handleMouseUp, { passive: true })
+    window.addEventListener("touchmove", handleTouchMove, { passive: false })
+    window.addEventListener("touchend", handleTouchEnd, { passive: true })
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
       window.removeEventListener("mouseup", handleMouseUp)
+      window.removeEventListener("touchmove", handleTouchMove)
+      window.removeEventListener("touchend", handleTouchEnd)
     }
   }, [isDragging])
 
@@ -90,17 +122,19 @@ export function FloatingRadioPlayer() {
     return (
       <div
         ref={playerRef}
-        className="fixed z-50 cursor-move"
+        className="fixed z-50 cursor-move touch-none"
         style={{
           left: `${position.x}px`,
           top: `${position.y}px`,
         }}
         onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
       >
         <div className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg shadow-lg">
           <div className={`w-2 h-2 rounded-full ${isPlaying ? "bg-green-400 animate-pulse" : "bg-gray-400"}`} />
           <button
             onClick={() => setIsMinimized(false)}
+            onTouchStart={(e) => e.stopPropagation()}
             className="text-sm font-medium hover:opacity-80 transition-opacity"
           >
             {t("blog.radio_title")}
@@ -113,12 +147,13 @@ export function FloatingRadioPlayer() {
   return (
     <div
       ref={playerRef}
-      className="fixed z-50 w-80 cursor-move"
+      className="fixed z-50 w-80 cursor-move touch-none"
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
       }}
       onMouseDown={handleMouseDown}
+      onTouchStart={handleTouchStart}
     >
       <div className="bg-card border-2 border-primary/30 rounded-lg shadow-2xl p-4 backdrop-blur-sm">
         {/* Header */}
@@ -130,6 +165,7 @@ export function FloatingRadioPlayer() {
           <div className="flex items-center gap-1">
             <button
               onClick={() => setIsMinimized(true)}
+              onTouchStart={(e) => e.stopPropagation()}
               className="p-1 hover:bg-primary/10 rounded transition-colors cursor-pointer"
               aria-label="Minimize"
             >
@@ -144,6 +180,7 @@ export function FloatingRadioPlayer() {
           <div className="flex items-center justify-center">
             <button
               onClick={togglePlay}
+              onTouchStart={(e) => e.stopPropagation()}
               className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full w-12 h-12 flex items-center justify-center transition-all shadow-lg cursor-pointer"
             >
               {isPlaying ? (
@@ -158,6 +195,7 @@ export function FloatingRadioPlayer() {
           <div className="flex items-center gap-2">
             <button
               onClick={toggleMute}
+              onTouchStart={(e) => e.stopPropagation()}
               className="p-1.5 hover:bg-primary/10 rounded transition-colors"
               aria-label={isMuted ? "Unmute" : "Mute"}
             >
@@ -183,6 +221,7 @@ export function FloatingRadioPlayer() {
                 onChange={handleVolumeChange}
                 className="absolute top-0 left-0 w-full h-2 rounded-lg appearance-none cursor-pointer volume-slider z-10 opacity-0"
                 onMouseDown={(e) => e.stopPropagation()}
+                onTouchStart={(e) => e.stopPropagation()}
               />
             </div>
             <span className="text-xs text-muted-foreground w-8 text-right">
