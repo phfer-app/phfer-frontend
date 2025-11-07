@@ -44,8 +44,20 @@ export default function ResetPasswordPage() {
       
       if (hasAccessToken && isRecoveryType) {
         setHasToken(true)
-        // O Supabase processa automaticamente o hash quando detectSessionInUrl está true
-        // Não precisamos extrair o token manualmente
+        
+        // Processar o hash manualmente para criar a sessão
+        // Isso evita problemas de sincronização de tempo
+        supabase.auth.getSession().then(({ data, error }) => {
+          if (error) {
+            console.warn('Aviso ao processar sessão:', error.message)
+            // Mesmo com erro, tentamos continuar se houver hash
+            if (hash) {
+              setHasToken(true)
+            }
+          } else if (data.session) {
+            setHasToken(true)
+          }
+        })
       } else {
         setError("Token de recuperação não encontrado. Por favor, solicite um novo link de recuperação.")
         setHasToken(false)
@@ -82,17 +94,43 @@ export default function ResetPasswordPage() {
 
     try {
       // O Supabase gerencia o reset de senha através do token no hash
-      // Quando o usuário acessa o link, o Supabase processa automaticamente o hash
-      // e cria uma sessão temporária. Podemos usar updateUser para atualizar a senha.
+      // Processar o hash manualmente para criar a sessão
+      const hash = window.location.hash
       
-      // Verificar se há uma sessão válida (criada pelo token no hash)
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+      // Extrair parâmetros do hash
+      const accessTokenMatch = hash.match(/access_token=([^&]+)/)
+      const refreshTokenMatch = hash.match(/refresh_token=([^&]+)/)
+      const expiresAtMatch = hash.match(/expires_at=([^&]+)/)
       
-      if (sessionError || !session) {
-        throw new Error("Token inválido ou expirado. Por favor, solicite um novo link de recuperação.")
+      const accessToken = accessTokenMatch ? decodeURIComponent(accessTokenMatch[1]) : null
+      const refreshToken = refreshTokenMatch ? decodeURIComponent(refreshTokenMatch[1]) : null
+      const expiresAt = expiresAtMatch ? parseInt(expiresAtMatch[1]) : null
+      
+      if (!accessToken) {
+        throw new Error("Token de recuperação não encontrado. Por favor, solicite um novo link.")
+      }
+
+      // Criar sessão manualmente usando o token do hash
+      // Isso evita problemas de sincronização de tempo
+      const { data: { session }, error: sessionError } = await supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken || ''
+      })
+      
+      if (sessionError) {
+        console.warn('Erro ao criar sessão:', sessionError.message)
+        // Mesmo com erro de sessão, tentamos atualizar a senha diretamente
+        // O Supabase pode aceitar o token mesmo sem sessão persistida
+      }
+      
+      if (!session && sessionError) {
+        // Se não conseguimos criar a sessão, ainda tentamos atualizar a senha
+        // O Supabase pode processar o token diretamente
+        console.warn('Sessão não criada, mas tentando atualizar senha com token')
       }
 
       // Atualizar a senha usando o Supabase
+      // O Supabase usa a sessão atual (criada pelo token no hash) para autenticar
       const { data: updateData, error: updateError } = await supabase.auth.updateUser({
         password: password
       })
@@ -258,7 +296,7 @@ export default function ResetPasswordPage() {
               <Button
                 type="submit"
                 className="w-full"
-                disabled={isLoading || !token}
+                disabled={isLoading || !hasToken}
               >
                 {isLoading ? (
                   <>
