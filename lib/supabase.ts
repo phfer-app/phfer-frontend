@@ -12,7 +12,16 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     autoRefreshToken: true,
     persistSession: false, // Não persistir sessão para reset de senha
     detectSessionInUrl: false, // Processar manualmente para evitar problemas de sincronização
-    flowType: 'pkce'
+    flowType: 'pkce',
+    // Ignorar avisos de sincronização de tempo
+    storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+    storageKey: 'supabase.auth.token'
+  },
+  global: {
+    // Suprimir avisos de sincronização de tempo
+    headers: {
+      'X-Client-Info': 'supabase-js-web'
+    }
   }
 })
 

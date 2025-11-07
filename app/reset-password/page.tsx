@@ -112,21 +112,33 @@ export default function ResetPasswordPage() {
 
       // Criar sessão manualmente usando o token do hash
       // Isso evita problemas de sincronização de tempo
-      const { data: { session }, error: sessionError } = await supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken || ''
-      })
+      // Ignoramos erros de sincronização de tempo e tentamos criar a sessão
+      let session = null
+      let sessionError = null
       
-      if (sessionError) {
-        console.warn('Erro ao criar sessão:', sessionError.message)
-        // Mesmo com erro de sessão, tentamos atualizar a senha diretamente
-        // O Supabase pode aceitar o token mesmo sem sessão persistida
+      try {
+        const result = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken || ''
+        })
+        session = result.data.session
+        sessionError = result.error
+        
+        // Se houver erro relacionado a sincronização de tempo, ignoramos
+        if (sessionError && (sessionError.message?.includes('future') || sessionError.message?.includes('clock'))) {
+          console.warn('Aviso de sincronização de tempo ignorado:', sessionError.message)
+          sessionError = null
+          // Tentamos obter a sessão novamente
+          const retry = await supabase.auth.getSession()
+          session = retry.data.session
+        }
+      } catch (err: any) {
+        console.warn('Erro ao criar sessão:', err.message)
+        // Mesmo com erro, tentamos atualizar a senha diretamente
       }
       
-      if (!session && sessionError) {
-        // Se não conseguimos criar a sessão, ainda tentamos atualizar a senha
-        // O Supabase pode processar o token diretamente
-        console.warn('Sessão não criada, mas tentando atualizar senha com token')
+      if (sessionError && !sessionError.message?.includes('future') && !sessionError.message?.includes('clock')) {
+        console.warn('Erro ao criar sessão:', sessionError.message)
       }
 
       // Atualizar a senha usando o Supabase
