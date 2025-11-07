@@ -101,15 +101,15 @@ export default function ChamadosPage() {
   const getStatusLabel = (status: string) => {
     switch (status) {
       case 'aberto':
-        return 'Aberto'
+        return t("tickets.status.aberto")
       case 'visto':
-        return 'Visto pelo Administrador'
+        return t("tickets.status.visto")
       case 'em_andamento':
-        return 'Em Andamento'
+        return t("tickets.status.em_andamento")
       case 'resolvido':
-        return 'Resolvido'
+        return t("tickets.status.resolvido")
       case 'fechado':
-        return 'Fechado'
+        return t("tickets.status.fechado")
       default:
         return status
     }
@@ -197,10 +197,10 @@ export default function ChamadosPage() {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold bg-linear-to-r from-primary via-secondary to-primary bg-clip-text text-transparent mb-2">
-                Meus Chamados
+                {t("tickets.title")}
               </h1>
               <p className="text-muted-foreground">
-                Gerencie seus chamados e solicitações de suporte
+                {t("tickets.subtitle")}
               </p>
             </div>
             <div className="flex gap-3">
@@ -211,14 +211,14 @@ export default function ChamadosPage() {
                 className="px-6 py-6 text-base font-semibold border border-border/50 hover:border-primary/50 cursor-pointer"
               >
                 <RefreshCw className={`h-5 w-5 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-                Atualizar
+                {t("tickets.update")}
               </Button>
               <Button
                 onClick={() => router.push("/solicitar-servicos")}
                 className="px-6 py-6 text-base font-semibold bg-linear-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground shadow-lg shadow-primary/20 cursor-pointer"
               >
                 <Plus className="h-5 w-5 mr-2" />
-                Novo Chamado
+                {t("tickets.new")}
               </Button>
             </div>
           </div>
@@ -228,7 +228,7 @@ export default function ChamadosPage() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
-                placeholder="Buscar chamados..."
+                placeholder={t("tickets.search")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 h-11"
@@ -240,28 +240,28 @@ export default function ChamadosPage() {
                 onClick={() => setFilterStatus("all")}
                 className="px-4"
               >
-                Todos
+                {t("tickets.filter.all")}
               </Button>
               <Button
                 variant={filterStatus === "aberto" ? "default" : "outline"}
                 onClick={() => setFilterStatus("aberto")}
                 className="px-4"
               >
-                Abertos
+                {t("tickets.filter.aberto")}
               </Button>
               <Button
                 variant={filterStatus === "em_andamento" ? "default" : "outline"}
                 onClick={() => setFilterStatus("em_andamento")}
                 className="px-4"
               >
-                Em Andamento
+                {t("tickets.filter.em_andamento")}
               </Button>
               <Button
                 variant={filterStatus === "resolvido" ? "default" : "outline"}
                 onClick={() => setFilterStatus("resolvido")}
                 className="px-4"
               >
-                Resolvidos
+                {t("tickets.filter.resolvido")}
               </Button>
             </div>
           </div>
@@ -277,7 +277,7 @@ export default function ChamadosPage() {
                 </div>
               </div>
               <h3 className="text-xl font-semibold text-foreground mb-2">
-                Carregando chamados...
+                {t("tickets.loading")}
               </h3>
             </div>
           ) : filteredChamados.length === 0 ? (
@@ -288,12 +288,12 @@ export default function ChamadosPage() {
                 </div>
               </div>
               <h3 className="text-xl font-semibold text-foreground mb-2">
-                Nenhum chamado encontrado
+                {t("tickets.empty")}
               </h3>
               <p className="text-muted-foreground mb-6">
                 {chamados.length === 0
-                  ? "Você ainda não possui chamados. Crie seu primeiro chamado!"
-                  : "Nenhum chamado corresponde aos filtros selecionados."
+                  ? t("tickets.empty.description")
+                  : t("tickets.empty.filtered")
                 }
               </p>
               {chamados.length === 0 && (
@@ -302,7 +302,7 @@ export default function ChamadosPage() {
                   className="px-6 py-6 text-base font-semibold bg-linear-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground shadow-lg shadow-primary/20 cursor-pointer"
                 >
                   <Plus className="h-5 w-5 mr-2" />
-                  Criar Primeiro Chamado
+                  {t("tickets.create_first")}
                 </Button>
               )}
             </div>
@@ -343,7 +343,7 @@ export default function ChamadosPage() {
                     className="shrink-0 flex items-center gap-2 cursor-pointer"
                   >
                     <Eye className="h-4 w-4" />
-                    Ver Detalhes
+                    {t("tickets.view_details")}
                   </Button>
                 </div>
               </div>
@@ -358,7 +358,7 @@ export default function ChamadosPage() {
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold">{selectedTicket?.titulo}</DialogTitle>
             <DialogDescription>
-              Visualize detalhes, comentários e histórico de atualizações do ticket
+              {t("tickets.dialog.title")}
             </DialogDescription>
           </DialogHeader>
 
@@ -367,7 +367,7 @@ export default function ChamadosPage() {
               {/* Informações do ticket */}
               <div className="space-y-4">
                 <div>
-                  <Label className="text-sm font-semibold mb-2 block">Descrição</Label>
+                  <Label className="text-sm font-semibold mb-2 block">{t("tickets.dialog.description")}</Label>
                   <p className="text-sm text-muted-foreground bg-muted/50 p-4 rounded-lg">
                     {selectedTicket.descricao}
                   </p>
@@ -375,26 +375,26 @@ export default function ChamadosPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-sm font-semibold mb-2 block">Status</Label>
+                    <Label className="text-sm font-semibold mb-2 block">{t("tickets.dialog.status")}</Label>
                     <Badge className={`${getStatusColor(selectedTicket.status)} text-xs font-medium px-2.5 py-1`}>
                       {getStatusLabel(selectedTicket.status)}
                     </Badge>
                   </div>
                   <div>
-                    <Label className="text-sm font-semibold mb-2 block">Prioridade</Label>
+                    <Label className="text-sm font-semibold mb-2 block">{t("tickets.dialog.priority")}</Label>
                     <Badge variant="outline" className="text-xs font-medium px-2.5 py-1">
-                      {selectedTicket.prioridade === 'alta' ? 'Alta' : 
-                       selectedTicket.prioridade === 'media' ? 'Média' : 'Baixa'}
+                      {selectedTicket.prioridade === 'alta' ? t("tickets.priority.alta") : 
+                       selectedTicket.prioridade === 'media' ? t("tickets.priority.media") : t("tickets.priority.baixa")}
                     </Badge>
                   </div>
                   <div>
-                    <Label className="text-sm font-semibold mb-2 block">Categoria</Label>
+                    <Label className="text-sm font-semibold mb-2 block">{t("tickets.dialog.category")}</Label>
                     <Badge variant="outline" className="text-xs font-medium px-2.5 py-1">
                       {selectedTicket.categoria}
                     </Badge>
                   </div>
                   <div>
-                    <Label className="text-sm font-semibold mb-2 block">Data de Criação</Label>
+                    <Label className="text-sm font-semibold mb-2 block">{t("tickets.dialog.created_at")}</Label>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Clock className="h-4 w-4" />
                       <span>{new Date(selectedTicket.created_at).toLocaleDateString('pt-BR', { 
@@ -413,15 +413,15 @@ export default function ChamadosPage() {
               <div className="pt-4 border-t border-border/50">
                 <div className="flex items-center gap-2 mb-4">
                   <History className="h-5 w-5 text-primary" />
-                  <Label className="text-sm font-semibold">Histórico de Atualizações</Label>
+                  <Label className="text-sm font-semibold">{t("tickets.dialog.history")}</Label>
                 </div>
                 {isLoadingComments ? (
                   <div className="text-center py-4 text-muted-foreground">
-                    Carregando histórico...
+                    {t("tickets.dialog.history.loading")}
                   </div>
                 ) : ticketHistory.length === 0 ? (
                   <div className="text-center py-4 text-muted-foreground text-sm">
-                    Nenhuma atualização de status registrada
+                    {t("tickets.dialog.history.empty")}
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -430,7 +430,7 @@ export default function ChamadosPage() {
                         <div className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
                         <div className="flex-1">
                           <p className="text-sm font-medium">
-                            Status alterado de <span className="text-muted-foreground">{item.old_status ? getStatusLabel(item.old_status) : 'N/A'}</span> para <span className="text-primary">{getStatusLabel(item.new_status)}</span>
+                            {t("tickets.dialog.history.changed")} <span className="text-muted-foreground">{item.old_status ? getStatusLabel(item.old_status) : 'N/A'}</span> {t("tickets.dialog.history.to")} <span className="text-primary">{getStatusLabel(item.new_status)}</span>
                           </p>
                           <p className="text-xs text-muted-foreground mt-1">
                             {new Date(item.created_at).toLocaleDateString('pt-BR', { 
@@ -452,17 +452,17 @@ export default function ChamadosPage() {
               <div className="pt-4 border-t border-border/50">
                 <div className="flex items-center gap-2 mb-4">
                   <MessageSquare className="h-5 w-5 text-primary" />
-                  <Label className="text-sm font-semibold">Comentários</Label>
+                  <Label className="text-sm font-semibold">{t("tickets.dialog.comments")}</Label>
                 </div>
                 
                 {/* Lista de comentários */}
                 {isLoadingComments ? (
                   <div className="text-center py-4 text-muted-foreground">
-                    Carregando comentários...
+                    {t("tickets.dialog.comments.loading")}
                   </div>
                 ) : ticketComments.length === 0 ? (
                   <div className="text-center py-4 text-muted-foreground text-sm">
-                    Nenhum comentário ainda. Seja o primeiro a comentar!
+                    {t("tickets.dialog.comments.empty")}
                   </div>
                 ) : (
                   <div className="space-y-3 mb-4 max-h-60 overflow-y-auto">
@@ -471,7 +471,7 @@ export default function ChamadosPage() {
                         <p className="text-sm text-foreground mb-2">{comment.comment}</p>
                         <div className="flex items-center justify-between">
                           <span className="text-xs text-muted-foreground">
-                            {comment.user?.name || 'Usuário'}
+                            {comment.user?.name || t("nav.usuario_logado")}
                           </span>
                           <span className="text-xs text-muted-foreground">
                             {new Date(comment.created_at).toLocaleDateString('pt-BR', { 
@@ -494,15 +494,15 @@ export default function ChamadosPage() {
                     <div className="bg-muted/50 border border-border/50 rounded-lg p-4 text-center">
                       <p className="text-sm text-muted-foreground">
                         {selectedTicket.status === 'resolvido' 
-                          ? 'Este ticket foi resolvido. Não é possível adicionar novos comentários.'
-                          : 'Este ticket foi fechado. Não é possível adicionar novos comentários.'}
+                          ? t("tickets.dialog.comments.resolved")
+                          : t("tickets.dialog.comments.closed")}
                       </p>
                     </div>
                   </div>
                 ) : (
                   <div className="space-y-2">
                     <Textarea
-                      placeholder="Adicione um comentário..."
+                      placeholder={t("tickets.dialog.comments.placeholder")}
                       value={newComment}
                       onChange={(e) => setNewComment(e.target.value)}
                       className="min-h-[100px]"
@@ -516,12 +516,12 @@ export default function ChamadosPage() {
                       {isAddingComment ? (
                         <>
                           <RefreshCw className="h-4 w-4 animate-spin" />
-                          Adicionando...
+                          {t("tickets.dialog.comments.adding")}
                         </>
                       ) : (
                         <>
                           <Send className="h-4 w-4" />
-                          Adicionar Comentário
+                          {t("tickets.dialog.comments.add")}
                         </>
                       )}
                     </Button>
@@ -536,7 +536,7 @@ export default function ChamadosPage() {
               variant="outline"
               onClick={() => setIsTicketDialogOpen(false)}
             >
-              Fechar
+              {t("tickets.dialog.close")}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -50,8 +50,8 @@ export default function SolicitarServicosPage() {
 
       if (result.success) {
         toast({
-          title: "Chamado criado!",
-          description: result.message || "Seu chamado foi criado com sucesso. Em breve entraremos em contato.",
+          title: t("services.success.title"),
+          description: result.message || t("services.success.description"),
         })
 
         // Limpar formulário
@@ -99,13 +99,13 @@ export default function SolicitarServicosPage() {
             className="mb-4 text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Voltar
+            {t("services.back")}
           </Button>
           <h1 className="text-3xl md:text-4xl font-bold bg-linear-to-r from-primary via-secondary to-primary bg-clip-text text-transparent mb-2">
-            Solicitar Serviços
+            {t("services.title")}
           </h1>
           <p className="text-muted-foreground">
-            Descreva sua necessidade e entraremos em contato o mais breve possível
+            {t("services.subtitle")}
           </p>
         </div>
 
@@ -115,12 +115,12 @@ export default function SolicitarServicosPage() {
             {/* Título */}
             <div className="space-y-2">
               <Label htmlFor="titulo" className="text-sm font-medium">
-                Título do Chamado *
+                {t("services.form.title")}
               </Label>
               <Input
                 id="titulo"
                 type="text"
-                placeholder="Ex: Desenvolvimento de site institucional"
+                placeholder={t("services.form.title.placeholder")}
                 value={titulo}
                 onChange={(e) => setTitulo(e.target.value)}
                 required
@@ -131,7 +131,7 @@ export default function SolicitarServicosPage() {
             {/* Categoria */}
             <div className="space-y-2">
               <Label htmlFor="categoria" className="text-sm font-medium">
-                Categoria *
+                {t("services.form.category")}
               </Label>
               <select
                 id="categoria"
@@ -140,24 +140,24 @@ export default function SolicitarServicosPage() {
                 required
                 className="w-full h-11 px-3 rounded-lg border border-border/50 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
-                <option value="">Selecione uma categoria</option>
-                <option value="desenvolvimento_web">Desenvolvimento Web</option>
-                <option value="desenvolvimento_mobile">Desenvolvimento Mobile</option>
-                <option value="design">Design</option>
-                <option value="consultoria">Consultoria</option>
-                <option value="manutencao">Manutenção</option>
-                <option value="outro">Outro</option>
+                <option value="">{t("services.form.category.select")}</option>
+                <option value="desenvolvimento_web">{t("services.form.category.web")}</option>
+                <option value="desenvolvimento_mobile">{t("services.form.category.mobile")}</option>
+                <option value="design">{t("services.form.category.design")}</option>
+                <option value="consultoria">{t("services.form.category.consultoria")}</option>
+                <option value="manutencao">{t("services.form.category.manutencao")}</option>
+                <option value="outro">{t("services.form.category.outro")}</option>
               </select>
             </div>
 
             {/* Descrição */}
             <div className="space-y-2">
               <Label htmlFor="descricao" className="text-sm font-medium">
-                Descrição Detalhada *
+                {t("services.form.description")}
               </Label>
               <textarea
                 id="descricao"
-                placeholder="Descreva detalhadamente sua necessidade, requisitos, prazos e qualquer informação relevante..."
+                placeholder={t("services.form.description.placeholder")}
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
                 required
@@ -169,7 +169,7 @@ export default function SolicitarServicosPage() {
             {/* Prioridade */}
             <div className="space-y-2">
               <Label htmlFor="prioridade" className="text-sm font-medium">
-                Prioridade
+                {t("services.form.priority")}
               </Label>
               <div className="flex gap-4">
                 <label className="flex items-center gap-2 cursor-pointer">
@@ -181,7 +181,7 @@ export default function SolicitarServicosPage() {
                     onChange={(e) => setPrioridade(e.target.value)}
                     className="w-4 h-4 text-primary"
                   />
-                  <span className="text-sm">Baixa</span>
+                  <span className="text-sm">{t("services.form.priority.baixa")}</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
@@ -192,7 +192,7 @@ export default function SolicitarServicosPage() {
                     onChange={(e) => setPrioridade(e.target.value)}
                     className="w-4 h-4 text-primary"
                   />
-                  <span className="text-sm">Média</span>
+                  <span className="text-sm">{t("services.form.priority.media")}</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
@@ -203,7 +203,7 @@ export default function SolicitarServicosPage() {
                     onChange={(e) => setPrioridade(e.target.value)}
                     className="w-4 h-4 text-primary"
                   />
-                  <span className="text-sm">Alta</span>
+                  <span className="text-sm">{t("services.form.priority.alta")}</span>
                 </label>
               </div>
             </div>
@@ -217,12 +217,12 @@ export default function SolicitarServicosPage() {
               {isLoading ? (
                 <span className="flex items-center gap-2">
                   <span className="h-4 w-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                  Enviando...
+                  {t("services.form.submitting")}
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
                   <Send className="h-4 w-4" />
-                  Enviar Solicitação
+                  {t("services.form.submit")}
                 </span>
               )}
             </Button>
