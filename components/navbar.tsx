@@ -452,7 +452,7 @@ export function Navbar() {
                 <DropdownMenuContent align="end" className="w-56 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl">
                   <div className="px-3 py-2">
                     <p className="text-sm font-medium">{userEmail}</p>
-                    <p className="text-xs text-muted-foreground">Usuário logado</p>
+                    <p className="text-xs text-muted-foreground">{t("nav.usuario_logado")}</p>
                   </div>
                   <DropdownMenuSeparator />
                   {isAdmin && (
@@ -696,7 +696,7 @@ export function Navbar() {
                         <div className="px-3 py-3 rounded-lg border-2 border-border/30 bg-muted/20">
                           <div className="flex items-center gap-2 mb-2">
                             <User className="h-4 w-4 text-primary" />
-                            <span className="text-xs font-medium text-muted-foreground">Usuário logado</span>
+                            <span className="text-xs font-medium text-muted-foreground">{t("nav.usuario_logado")}</span>
                           </div>
                           <p className="text-sm font-medium text-foreground truncate">{userEmail}</p>
                         </div>

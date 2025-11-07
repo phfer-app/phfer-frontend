@@ -26,6 +26,7 @@ const translations = {
     "nav.solicitar_servicos": "Solicitar Serviços",
     "nav.painel_administrativo": "Painel Administrativo",
     "nav.desconectar": "Desconectar",
+    "nav.usuario_logado": "Usuário logado",
     
     // Hero
     "hero.title1": "Especialista em",
@@ -360,6 +361,7 @@ const translations = {
     "nav.solicitar_servicos": "Request Services",
     "nav.painel_administrativo": "Admin Panel",
     "nav.desconectar": "Logout",
+    "nav.usuario_logado": "Logged in user",
     
     // Hero
     "hero.title1": "Specialist in",
