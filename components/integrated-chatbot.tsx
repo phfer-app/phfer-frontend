@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { Send, Bot, User, Loader2 } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'
 
@@ -17,6 +18,7 @@ interface Message {
 
 export function IntegratedChatbot() {
   const { language } = useLanguage()
+  const isMobile = useIsMobile()
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
@@ -256,9 +258,13 @@ export function IntegratedChatbot() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder={language === 'pt' ? 'Digite sua mensagem para o PedroBot...' : 'Type your message to PedroBot...'}
+              placeholder={
+                isMobile 
+                  ? (language === 'pt' ? 'Digite aqui...' : 'Type here...')
+                  : (language === 'pt' ? 'Digite sua mensagem para o PedroBot...' : 'Type your message to PedroBot...')
+              }
               disabled={isLoading}
-              className="w-full pr-12 rounded-lg border-2 focus:border-primary/50 transition-colors bg-background/80 backdrop-blur-sm"
+              className="w-full pr-12 rounded-lg border-2 focus:border-primary/50 transition-colors bg-background/80 backdrop-blur-sm placeholder:text-xs md:placeholder:text-sm"
               maxLength={1000}
             />
             <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground/70 font-medium">
@@ -268,8 +274,8 @@ export function IntegratedChatbot() {
           <Button
             onClick={sendMessage}
             disabled={isLoading || !input.trim()}
-            size="lg"
-            className={`shrink-0 rounded-lg h-11 px-6 bg-linear-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg transition-all duration-200 ${
+            size="icon"
+            className={`shrink-0 rounded-lg h-11 w-11 bg-linear-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg transition-all duration-200 ${
               !isLoading && input.trim() ? 'cursor-pointer hover:scale-105' : 'opacity-50'
             }`}
             aria-label={language === 'pt' ? 'Enviar mensagem' : 'Send message'}
@@ -277,10 +283,7 @@ export function IntegratedChatbot() {
             {isLoading ? (
               <Loader2 className="h-5 w-5 animate-spin" />
             ) : (
-              <>
-                <Send className="h-5 w-5 mr-2" />
-                {language === 'pt' ? 'Enviar' : 'Send'}
-              </>
+              <Send className="h-5 w-5" />
             )}
           </Button>
         </div>

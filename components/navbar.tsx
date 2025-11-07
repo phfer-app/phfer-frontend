@@ -26,6 +26,8 @@ const navLinks = [
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [isMobileMenuExpanded, setIsMobileMenuExpanded] = useState(false)
+  const [isLanguageExpanded, setIsLanguageExpanded] = useState(false)
+  const [isThemeExpanded, setIsThemeExpanded] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
@@ -267,15 +269,28 @@ export function Navbar() {
             <Button 
               variant="ghost" 
               size="sm" 
-              className="rounded-lg" 
+              className="rounded-lg hover:bg-transparent! hover:text-foreground! active:bg-transparent! transition-all duration-300 group cursor-pointer" 
               onClick={() => {
                 setIsOpen(!isOpen)
                 if (isOpen) {
                   setIsMobileMenuExpanded(false)
+                  setIsLanguageExpanded(false)
+                  setIsThemeExpanded(false)
                 }
               }}
             >
-              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              <div className="relative w-5 h-5">
+                <Menu 
+                  className={`h-5 w-5 absolute inset-0 transition-all duration-300 ${
+                    isOpen ? "opacity-0 scale-0" : "opacity-100 scale-100 group-hover:scale-110"
+                  }`}
+                />
+                <X 
+                  className={`h-5 w-5 absolute inset-0 transition-all duration-300 ${
+                    isOpen ? "opacity-100 scale-100 group-hover:scale-110" : "opacity-0 scale-0"
+                  }`}
+                />
+              </div>
             </Button>
           </div>
         </div>
@@ -285,25 +300,29 @@ export function Navbar() {
           <>
             {/* Backdrop to close menu */}
             <div 
-              className="md:hidden fixed inset-0 z-30 bg-black/40"
+              className="md:hidden fixed inset-0 z-30 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300"
               onClick={() => {
                 setIsOpen(false)
                 setIsMobileMenuExpanded(false)
+                setIsLanguageExpanded(false)
+                setIsThemeExpanded(false)
               }}
             />
             
-            {/* Menu Drawer from Right */}
-            <div className="md:hidden fixed right-0 top-0 h-screen w-64 z-40 bg-card border-l border-border/50 backdrop-blur-sm animate-in slide-in-from-right-64 duration-300 shadow-2xl shadow-black/20">
+            {/* Menu Drawer from Right - Modernizado */}
+            <div className="md:hidden fixed right-0 top-0 h-screen w-[280px] z-40 bg-linear-to-b from-background via-background to-background/95 backdrop-blur-xl border-l border-border/50 shadow-2xl shadow-black/40 animate-in slide-in-from-right duration-300">
               <div className="flex flex-col h-full">
                 {/* Close Button */}
                 <div className="flex items-center justify-end p-4 border-b border-border/30">
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="rounded-lg" 
+                    className="rounded-lg h-9 w-9 hover:bg-transparent! hover:text-foreground! active:bg-transparent! cursor-pointer" 
                     onClick={() => {
                       setIsOpen(false)
                       setIsMobileMenuExpanded(false)
+                      setIsLanguageExpanded(false)
+                      setIsThemeExpanded(false)
                     }}
                   >
                     <X className="h-5 w-5" />
@@ -311,65 +330,70 @@ export function Navbar() {
                 </div>
 
                 {/* Navigation Links */}
-                <div className="flex-1 px-4 py-8 space-y-3 overflow-y-auto">
-                  {/* Inicio Button - Expandable */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between w-full px-6 py-4 text-lg font-semibold rounded-xl transition-all duration-200 border text-primary bg-primary/10 hover:bg-primary/20 border-primary/20 hover:border-primary/40">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleNavClick(e, "home")
-                        }}
-                        className="flex-1 text-left cursor-pointer"
-                      >
-                        {t("nav.inicio")}
-                      </button>
+                <div className="flex-1 px-4 py-4 space-y-1.5 overflow-y-auto">
+                  {/* Botão Principal - Mostra o item selecionado ou Início */}
+                  <div className="space-y-1.5">
+                    {currentRoute === "home" ? (
                       <button
                         onClick={(e) => {
                           e.stopPropagation()
                           setIsMobileMenuExpanded(!isMobileMenuExpanded)
                         }}
-                        className="ml-2 p-1 hover:bg-primary/20 rounded transition-colors cursor-pointer"
-                        aria-label={isMobileMenuExpanded ? "Recolher menu" : "Expandir menu"}
+                        className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 text-primary border-primary/50 bg-transparent hover:bg-primary/5 cursor-pointer"
                       >
+                        <span>{t("nav.inicio")}</span>
                         <ChevronDown 
-                          className={`h-5 w-5 transition-transform duration-200 ${
+                          className={`h-3.5 w-3.5 transition-transform duration-300 ${
                             isMobileMenuExpanded ? "rotate-180" : ""
                           }`}
                         />
                       </button>
-                    </div>
+                    ) : (
+                      <>
+                        {/* Mostra o botão selecionado no topo */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setIsMobileMenuExpanded(!isMobileMenuExpanded)
+                          }}
+                          className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 text-primary border-primary/50 bg-transparent hover:bg-primary/5 cursor-pointer"
+                        >
+                          <span>{t(navLinks.find(l => l.route === currentRoute)?.labelKey || "nav.inicio")}</span>
+                          <ChevronDown 
+                            className={`h-3.5 w-3.5 transition-transform duration-300 ${
+                              isMobileMenuExpanded ? "rotate-180" : ""
+                            }`}
+                          />
+                        </button>
+                      </>
+                    )}
                     
                     {/* Expanded Menu Items */}
                     <div 
-                      className={`overflow-hidden transition-all duration-300 space-y-2 ${
+                      className={`overflow-hidden transition-all duration-300 space-y-1.5 pl-3 ${
                         isMobileMenuExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
                       }`}
                     >
-                      {navLinks.filter(link => link.route !== "home").map((link) => (
-                    <button
-                      key={link.route}
-                      onClick={(e) => handleNavClick(e, link.route)}
-                          className={`flex items-center w-full px-6 py-4 text-lg font-semibold rounded-xl transition-all duration-200 group border cursor-pointer ml-4 ${
-                        currentRoute === link.route
-                          ? "text-primary bg-primary/20 border-primary/40"
-                          : "text-primary bg-primary/10 hover:bg-primary/20 border-primary/20 hover:border-primary/40"
-                      }`}
-                    >
-                      <span className="group-hover:translate-x-1 transition-transform">{t(link.labelKey)}</span>
-                    </button>
-                  ))}
+                      {navLinks.filter(link => link.route !== currentRoute).map((link) => (
+                        <button
+                          key={link.route}
+                          onClick={(e) => handleNavClick(e, link.route)}
+                          className="flex items-center w-full px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 group border-2 cursor-pointer text-foreground border-transparent hover:border-border/30 hover:text-primary"
+                        >
+                          <span className="group-hover:translate-x-1 transition-transform">{t(link.labelKey)}</span>
+                        </button>
+                      ))}
                     </div>
                   </div>
 
                   {/* Login and Cadastre-se Buttons */}
-                  <div className="space-y-2 pt-2">
+                  <div className="space-y-1.5 pt-2">
                     <button
                       onClick={() => {
                         setIsOpen(false)
                         router.push("/soon")
                       }}
-                      className="flex items-center w-full px-6 py-4 text-lg font-semibold rounded-xl transition-all duration-200 border cursor-pointer text-primary bg-primary/10 hover:bg-primary/20 border-primary/20 hover:border-primary/40"
+                      className="flex items-center justify-center w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-foreground border-border/30 hover:border-primary/30 bg-transparent hover:bg-muted/30"
                     >
                       {t("nav.login")}
                     </button>
@@ -378,99 +402,170 @@ export function Navbar() {
                         setIsOpen(false)
                         router.push("/soon")
                       }}
-                      className="flex items-center w-full px-6 py-4 text-lg font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl transition-all duration-200 cursor-pointer"
+                      className="flex items-center justify-center w-full px-3 py-2 text-sm font-semibold bg-linear-to-r from-primary to-primary/90 text-primary-foreground hover:from-primary/90 hover:to-primary rounded-lg transition-all duration-200 cursor-pointer shadow-md shadow-primary/20"
                     >
                       {t("nav.cadastre_se")}
                     </button>
                   </div>
                 </div>
 
-                {/* Controls */}
-                <div className="px-4 py-6 border-t border-border/30 space-y-3">
-                  {/* Language Selector */}
-                  <div className="space-y-2">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide px-2">{language === "pt" ? "Idioma" : "Language"}</p>
+                {/* Controls com Dropdowns */}
+                <div className="px-4 py-3 border-t border-border/30 space-y-2 bg-background/50">
+                  {/* Language Dropdown */}
+                  <div className="space-y-1.5">
                     <button
-                      onClick={() => setLanguage("pt")}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer ${
-                        language === "pt"
-                          ? "bg-primary/20 text-primary border border-primary/50"
-                          : "text-muted-foreground hover:bg-muted border border-transparent"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setIsLanguageExpanded(!isLanguageExpanded)
+                      }}
+                      className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 border-border/30 hover:border-primary/40 bg-transparent hover:bg-muted/30 cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <Languages className="h-4 w-4 text-muted-foreground" />
+                        <div className="flex flex-col text-left">
+                          <span className="text-xs font-medium">{language === "pt" ? "Português" : "English"}</span>
+                          <span className="text-[10px] text-muted-foreground">{language === "pt" ? "Language" : "Idioma"}</span>
+                        </div>
+                      </div>
+                      <ChevronDown 
+                        className={`h-3.5 w-3.5 transition-transform duration-300 ${
+                          isLanguageExpanded ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                    
+                    {/* Expanded Language Options */}
+                    <div 
+                      className={`overflow-hidden transition-all duration-300 space-y-1.5 pl-3 ${
+                        isLanguageExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
                       }`}
                     >
-                      <span className="text-xl">🇧🇷</span>
-                      <div className="flex flex-col">
-                        <span className="font-medium">Português</span>
-                        <span className="text-xs text-muted-foreground">Portuguese</span>
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => setLanguage("en")}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer ${
-                        language === "en"
-                          ? "bg-primary/20 text-primary border border-primary/50"
-                          : "text-muted-foreground hover:bg-muted border border-transparent"
-                      }`}
-                    >
-                      <span className="text-xl">🇺🇸</span>
-                      <div className="flex flex-col">
-                        <span className="font-medium">English</span>
-                        <span className="text-xs text-muted-foreground">Inglês</span>
-                      </div>
-                    </button>
+                      <button
+                        onClick={() => {
+                          setLanguage("pt")
+                          setIsLanguageExpanded(false)
+                        }}
+                        className={`flex items-center w-full px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 border-2 cursor-pointer ${
+                          language === "pt"
+                            ? "text-primary border-primary/50 bg-transparent"
+                            : "text-foreground border-transparent hover:border-border/30 hover:text-primary"
+                        }`}
+                      >
+                        <span className="text-base mr-2">🇧🇷</span>
+                        <div className="flex flex-col text-left">
+                          <span className="text-xs font-medium">Português</span>
+                          <span className="text-[10px] text-muted-foreground">Portuguese</span>
+                        </div>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setLanguage("en")
+                          setIsLanguageExpanded(false)
+                        }}
+                        className={`flex items-center w-full px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 border-2 cursor-pointer ${
+                          language === "en"
+                            ? "text-primary border-primary/50 bg-transparent"
+                            : "text-foreground border-transparent hover:border-border/30 hover:text-primary"
+                        }`}
+                      >
+                        <span className="text-base mr-2">🇺🇸</span>
+                        <div className="flex flex-col text-left">
+                          <span className="text-xs font-medium">English</span>
+                          <span className="text-[10px] text-muted-foreground">Inglês</span>
+                        </div>
+                      </button>
+                    </div>
                   </div>
 
-                  {/* Theme Toggle */}
-                  <div className="space-y-2">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide px-2">{language === "pt" ? "Tema" : "Theme"}</p>
+                  {/* Theme Dropdown */}
+                  <div className="space-y-1.5">
                     <button
-                      onClick={() => setTheme("light")}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer ${
-                        theme === "light"
-                          ? "bg-primary/20 text-primary border border-primary/50"
-                          : "text-muted-foreground hover:bg-muted border border-transparent"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setIsThemeExpanded(!isThemeExpanded)
+                      }}
+                      className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 border-border/30 hover:border-primary/40 bg-transparent hover:bg-muted/30 cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <Palette className="h-4 w-4 text-muted-foreground" />
+                        <div className="flex flex-col text-left">
+                          <span className="text-xs font-medium">
+                            {theme === "light" ? "Claro" : theme === "dark" ? "Escuro" : "Sistema"}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground">{language === "pt" ? "Theme" : "Tema"}</span>
+                        </div>
+                      </div>
+                      <ChevronDown 
+                        className={`h-3.5 w-3.5 transition-transform duration-300 ${
+                          isThemeExpanded ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                    
+                    {/* Expanded Theme Options */}
+                    <div 
+                      className={`overflow-hidden transition-all duration-300 space-y-1.5 pl-3 ${
+                        isThemeExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
                       }`}
                     >
-                      <div className="w-5 h-5 rounded-full bg-yellow-400 border border-yellow-500/30 flex items-center justify-center">
-                        <span className="text-xs">☀️</span>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="font-medium">Claro</span>
-                        <span className="text-xs text-muted-foreground">Light</span>
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => setTheme("dark")}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer ${
-                        theme === "dark"
-                          ? "bg-primary/20 text-primary border border-primary/50"
-                          : "text-muted-foreground hover:bg-muted border border-transparent"
-                      }`}
-                    >
-                      <div className="w-5 h-5 rounded-full bg-slate-700 border border-slate-600/30 flex items-center justify-center">
-                        <span className="text-xs">🌙</span>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="font-medium">Escuro</span>
-                        <span className="text-xs text-muted-foreground">Dark</span>
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => setTheme("system")}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer ${
-                        theme === "system"
-                          ? "bg-primary/20 text-primary border border-primary/50"
-                          : "text-muted-foreground hover:bg-muted border border-transparent"
-                      }`}
-                    >
-                      <div className="w-5 h-5 rounded-full bg-linear-to-br from-yellow-400 to-slate-700 border border-border/30 flex items-center justify-center">
-                        <span className="text-xs">💻</span>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="font-medium">Sistema</span>
-                        <span className="text-xs text-muted-foreground">System</span>
-                      </div>
-                    </button>
+                      <button
+                        onClick={() => {
+                          setTheme("light")
+                          setIsThemeExpanded(false)
+                        }}
+                        className={`flex items-center w-full px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 border-2 cursor-pointer ${
+                          theme === "light"
+                            ? "text-primary border-primary/50 bg-transparent"
+                            : "text-foreground border-transparent hover:border-border/30 hover:text-primary"
+                        }`}
+                      >
+                        <div className="w-4 h-4 rounded-full bg-yellow-400 border border-yellow-500/30 flex items-center justify-center mr-2">
+                          <span className="text-[10px]">☀️</span>
+                        </div>
+                        <div className="flex flex-col text-left">
+                          <span className="text-xs font-medium">Claro</span>
+                          <span className="text-[10px] text-muted-foreground">Light</span>
+                        </div>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setTheme("dark")
+                          setIsThemeExpanded(false)
+                        }}
+                        className={`flex items-center w-full px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 border-2 cursor-pointer ${
+                          theme === "dark"
+                            ? "text-primary border-primary/50 bg-transparent"
+                            : "text-foreground border-transparent hover:border-border/30 hover:text-primary"
+                        }`}
+                      >
+                        <div className="w-4 h-4 rounded-full bg-slate-700 border border-slate-600/30 flex items-center justify-center mr-2">
+                          <span className="text-[10px]">🌙</span>
+                        </div>
+                        <div className="flex flex-col text-left">
+                          <span className="text-xs font-medium">Escuro</span>
+                          <span className="text-[10px] text-muted-foreground">Dark</span>
+                        </div>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setTheme("system")
+                          setIsThemeExpanded(false)
+                        }}
+                        className={`flex items-center w-full px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 border-2 cursor-pointer ${
+                          theme === "system"
+                            ? "text-primary border-primary/50 bg-transparent"
+                            : "text-foreground border-transparent hover:border-border/30 hover:text-primary"
+                        }`}
+                      >
+                        <div className="w-4 h-4 rounded-full bg-linear-to-br from-yellow-400 to-slate-700 border border-border/30 flex items-center justify-center mr-2">
+                          <span className="text-[10px]">💻</span>
+                        </div>
+                        <div className="flex flex-col text-left">
+                          <span className="text-xs font-medium">Sistema</span>
+                          <span className="text-[10px] text-muted-foreground">System</span>
+                        </div>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

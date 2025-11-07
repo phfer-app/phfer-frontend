@@ -192,30 +192,37 @@ export function Chatbot() {
           </div>
 
           {/* Input */}
-          <div className="p-4 border-t bg-background flex gap-2">
-            <Input
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Digite sua mensagem..."
-              disabled={isLoading}
-              className="flex-1"
-              maxLength={1000}
-            />
-            <Button
-              onClick={sendMessage}
-              disabled={isLoading || !input.trim()}
-              size="icon"
-              className="shrink-0"
-              aria-label="Enviar mensagem"
-            >
-              {isLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Send className="h-4 w-4" />
-              )}
-            </Button>
+          <div className="p-4 border-t bg-background">
+            <div className="flex gap-2 items-center">
+              <div className="flex-1 relative">
+                <Input
+                  ref={inputRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Digite sua mensagem..."
+                  disabled={isLoading}
+                  className="flex-1 pr-12 text-sm md:text-base placeholder:text-xs md:placeholder:text-sm h-9"
+                  maxLength={1000}
+                />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground/70 font-medium pointer-events-none">
+                  {input.length}/1000
+                </div>
+              </div>
+              <Button
+                onClick={sendMessage}
+                disabled={isLoading || !input.trim()}
+                size="icon"
+                className="shrink-0 h-9 w-9"
+                aria-label="Enviar mensagem"
+              >
+                {isLoading ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Send className="h-3.5 w-3.5" />
+                )}
+              </Button>
+            </div>
           </div>
         </Card>
       )}

@@ -257,8 +257,9 @@ export function HeroSection() {
                   <span className="bg-linear-to-r from-primary via-secondary to-primary bg-clip-text text-transparent min-h-[1.2em] inline-block">
                     {displayText || rotatingWords[language][0]}
                     <span className="animate-pulse text-primary ml-2">|</span>
-                  </span>{" "}
-                  inovadores!
+                  </span>
+                  <br className="md:hidden" />{" "}
+                  <span className="md:inline">inovadores!</span>
                 </>
               ) : (
                 <>
@@ -266,8 +267,9 @@ export function HeroSection() {
                   <span className="bg-linear-to-r from-primary via-secondary to-primary bg-clip-text text-transparent min-h-[1.2em] inline-block">
                     {displayText || rotatingWords[language][0]}
                     <span className="animate-pulse text-primary ml-2">|</span>
-                  </span>{" "}
-                  innovative!
+                  </span>
+                  <br className="md:hidden" />{" "}
+                  <span className="md:inline">innovative!</span>
                 </>
               )}
             </span>
