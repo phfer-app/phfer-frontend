@@ -347,6 +347,35 @@ const translations = {
     // Admin Panel
     "admin.title": "Painel Administrativo",
     "admin.subtitle": "Gerencie usuários, tickets e administradores",
+    
+    // Admin Tabs
+    "admin.tabs.usuarios": "Usuários",
+    "admin.tabs.usuarios_short": "Usu.",
+    "admin.tabs.tickets": "Tickets",
+    "admin.tabs.tickets_short": "Tick.",
+    "admin.tabs.administradores": "Administradores",
+    "admin.tabs.administradores_short": "Admin.",
+    
+    // Users Tab
+    "admin.users.search": "Buscar usuários...",
+    "admin.users.update": "Atualizar",
+    "admin.users.table.name": "Nome",
+    "admin.users.table.email": "E-mail",
+    "admin.users.table.email_verified": "Email Verificado",
+    "admin.users.table.created_at": "Data de Cadastro",
+    
+    // Tickets Tab
+    "admin.tickets.search": "Buscar tickets...",
+    "admin.tickets.update": "Atualizar",
+    "admin.tickets.open": "Abrir Ticket",
+    
+    // Admins Tab
+    "admin.admins.add_title": "Adicionar Administrador",
+    "admin.admins.add_button": "Adicionar",
+    "admin.admins.table.email": "E-mail",
+    "admin.admins.table.type": "Tipo",
+    "admin.admins.table.date": "Data",
+    "admin.admins.table.actions": "Ações",
   },
   en: {
     // Navigation
@@ -682,6 +711,35 @@ const translations = {
     // Admin Panel
     "admin.title": "Admin Panel",
     "admin.subtitle": "Manage users, tickets and administrators",
+    
+    // Admin Tabs
+    "admin.tabs.usuarios": "Users",
+    "admin.tabs.usuarios_short": "Us.",
+    "admin.tabs.tickets": "Tickets",
+    "admin.tabs.tickets_short": "Tick.",
+    "admin.tabs.administradores": "Administrators",
+    "admin.tabs.administradores_short": "Admin.",
+    
+    // Users Tab
+    "admin.users.search": "Search users...",
+    "admin.users.update": "Update",
+    "admin.users.table.name": "Name",
+    "admin.users.table.email": "Email",
+    "admin.users.table.email_verified": "Email Verified",
+    "admin.users.table.created_at": "Registration Date",
+    
+    // Tickets Tab
+    "admin.tickets.search": "Search tickets...",
+    "admin.tickets.update": "Update",
+    "admin.tickets.open": "Open Ticket",
+    
+    // Admins Tab
+    "admin.admins.add_title": "Add Administrator",
+    "admin.admins.add_button": "Add",
+    "admin.admins.table.email": "Email",
+    "admin.admins.table.type": "Type",
+    "admin.admins.table.date": "Date",
+    "admin.admins.table.actions": "Actions",
   },
 }
 

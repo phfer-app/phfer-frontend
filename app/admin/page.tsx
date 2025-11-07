@@ -361,19 +361,19 @@ export default function AdminPage() {
           <TabsList className="grid w-full grid-cols-3 mb-4 md:mb-6 h-auto">
             <TabsTrigger value="users" className="flex items-center justify-center gap-1.5 md:gap-2 cursor-pointer text-xs md:text-sm px-2 md:px-4 py-2 md:py-3">
               <Users className="h-3.5 w-3.5 md:h-4 md:w-4" />
-              <span className="hidden sm:inline">Usuários</span>
-              <span className="sm:hidden">Usu.</span>
+              <span className="hidden sm:inline">{t("admin.tabs.usuarios")}</span>
+              <span className="sm:hidden">{t("admin.tabs.usuarios_short")}</span>
             </TabsTrigger>
             <TabsTrigger value="tickets" className="flex items-center justify-center gap-1.5 md:gap-2 cursor-pointer text-xs md:text-sm px-2 md:px-4 py-2 md:py-3">
               <Ticket className="h-3.5 w-3.5 md:h-4 md:w-4" />
-              <span className="hidden sm:inline">Tickets</span>
-              <span className="sm:hidden">Tick.</span>
+              <span className="hidden sm:inline">{t("admin.tabs.tickets")}</span>
+              <span className="sm:hidden">{t("admin.tabs.tickets_short")}</span>
             </TabsTrigger>
             {isOwner && (
               <TabsTrigger value="admins" className="flex items-center justify-center gap-1.5 md:gap-2 cursor-pointer text-xs md:text-sm px-2 md:px-4 py-2 md:py-3">
                 <Shield className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                <span className="hidden sm:inline">Administradores</span>
-                <span className="sm:hidden">Admin.</span>
+                <span className="hidden sm:inline">{t("admin.tabs.administradores")}</span>
+                <span className="sm:hidden">{t("admin.tabs.administradores_short")}</span>
               </TabsTrigger>
             )}
           </TabsList>
@@ -384,7 +384,7 @@ export default function AdminPage() {
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
-                  placeholder="Buscar usuários..."
+                  placeholder={t("admin.users.search")}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -396,7 +396,7 @@ export default function AdminPage() {
                 className="flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
               >
                 <RefreshCw className="h-4 w-4" />
-                Atualizar
+                {t("admin.users.update")}
               </Button>
             </div>
 
@@ -406,10 +406,10 @@ export default function AdminPage() {
                 <table className="w-full">
                   <thead className="bg-muted/50">
                     <tr>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Nome</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">E-mail</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Email Verificado</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Data de Cadastro</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">{t("admin.users.table.name")}</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">{t("admin.users.table.email")}</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">{t("admin.users.table.email_verified")}</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">{t("admin.users.table.created_at")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -501,7 +501,7 @@ export default function AdminPage() {
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
-                  placeholder="Buscar tickets..."
+                  placeholder={t("admin.tickets.search")}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -513,7 +513,7 @@ export default function AdminPage() {
                 className="flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
               >
                 <RefreshCw className="h-4 w-4" />
-                Atualizar
+                {t("admin.tickets.update")}
               </Button>
             </div>
 
@@ -604,7 +604,7 @@ export default function AdminPage() {
                             variant="outline"
                           >
                             <Eye className="h-4 w-4" />
-                            Abrir Ticket
+                            {t("admin.tickets.open")}
                           </Button>
                         </div>
                       </div>
@@ -619,7 +619,7 @@ export default function AdminPage() {
           {isOwner && (
             <TabsContent value="admins" className="space-y-4">
               <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-4 md:p-6 mb-4">
-                <h3 className="text-base md:text-lg font-semibold text-foreground mb-4">Adicionar Administrador</h3>
+                <h3 className="text-base md:text-lg font-semibold text-foreground mb-4">{t("admin.admins.add_title")}</h3>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Input
                     placeholder="E-mail do usuário"
@@ -633,7 +633,7 @@ export default function AdminPage() {
                     className="flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
                   >
                     <Plus className="h-4 w-4" />
-                    Adicionar
+                    {t("admin.admins.add_button")}
                   </Button>
                 </div>
               </div>
@@ -644,10 +644,10 @@ export default function AdminPage() {
                   <table className="w-full">
                     <thead className="bg-muted/50">
                       <tr>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">E-mail</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Tipo</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Data</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Ações</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">{t("admin.admins.table.email")}</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">{t("admin.admins.table.type")}</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">{t("admin.admins.table.date")}</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">{t("admin.admins.table.actions")}</th>
                       </tr>
                     </thead>
                     <tbody>
