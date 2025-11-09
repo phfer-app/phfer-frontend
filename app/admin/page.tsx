@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Shield, Users, Ticket, Plus, X, RefreshCw, Search, Calendar, User, Mail, Clock, AlertCircle, Eye, CheckCircle, MessageSquare, History, CheckCircle2, XCircle, Lock, Save, Edit, Trash2, FolderPlus, Send } from "lucide-react"
+import { Shield, Users, Ticket, Plus, X, RefreshCw, Search, Calendar, User, Mail, Clock, AlertCircle, Eye, CheckCircle, MessageSquare, History, CheckCircle2, XCircle, Lock, Save, Edit, Trash2, FolderPlus, Send, Filter } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -61,6 +61,10 @@ export default function AdminPage() {
   const [removeAdminDialogOpen, setRemoveAdminDialogOpen] = useState(false)
   const [adminToRemove, setAdminToRemove] = useState<string | null>(null)
   const [adminToRemoveName, setAdminToRemoveName] = useState<string>("")
+  const [filterStatus, setFilterStatus] = useState<string>("all")
+  const [filterPriority, setFilterPriority] = useState<string>("all")
+  const [filterDateFrom, setFilterDateFrom] = useState<string>("")
+  const [filterDateTo, setFilterDateTo] = useState<string>("")
   const router = useRouter()
   const { t } = useLanguage()
   const { toast } = useToast()
@@ -541,11 +545,45 @@ export default function AdminPage() {
     user.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  const filteredTickets = tickets.filter(ticket =>
-    ticket.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    ticket.descricao.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    ticket.user?.email.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const filteredTickets = tickets.filter(ticket => {
+    // Filtro de busca por texto
+    const matchesSearch = searchTerm === "" || 
+      ticket.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ticket.descricao.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ticket.user?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ticket.user?.email?.toLowerCase().includes(searchTerm.toLowerCase())
+    
+    // Filtro de status
+    const matchesStatus = filterStatus === "all" || ticket.status === filterStatus
+    
+    // Filtro de prioridade
+    const matchesPriority = filterPriority === "all" || ticket.prioridade === filterPriority
+    
+    // Filtro de data de abertura
+    let matchesDate = true
+    if (filterDateFrom || filterDateTo) {
+      const ticketDate = new Date(ticket.created_at)
+      ticketDate.setHours(0, 0, 0, 0)
+      
+      if (filterDateFrom) {
+        const fromDate = new Date(filterDateFrom)
+        fromDate.setHours(0, 0, 0, 0)
+        if (ticketDate < fromDate) {
+          matchesDate = false
+        }
+      }
+      
+      if (filterDateTo) {
+        const toDate = new Date(filterDateTo)
+        toDate.setHours(23, 59, 59, 999)
+        if (ticketDate > toDate) {
+          matchesDate = false
+        }
+      }
+    }
+    
+    return matchesSearch && matchesStatus && matchesPriority && matchesDate
+  })
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -904,6 +942,7 @@ export default function AdminPage() {
 
           {/* Tickets Tab */}
           <TabsContent value="tickets" className="space-y-4">
+            {/* Barra de busca e atualizar */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
@@ -922,6 +961,95 @@ export default function AdminPage() {
                 <RefreshCw className="h-4 w-4" />
                 {t("admin.tickets.update")}
               </Button>
+            </div>
+
+            {/* Filtros */}
+            <div className="bg-card/60 backdrop-blur-sm border border-border/50 rounded-xl p-4 mb-4">
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-2">
+                  <Filter className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm font-semibold text-foreground">Filtros</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {/* Filtro de Status */}
+                  <div className="space-y-2">
+                    <Label htmlFor="filter-status" className="text-xs font-medium">Status</Label>
+                    <Select value={filterStatus} onValueChange={setFilterStatus}>
+                      <SelectTrigger id="filter-status" className="h-9 text-xs">
+                        <SelectValue placeholder="Todos os status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Todos os status</SelectItem>
+                        <SelectItem value="aberto">Aberto</SelectItem>
+                        <SelectItem value="visto">Visto</SelectItem>
+                        <SelectItem value="em_andamento">Em Andamento</SelectItem>
+                        <SelectItem value="resolvido">Resolvido</SelectItem>
+                        <SelectItem value="fechado">Fechado</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Filtro de Prioridade */}
+                  <div className="space-y-2">
+                    <Label htmlFor="filter-priority" className="text-xs font-medium">Prioridade</Label>
+                    <Select value={filterPriority} onValueChange={setFilterPriority}>
+                      <SelectTrigger id="filter-priority" className="h-9 text-xs">
+                        <SelectValue placeholder="Todas as prioridades" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Todas as prioridades</SelectItem>
+                        <SelectItem value="baixa">Baixa</SelectItem>
+                        <SelectItem value="media">Média</SelectItem>
+                        <SelectItem value="alta">Alta</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Filtro de Data Inicial */}
+                  <div className="space-y-2">
+                    <Label htmlFor="filter-date-from" className="text-xs font-medium">Data de Abertura (De)</Label>
+                    <Input
+                      id="filter-date-from"
+                      type="date"
+                      value={filterDateFrom}
+                      onChange={(e) => setFilterDateFrom(e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+
+                  {/* Filtro de Data Final */}
+                  <div className="space-y-2">
+                    <Label htmlFor="filter-date-to" className="text-xs font-medium">Data de Abertura (Até)</Label>
+                    <Input
+                      id="filter-date-to"
+                      type="date"
+                      value={filterDateTo}
+                      onChange={(e) => setFilterDateTo(e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+                </div>
+
+                {/* Botão para limpar filtros */}
+                {(filterStatus !== "all" || filterPriority !== "all" || filterDateFrom || filterDateTo) && (
+                  <div className="flex justify-end">
+                    <Button
+                      onClick={() => {
+                        setFilterStatus("all")
+                        setFilterPriority("all")
+                        setFilterDateFrom("")
+                        setFilterDateTo("")
+                      }}
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 text-xs"
+                    >
+                      <X className="h-3.5 w-3.5 mr-1.5" />
+                      Limpar Filtros
+                    </Button>
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="space-y-4">
@@ -1560,7 +1688,7 @@ export default function AdminPage() {
                 </div>
 
                 {/* Input de Comentário para Admin */}
-                <div className="p-3 sm:p-4 border-t border-border/50 bg-card/80 backdrop-blur-sm shrink-0">
+                <div className="px-3 sm:px-4 pt-3 sm:pt-4 pb-0 border-t border-border/50 bg-card/80 backdrop-blur-sm shrink-0">
                   <div className="flex items-center gap-2.5">
                     <div className="flex-1 relative">
                       <Textarea
@@ -1599,7 +1727,7 @@ export default function AdminPage() {
                     </Button>
                   </div>
                   {(selectedTicket.status === 'resolvido' || selectedTicket.status === 'fechado') && (
-                    <p className="text-[10px] sm:text-xs text-muted-foreground mt-2 flex items-center gap-1.5">
+                    <p className="text-[10px] sm:text-xs text-muted-foreground mt-2 mb-0 flex items-center gap-1.5">
                       <AlertCircle className="h-3 w-3" />
                       Não é possível adicionar comentários em tickets {selectedTicket.status === 'resolvido' ? 'resolvidos' : 'fechados'}
                     </p>

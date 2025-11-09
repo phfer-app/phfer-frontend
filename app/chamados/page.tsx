@@ -622,9 +622,9 @@ export default function ChamadosPage() {
                 </div>
 
                 {/* Input de Comentário para Usuário */}
-                <div className="p-3 sm:p-4 border-t border-border/50 bg-card/80 backdrop-blur-sm shrink-0">
+                <div className="px-3 sm:px-4 pt-3 sm:pt-4 pb-0 border-t border-border/50 bg-card/80 backdrop-blur-sm shrink-0">
                   {selectedTicket.status === 'resolvido' || selectedTicket.status === 'fechado' ? (
-                    <div className="bg-muted/50 border-2 border-dashed border-border/50 rounded-xl p-3 text-center">
+                    <div className="bg-muted/50 border-2 border-dashed border-border/50 rounded-xl p-3 text-center mb-3">
                       <p className="text-[10px] sm:text-xs text-muted-foreground flex items-center justify-center gap-2">
                         {selectedTicket.status === 'resolvido' ? (
                           <CheckCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
