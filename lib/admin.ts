@@ -66,6 +66,11 @@ export async function checkAdmin(): Promise<AdminResponse> {
       }
     }
 
+    // Log para debug
+    console.log('🔍 Verificando admin status...')
+    console.log('📍 API_URL:', API_URL)
+    console.log('🔗 URL completa:', `${API_URL}/admin/check`)
+
     let response
     try {
       response = await fetch(`${API_URL}/admin/check`, {
@@ -75,19 +80,45 @@ export async function checkAdmin(): Promise<AdminResponse> {
           'Authorization': `Bearer ${token}`,
         },
       })
+      console.log('✅ Resposta recebida:', response.status, response.statusText)
     } catch (fetchError: any) {
       // Erro de rede (backend não está rodando ou URL incorreta)
-      console.error('Erro de rede ao verificar admin:', fetchError)
+      console.error('❌ Erro de rede ao verificar admin:', fetchError)
+      console.error('   Tipo:', fetchError.name)
+      console.error('   Mensagem:', fetchError.message)
+      console.error('   Stack:', fetchError.stack)
+      
+      // Verificar se é um erro de CORS
+      if (fetchError.message?.includes('CORS') || fetchError.message?.includes('cors')) {
+        return {
+          success: false,
+          isAdmin: false,
+          isOwner: false,
+          error: `Erro de CORS. Verifique se o backend está configurado para aceitar requisições de ${typeof window !== 'undefined' ? window.location.origin : 'frontend'}`
+        }
+      }
+      
+      // Verificar se é erro de conexão
+      if (fetchError.message === 'Failed to fetch' || fetchError.name === 'TypeError') {
+        return {
+          success: false,
+          isAdmin: false,
+          isOwner: false,
+          error: `Não foi possível conectar ao servidor em ${API_URL}. Verifique se:\n1. O backend está rodando\n2. A URL está correta\n3. Não há firewall bloqueando a conexão`
+        }
+      }
+      
       return {
         success: false,
         isAdmin: false,
         isOwner: false,
-        error: `Não foi possível conectar ao servidor. Verifique se o backend está rodando em ${API_URL}`
+        error: `Erro de conexão: ${fetchError.message || 'Erro desconhecido'}`
       }
     }
 
     // Se for 401, o token expirou - fazer logout automático
     if (response.status === 401) {
+      console.warn('⚠️ Token expirado ou inválido')
       const { handleUnauthorized } = await import('@/lib/auth')
       await handleUnauthorized()
       return {
@@ -99,7 +130,16 @@ export async function checkAdmin(): Promise<AdminResponse> {
     }
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ error: 'Erro ao verificar permissões' }))
+      console.error('❌ Resposta não OK:', response.status, response.statusText)
+      let errorData
+      try {
+        errorData = await response.json()
+        console.error('   Dados do erro:', errorData)
+      } catch (parseError) {
+        console.error('   Não foi possível parsear JSON da resposta')
+        errorData = { error: `Erro ${response.status}: ${response.statusText}` }
+      }
+      
       return {
         success: false,
         isAdmin: false,
@@ -109,6 +149,7 @@ export async function checkAdmin(): Promise<AdminResponse> {
     }
 
     const result = await response.json()
+    console.log('✅ Status de admin:', { isAdmin: result.isAdmin, isOwner: result.isOwner })
 
     return {
       success: true,
@@ -116,15 +157,18 @@ export async function checkAdmin(): Promise<AdminResponse> {
       isOwner: result.isOwner || false
     }
   } catch (error: any) {
-    console.error('Erro no checkAdmin:', error)
+    console.error('❌ Erro geral no checkAdmin:', error)
+    console.error('   Tipo:', error?.name)
+    console.error('   Mensagem:', error?.message)
+    console.error('   Stack:', error?.stack)
     
     // Se for erro de rede, verificar se o backend está rodando
-    if (error.message === 'Failed to fetch' || error.name === 'TypeError') {
+    if (error?.message === 'Failed to fetch' || error?.name === 'TypeError' || error?.message?.includes('fetch')) {
       return {
         success: false,
         isAdmin: false,
         isOwner: false,
-        error: `Não foi possível conectar ao servidor. Verifique se o backend está rodando em ${API_URL}`
+        error: `Não foi possível conectar ao servidor em ${API_URL}.\n\nVerifique se:\n1. O backend está rodando (npm run dev no diretório phfer-backend)\n2. A porta 3001 está disponível\n3. A variável NEXT_PUBLIC_API_URL está configurada corretamente\n4. Não há firewall ou proxy bloqueando a conexão`
       }
     }
     
@@ -132,7 +176,7 @@ export async function checkAdmin(): Promise<AdminResponse> {
       success: false,
       isAdmin: false,
       isOwner: false,
-      error: error.message || 'Erro ao verificar permissões'
+      error: error?.message || 'Erro ao verificar permissões'
     }
   }
 }

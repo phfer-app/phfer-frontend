@@ -19,6 +19,7 @@ import { useNavigation } from "@/components/navigation-provider"
 import { getUser, isAuthenticated, logout, refreshAdminStatus, updateUserData } from "@/lib/auth"
 import { useToast } from "@/hooks/use-toast"
 import { checkAdmin } from "@/lib/admin"
+import { getMyWorkspacePermissions, type Workspace } from "@/lib/workspace-permissions"
 
 const navLinks = [
   { route: "home" as const, labelKey: "nav.inicio" },
@@ -43,6 +44,8 @@ export function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [userWorkspaces, setUserWorkspaces] = useState<Workspace[]>([])
+  const [isLoadingWorkspaces, setIsLoadingWorkspaces] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
   const { toast } = useToast()
@@ -74,6 +77,52 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [lastScrollY])
+
+  // Carregar workspaces do usuário
+  useEffect(() => {
+    const loadUserWorkspaces = async () => {
+      // Só carregar se estiver autenticado
+      if (!isLoggedIn || !isAuthenticated()) {
+        setUserWorkspaces([])
+        return
+      }
+
+      setIsLoadingWorkspaces(true)
+      try {
+        const result = await getMyWorkspacePermissions()
+        if (result.success && result.workspaces) {
+          // O backend já retorna apenas os workspaces que o usuário tem permissão
+          // Ordenar: workspace padrão primeiro, depois os outros por nome
+          const sortedWorkspaces = result.workspaces.sort((a, b) => {
+            if (a.is_default && !b.is_default) return -1
+            if (!a.is_default && b.is_default) return 1
+            return a.name.localeCompare(b.name)
+          })
+          setUserWorkspaces(sortedWorkspaces)
+        } else {
+          setUserWorkspaces([])
+        }
+      } catch (error) {
+        console.error('Erro ao carregar workspaces:', error)
+        setUserWorkspaces([])
+      } finally {
+        setIsLoadingWorkspaces(false)
+      }
+    }
+
+    loadUserWorkspaces()
+    
+    // Recarregar workspaces periodicamente (quando permissões podem mudar)
+    // Apenas se estiver logado
+    let interval: NodeJS.Timeout | null = null
+    if (isLoggedIn) {
+      interval = setInterval(loadUserWorkspaces, 30000) // A cada 30 segundos
+    }
+
+    return () => {
+      if (interval) clearInterval(interval)
+    }
+  }, [isLoggedIn])
 
   // Verificar autenticação
   useEffect(() => {
@@ -124,6 +173,7 @@ export function Navbar() {
       } else {
         setUserEmail(null)
         setIsAdmin(false)
+        setUserWorkspaces([])
       }
     }
 
@@ -321,20 +371,52 @@ export function Navbar() {
                       </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="center" className="w-56 bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-xl p-2">
-                      <DropdownMenuItem 
-                        onClick={() => router.push("/chamados")}
-                        className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-primary/10 hover:text-primary transition-all duration-200 rounded-lg m-1"
-                      >
-                        <Ticket className="h-4 w-4" />
-                        <span className="font-medium">{t("workspace.meus_chamados") || "Meus Chamados"}</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => router.push("/workspace/pasta-pessoal")}
-                        className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-primary/10 hover:text-primary transition-all duration-200 rounded-lg m-1"
-                      >
-                        <Folder className="h-4 w-4" />
-                        <span className="font-medium">{t("workspace.pasta_pessoal") || "Pasta Pessoal"}</span>
-                      </DropdownMenuItem>
+                      {isLoadingWorkspaces ? (
+                        <div className="px-4 py-3 text-sm text-muted-foreground text-center">
+                          {t("workspace.loading")}
+                        </div>
+                      ) : userWorkspaces.length === 0 ? (
+                        <div className="px-4 py-3 text-sm text-muted-foreground text-center">
+                          {t("workspace.empty")}
+                        </div>
+                      ) : (
+                        userWorkspaces.map((workspace) => {
+                          // Determinar ícone e rota baseado no slug
+                          const getWorkspaceIcon = (slug: string) => {
+                            if (slug === 'chamados') return Ticket
+                            if (slug === 'pasta-pessoal') return Folder
+                            return Folder
+                          }
+                          
+                          const getWorkspaceRoute = (slug: string) => {
+                            if (slug === 'chamados') return '/chamados'
+                            return `/workspace/${slug}`
+                          }
+                          
+                          // Traduzir nome do workspace baseado no slug
+                          const getWorkspaceName = (slug: string, name: string) => {
+                            if (slug === 'chamados') return t("workspace.meus_chamados")
+                            if (slug === 'pasta-pessoal') return t("workspace.pasta_pessoal")
+                            // Para workspaces customizados, usar o nome do banco
+                            return name
+                          }
+                          
+                          const Icon = getWorkspaceIcon(workspace.slug)
+                          const route = getWorkspaceRoute(workspace.slug)
+                          const translatedName = getWorkspaceName(workspace.slug, workspace.name)
+                          
+                          return (
+                            <DropdownMenuItem 
+                              key={workspace.id}
+                              onClick={() => router.push(route)}
+                              className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-primary/10 hover:text-primary transition-all duration-200 rounded-lg m-1"
+                            >
+                              <Icon className="h-4 w-4" />
+                              <span className="font-medium">{translatedName}</span>
+                            </DropdownMenuItem>
+                          )
+                        })
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
@@ -690,26 +772,55 @@ export function Navbar() {
                             isWorkspaceExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
                           }`}
                         >
-                          <button
-                            onClick={() => {
-                              setIsOpen(false)
-                              router.push("/chamados")
-                            }}
-                            className="flex items-center gap-2 w-full px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 group border-2 cursor-pointer text-foreground border-transparent hover:border-border/30 hover:text-primary"
-                          >
-                            <Ticket className="h-4 w-4" />
-                            <span className="group-hover:translate-x-1 transition-transform">{t("workspace.meus_chamados") || "Meus Chamados"}</span>
-                          </button>
-                          <button
-                            onClick={() => {
-                              setIsOpen(false)
-                              router.push("/workspace/pasta-pessoal")
-                            }}
-                            className="flex items-center gap-2 w-full px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 group border-2 cursor-pointer text-foreground border-transparent hover:border-border/30 hover:text-primary"
-                          >
-                            <Folder className="h-4 w-4" />
-                            <span className="group-hover:translate-x-1 transition-transform">{t("workspace.pasta_pessoal") || "Pasta Pessoal"}</span>
-                          </button>
+                          {isLoadingWorkspaces ? (
+                            <div className="px-3 py-2 text-sm text-muted-foreground text-center">
+                              {t("workspace.loading")}
+                            </div>
+                          ) : userWorkspaces.length === 0 ? (
+                            <div className="px-3 py-2 text-sm text-muted-foreground text-center">
+                              {t("workspace.empty")}
+                            </div>
+                          ) : (
+                            userWorkspaces.map((workspace) => {
+                              // Determinar ícone e rota baseado no slug
+                              const getWorkspaceIcon = (slug: string) => {
+                                if (slug === 'chamados') return Ticket
+                                if (slug === 'pasta-pessoal') return Folder
+                                return Folder
+                              }
+                              
+                              const getWorkspaceRoute = (slug: string) => {
+                                if (slug === 'chamados') return '/chamados'
+                                return `/workspace/${slug}`
+                              }
+                              
+                              // Traduzir nome do workspace baseado no slug
+                              const getWorkspaceName = (slug: string, name: string) => {
+                                if (slug === 'chamados') return t("workspace.meus_chamados")
+                                if (slug === 'pasta-pessoal') return t("workspace.pasta_pessoal")
+                                // Para workspaces customizados, usar o nome do banco
+                                return name
+                              }
+                              
+                              const Icon = getWorkspaceIcon(workspace.slug)
+                              const route = getWorkspaceRoute(workspace.slug)
+                              const translatedName = getWorkspaceName(workspace.slug, workspace.name)
+                              
+                              return (
+                                <button
+                                  key={workspace.id}
+                                  onClick={() => {
+                                    setIsOpen(false)
+                                    router.push(route)
+                                  }}
+                                  className="flex items-center gap-2 w-full px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 group border-2 cursor-pointer text-foreground border-transparent hover:border-border/30 hover:text-primary"
+                                >
+                                  <Icon className="h-4 w-4" />
+                                  <span className="group-hover:translate-x-1 transition-transform">{translatedName}</span>
+                                </button>
+                              )
+                            })
+                          )}
                         </div>
                       </div>
                       

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Ticket, Plus, Search, Filter, Clock, CheckCircle, XCircle, AlertCircle, RefreshCw, Eye, MessageSquare, History, Send, TrendingUp, Calendar, Tag, ArrowRight, Sparkles } from "lucide-react"
+import { Ticket, Plus, Search, Filter, Clock, CheckCircle, XCircle, AlertCircle, RefreshCw, Eye, MessageSquare, History, Send, TrendingUp, Calendar, Tag, ArrowRight, Sparkles, Shield, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -173,6 +173,17 @@ export default function ChamadosPage() {
       if (historyResult.success) {
         setTicketHistory(historyResult.history || [])
       }
+
+      // Scroll para o final após carregar
+      setTimeout(() => {
+        const chatContainer = document.getElementById('ticket-chat-container-user')
+        if (chatContainer) {
+          chatContainer.scrollTo({
+            top: chatContainer.scrollHeight,
+            behavior: 'smooth'
+          })
+        }
+      }, 300)
     } catch (error: any) {
       toast({
         title: "Erro",
@@ -196,13 +207,24 @@ export default function ChamadosPage() {
           title: "Sucesso",
           description: "Comentário adicionado com sucesso!",
         })
-        setNewComment("")
         
         // Recarregar comentários
         const commentsResult = await getTicketComments(selectedTicket.id)
         if (commentsResult.success) {
           setTicketComments(commentsResult.comments || [])
         }
+        setNewComment("")
+        
+        // Scroll para o final da conversa após um pequeno delay
+        setTimeout(() => {
+          const chatContainer = document.getElementById('ticket-chat-container-user')
+          if (chatContainer) {
+            chatContainer.scrollTo({
+              top: chatContainer.scrollHeight,
+              behavior: 'smooth'
+            })
+          }
+        }, 150)
       } else {
         toast({
           title: "Erro",
@@ -383,7 +405,7 @@ export default function ChamadosPage() {
             filteredChamados.map((chamado, index) => (
               <div
                 key={chamado.id}
-                className="group bg-card/60 backdrop-blur-sm border-2 border-border/50 rounded-2xl shadow-lg hover:shadow-2xl hover:border-primary/30 transition-all duration-300 overflow-hidden"
+                className="group bg-card/60 backdrop-blur-sm border-2 border-border/50 rounded-2xl shadow-lg hover:shadow-2xl hover:border-primary/30 transition-all duration-300 overflow-hidden cursor-default"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
                 <div className="p-6">
@@ -391,15 +413,9 @@ export default function ChamadosPage() {
                     {/* Left Content */}
                     <div className="flex-1 space-y-4">
                       <div className="flex items-start gap-4">
-                        <div className="relative shrink-0">
+                        <div className="shrink-0">
                           <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 border-2 border-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                             <Ticket className="h-7 w-7 text-primary" />
-                          </div>
-                          <div className="absolute -top-1 -right-1">
-                            <Badge className={`${getStatusColor(chamado.status)} text-xs font-semibold px-2.5 py-1 border-2 flex items-center gap-1.5`}>
-                              {getStatusIcon(chamado.status)}
-                              {getStatusLabel(chamado.status)}
-                            </Badge>
                           </div>
                         </div>
                         <div className="flex-1 min-w-0">
@@ -433,11 +449,15 @@ export default function ChamadosPage() {
                     </div>
 
                     {/* Right Action */}
-                    <div className="flex items-center lg:items-start">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 shrink-0">
+                      <Badge className={`${getStatusColor(chamado.status)} text-xs font-semibold px-3 py-1.5 border-2 flex items-center gap-1.5 h-fit whitespace-nowrap self-center sm:self-auto`}>
+                        {getStatusIcon(chamado.status)}
+                        {getStatusLabel(chamado.status)}
+                      </Badge>
                       <Button
                         variant="outline"
                         onClick={() => handleOpenTicket(chamado)}
-                        className="h-11 px-6 border-2 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-200 group/btn"
+                        className="h-11 px-6 border-2 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-200 group/btn cursor-pointer whitespace-nowrap"
                       >
                         <span className="flex items-center gap-2">
                           <Eye className="h-4 w-4 group-hover/btn:scale-110 transition-transform" />
@@ -457,244 +477,208 @@ export default function ChamadosPage() {
         </div>
       </div>
 
-      {/* Dialog para visualizar detalhes do ticket */}
+      {/* Dialog para visualizar detalhes do ticket - Layout de Chat Moderno */}
       <Dialog open={isTicketDialogOpen} onOpenChange={setIsTicketDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[95vh] sm:max-h-[90vh] flex flex-col p-0 gap-0">
-          <DialogHeader className="space-y-3 p-4 sm:p-6 border-b border-border/50 shrink-0">
-            <div className="flex items-start gap-3 sm:gap-4">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 border-2 border-primary/20 flex items-center justify-center shrink-0">
-                <Ticket className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <DialogTitle className="text-lg sm:text-2xl font-bold mb-1 sm:mb-2 line-clamp-2">{selectedTicket?.titulo}</DialogTitle>
-                <DialogDescription className="text-sm sm:text-base">
-                  {t("tickets.dialog.title")}
-                </DialogDescription>
-              </div>
-            </div>
-          </DialogHeader>
-
+        <DialogContent className="!max-w-[95vw] !w-[95vw] !max-h-[98vh] !h-[98vh] flex flex-col p-0 gap-0 bg-background m-0">
           {selectedTicket && (
-            <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
-              {/* Informações do ticket */}
-              <div className="space-y-4 sm:space-y-6">
-                <div className="bg-gradient-to-br from-muted/50 to-muted/30 border-2 border-border/50 rounded-xl p-4 sm:p-6">
-                  <Label className="text-xs sm:text-sm font-semibold mb-2 sm:mb-3 text-foreground flex items-center gap-2">
-                    <MessageSquare className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
-                    {t("tickets.dialog.description")}
-                  </Label>
-                  <p className="text-xs sm:text-sm text-foreground/90 leading-relaxed whitespace-pre-wrap">
-                    {selectedTicket.descricao}
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                  <div className="bg-card/60 backdrop-blur-sm border-2 border-border/50 rounded-xl p-3 sm:p-4">
-                    <Label className="text-[10px] sm:text-xs font-semibold mb-2 sm:mb-3 block text-muted-foreground uppercase tracking-wide">
-                      {t("tickets.dialog.status")}
-                    </Label>
-                    <Badge className={`${getStatusColor(selectedTicket.status)} text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1 sm:py-1.5 border-2 flex items-center gap-1.5 sm:gap-2 w-fit`}>
-                      <span className="scale-75 sm:scale-100">{getStatusIcon(selectedTicket.status)}</span>
-                      {getStatusLabel(selectedTicket.status)}
-                    </Badge>
-                  </div>
-                  <div className="bg-card/60 backdrop-blur-sm border-2 border-border/50 rounded-xl p-3 sm:p-4">
-                    <Label className="text-[10px] sm:text-xs font-semibold mb-2 sm:mb-3 block text-muted-foreground uppercase tracking-wide">
-                      {t("tickets.dialog.priority")}
-                    </Label>
-                    <Badge className={`${getPriorityColor(selectedTicket.prioridade)} text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1 sm:py-1.5 border-2 flex items-center gap-1.5 sm:gap-2 w-fit`}>
-                      <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4" />
-                      {selectedTicket.prioridade === 'alta' ? t("tickets.priority.alta") : 
-                       selectedTicket.prioridade === 'media' ? t("tickets.priority.media") : t("tickets.priority.baixa")}
-                    </Badge>
-                  </div>
-                  <div className="bg-card/60 backdrop-blur-sm border-2 border-border/50 rounded-xl p-3 sm:p-4">
-                    <Label className="text-[10px] sm:text-xs font-semibold mb-2 sm:mb-3 block text-muted-foreground uppercase tracking-wide">
-                      {t("tickets.dialog.category")}
-                    </Label>
-                    <Badge variant="outline" className="text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1 sm:py-1.5 border-2 flex items-center gap-1.5 sm:gap-2 w-fit">
-                      <Tag className="h-3 w-3 sm:h-4 sm:w-4" />
-                      {selectedTicket.categoria}
-                    </Badge>
-                  </div>
-                  <div className="bg-card/60 backdrop-blur-sm border-2 border-border/50 rounded-xl p-3 sm:p-4">
-                    <Label className="text-[10px] sm:text-xs font-semibold mb-2 sm:mb-3 block text-muted-foreground uppercase tracking-wide">
-                      {t("tickets.dialog.created_at")}
-                    </Label>
-                    <div className="flex items-center gap-2 text-xs sm:text-sm text-foreground">
-                      <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-primary shrink-0" />
-                      <span className="break-words">{new Date(selectedTicket.created_at).toLocaleDateString('pt-BR', { 
-                        day: '2-digit', 
-                        month: 'short', 
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}</span>
+            <>
+              {/* Header Compacto com Informações */}
+              <div className="p-4 sm:p-6 border-b border-border/50 bg-card/50 backdrop-blur-sm shrink-0">
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <DialogTitle className="text-xl sm:text-2xl font-bold mb-3 line-clamp-2">{selectedTicket.titulo}</DialogTitle>
+                      <div className="flex flex-wrap items-center gap-3 text-sm">
+                        <Badge className={`${getStatusColor(selectedTicket.status)} text-xs font-semibold px-2.5 py-1 border-2 flex items-center gap-1.5 w-fit`}>
+                          {getStatusIcon(selectedTicket.status)}
+                          {getStatusLabel(selectedTicket.status)}
+                        </Badge>
+                        <Badge className={`${getPriorityColor(selectedTicket.prioridade)} text-xs font-semibold px-2.5 py-1 border-2 flex items-center gap-1.5 w-fit`}>
+                          <AlertCircle className="h-3 w-3" />
+                          {selectedTicket.prioridade === 'alta' ? t("tickets.priority.alta") : 
+                           selectedTicket.prioridade === 'media' ? t("tickets.priority.media") : t("tickets.priority.baixa")}
+                        </Badge>
+                        <Badge variant="outline" className="text-xs font-semibold px-2.5 py-1 border-2 flex items-center gap-1.5 w-fit">
+                          <Tag className="h-3 w-3" />
+                          {selectedTicket.categoria}
+                        </Badge>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <Calendar className="h-3.5 w-3.5 shrink-0" />
+                          <span>{new Date(selectedTicket.created_at).toLocaleDateString('pt-BR', { 
+                            day: '2-digit', 
+                            month: 'short', 
+                            year: 'numeric'
+                          })}</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Histórico de Status */}
-              <div className="pt-4 sm:pt-6 border-t-2 border-border/50">
-                <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-                  <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10 border border-primary/20 shrink-0">
-                    <History className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-                  </div>
-                  <Label className="text-sm sm:text-base font-bold">{t("tickets.dialog.history")}</Label>
-                </div>
-                {isLoadingComments ? (
-                  <div className="text-center py-6 sm:py-8 text-muted-foreground bg-muted/30 rounded-xl border-2 border-dashed border-border/50">
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="h-6 w-6 sm:h-8 sm:w-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-                      <span className="text-xs sm:text-sm">{t("tickets.dialog.history.loading")}</span>
+              {/* Área de Chat */}
+              <div className="flex-1 flex flex-col min-h-0 bg-gradient-to-b from-muted/10 to-background overflow-hidden">
+                {/* Container de Mensagens com Scroll */}
+                <div 
+                  id="ticket-chat-container-user"
+                  className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4"
+                  style={{ height: 'calc(98vh - 240px)', minHeight: '400px' }}
+                >
+                  {isLoadingComments ? (
+                    <div className="flex items-center justify-center h-full min-h-[300px]">
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="h-8 w-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+                        <span className="text-sm text-muted-foreground">Carregando conversa...</span>
+                      </div>
                     </div>
-                  </div>
-                ) : ticketHistory.length === 0 ? (
-                  <div className="text-center py-6 sm:py-8 text-muted-foreground text-xs sm:text-sm bg-muted/30 rounded-xl border-2 border-dashed border-border/50">
-                    {t("tickets.dialog.history.empty")}
-                  </div>
-                ) : (
-                  <div className="space-y-2 sm:space-y-3">
-                    {ticketHistory.map((item, idx) => (
-                      <div key={item.id} className="relative flex items-start gap-3 sm:gap-4 p-3 sm:p-4 bg-card/60 backdrop-blur-sm border-2 border-border/50 rounded-xl hover:border-primary/30 transition-all duration-200">
-                        <div className="relative shrink-0">
-                          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 border-2 border-primary/20 flex items-center justify-center">
-                            <History className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-                          </div>
-                          {idx < ticketHistory.length - 1 && (
-                            <div className="absolute top-8 sm:top-10 left-1/2 -translate-x-1/2 w-0.5 h-6 sm:h-8 bg-gradient-to-b from-primary/30 to-transparent" />
-                          )}
+                  ) : (
+                    <>
+                      {/* Mensagem Inicial - Descrição do Ticket (do Usuário) */}
+                      <div className="flex items-start gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                        <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0 border-2 border-primary/20">
+                          <User className="h-4 w-4 text-primary" />
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs sm:text-sm font-semibold text-foreground mb-1 sm:mb-2 leading-relaxed">
-                            {t("tickets.dialog.history.changed")} <span className="text-muted-foreground">{item.old_status ? getStatusLabel(item.old_status) : 'N/A'}</span> {t("tickets.dialog.history.to")} <span className="text-primary font-bold">{getStatusLabel(item.new_status)}</span>
-                          </p>
-                          <div className="flex items-center gap-2 text-[10px] sm:text-xs text-muted-foreground">
-                            <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0" />
-                            <span>{new Date(item.created_at).toLocaleDateString('pt-BR', { 
-                              day: '2-digit', 
-                              month: 'short', 
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}</span>
+                        <div className="flex-1 min-w-0 max-w-[85%] sm:max-w-[75%]">
+                          <div className="bg-card rounded-2xl rounded-tl-sm p-4 shadow-md border border-border/50">
+                            <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap break-words">
+                              {selectedTicket.descricao}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2 mt-2 px-1">
+                            <span className="text-xs font-medium text-foreground">
+                              {user?.name || 'Você'}
+                            </span>
+                            <span className="text-xs text-muted-foreground">·</span>
+                            <span className="text-xs text-muted-foreground">
+                              {new Date(selectedTicket.created_at).toLocaleDateString('pt-BR', { 
+                                day: '2-digit', 
+                                month: 'short', 
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </span>
                           </div>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
 
-              {/* Comentários */}
-              <div className="pt-4 sm:pt-6 border-t-2 border-border/50">
-                <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-                  <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10 border border-primary/20 shrink-0">
-                    <MessageSquare className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-                  </div>
-                  <Label className="text-sm sm:text-base font-bold">{t("tickets.dialog.comments")}</Label>
+                      {/* Comentários como Mensagens de Chat */}
+                      {ticketComments.map((comment, index) => {
+                        // Se o comment.user_id é diferente do user atual, é um admin
+                        const isAdminComment = comment.user_id !== user?.id
+                        
+                        return (
+                          <div 
+                            key={comment.id} 
+                            className={`flex items-start gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300 ${
+                              isAdminComment ? 'flex-row-reverse' : ''
+                            }`}
+                            style={{ animationDelay: `${index * 50}ms` }}
+                          >
+                            <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 border-2 ${
+                              isAdminComment 
+                                ? 'bg-primary text-primary-foreground border-primary/30' 
+                                : 'bg-muted text-muted-foreground border-border/50'
+                            }`}>
+                              {isAdminComment ? (
+                                <Shield className="h-4 w-4" />
+                              ) : (
+                                <User className="h-4 w-4" />
+                              )}
+                            </div>
+                            <div className={`flex-1 min-w-0 max-w-[85%] sm:max-w-[75%] ${isAdminComment ? 'flex flex-col items-end' : ''}`}>
+                              <div className={`rounded-2xl p-4 shadow-md border max-w-full ${
+                                isAdminComment
+                                  ? 'bg-primary text-primary-foreground rounded-tr-sm border-primary/20'
+                                  : 'bg-card rounded-tl-sm border-border/50'
+                              }`}>
+                                <p className={`text-sm leading-relaxed whitespace-pre-wrap break-words ${
+                                  isAdminComment ? 'text-primary-foreground' : 'text-foreground'
+                                }`}>
+                                  {comment.comment}
+                                </p>
+                              </div>
+                              <div className={`flex items-center gap-2 mt-2 px-1 ${isAdminComment ? 'flex-row-reverse' : ''}`}>
+                                <span className={`text-xs font-medium ${
+                                  isAdminComment ? 'text-primary' : 'text-foreground'
+                                }`}>
+                                  {isAdminComment ? (comment.user?.name || 'Administrador') : (comment.user?.name || 'Você')}
+                                </span>
+                                <span className="text-xs text-muted-foreground">·</span>
+                                <span className="text-xs text-muted-foreground">
+                                  {new Date(comment.created_at).toLocaleDateString('pt-BR', { 
+                                    day: '2-digit', 
+                                    month: 'short', 
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </>
+                  )}
                 </div>
-                
-                {/* Lista de comentários */}
-                {isLoadingComments ? (
-                  <div className="text-center py-6 sm:py-8 text-muted-foreground bg-muted/30 rounded-xl border-2 border-dashed border-border/50">
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="h-6 w-6 sm:h-8 sm:w-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-                      <span className="text-xs sm:text-sm">{t("tickets.dialog.comments.loading")}</span>
-                    </div>
-                  </div>
-                ) : ticketComments.length === 0 ? (
-                  <div className="text-center py-6 sm:py-8 text-muted-foreground text-xs sm:text-sm bg-muted/30 rounded-xl border-2 border-dashed border-border/50 mb-4 sm:mb-6">
-                    {t("tickets.dialog.comments.empty")}
-                  </div>
-                ) : (
-                  <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6 max-h-60 sm:max-h-80 overflow-y-auto pr-1 sm:pr-2">
-                    {ticketComments.map((comment) => (
-                      <div key={comment.id} className="p-3 sm:p-4 bg-card/60 backdrop-blur-sm border-2 border-border/50 rounded-xl hover:border-primary/30 transition-all duration-200">
-                        <div className="flex items-start gap-2 sm:gap-3 mb-2 sm:mb-3">
-                          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
-                            <MessageSquare className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs sm:text-sm text-foreground leading-relaxed whitespace-pre-wrap break-words">{comment.comment}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between pt-2 sm:pt-3 border-t border-border/30 gap-2">
-                          <span className="text-[10px] sm:text-xs font-medium text-foreground truncate">
-                            {comment.user?.name || t("nav.usuario_logado")}
-                          </span>
-                          <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-muted-foreground shrink-0">
-                            <Clock className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
-                            <span className="whitespace-nowrap">{new Date(comment.created_at).toLocaleDateString('pt-BR', { 
-                              day: '2-digit', 
-                              month: 'short', 
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}</span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
 
-                {/* Formulário para adicionar comentário */}
-                {selectedTicket.status === 'resolvido' || selectedTicket.status === 'fechado' ? (
-                  <div className="bg-muted/50 border-2 border-dashed border-border/50 rounded-xl p-4 sm:p-6 text-center">
-                    <p className="text-xs sm:text-sm text-muted-foreground flex items-center justify-center gap-2">
-                      {selectedTicket.status === 'resolvido' ? (
-                        <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                      ) : (
-                        <XCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                      )}
-                      {selectedTicket.status === 'resolvido' 
-                        ? t("tickets.dialog.comments.resolved")
-                        : t("tickets.dialog.comments.closed")}
-                    </p>
-                  </div>
-                ) : (
-                  <div className="space-y-2 sm:space-y-3 bg-card/60 backdrop-blur-sm border-2 border-border/50 rounded-xl p-3 sm:p-4">
-                    <Textarea
-                      placeholder={t("tickets.dialog.comments.placeholder")}
-                      value={newComment}
-                      onChange={(e) => setNewComment(e.target.value)}
-                      className="min-h-[100px] sm:min-h-[120px] text-xs sm:text-sm border-2 focus:border-primary/50 transition-all duration-200 resize-none"
-                      disabled={isAddingComment}
-                    />
-                    <Button
-                      onClick={handleAddComment}
-                      disabled={isAddingComment || !newComment.trim()}
-                      className="w-full h-9 sm:h-11 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm"
-                    >
-                      {isAddingComment ? (
-                        <>
-                          <RefreshCw className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2 animate-spin" />
-                          {t("tickets.dialog.comments.adding")}
-                        </>
-                      ) : (
-                        <>
-                          <Send className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2" />
-                          {t("tickets.dialog.comments.add")}
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                )}
+                {/* Input de Comentário para Usuário */}
+                <div className="p-4 sm:p-6 border-t border-border/50 bg-card/80 backdrop-blur-sm shrink-0">
+                  {selectedTicket.status === 'resolvido' || selectedTicket.status === 'fechado' ? (
+                    <div className="bg-muted/50 border-2 border-dashed border-border/50 rounded-xl p-4 text-center">
+                      <p className="text-xs sm:text-sm text-muted-foreground flex items-center justify-center gap-2">
+                        {selectedTicket.status === 'resolvido' ? (
+                          <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                        ) : (
+                          <XCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                        )}
+                        {selectedTicket.status === 'resolvido' 
+                          ? t("tickets.dialog.comments.resolved")
+                          : t("tickets.dialog.comments.closed")}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="flex items-end gap-3">
+                      <div className="flex-1 relative">
+                        <Textarea
+                          value={newComment}
+                          onChange={(e) => setNewComment(e.target.value)}
+                          placeholder="Digite sua mensagem para o administrador..."
+                          rows={3}
+                          className="resize-none text-sm border-2 border-border/50 focus:border-primary/50 bg-background pr-12"
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                              e.preventDefault()
+                              handleAddComment()
+                            }
+                          }}
+                          disabled={isAddingComment}
+                        />
+                        <p className="text-xs text-muted-foreground mt-1.5 flex items-center gap-1">
+                          <span>Pressione</span>
+                          <kbd className="px-1.5 py-0.5 text-xs font-semibold text-muted-foreground bg-muted border border-border rounded">Ctrl</kbd>
+                          <span>+</span>
+                          <kbd className="px-1.5 py-0.5 text-xs font-semibold text-muted-foreground bg-muted border border-border rounded">Enter</kbd>
+                          <span>para enviar</span>
+                        </p>
+                      </div>
+                      <Button
+                        onClick={handleAddComment}
+                        disabled={isAddingComment || !newComment.trim()}
+                        size="lg"
+                        className="h-12 w-12 p-0 shrink-0"
+                      >
+                        {isAddingComment ? (
+                          <span className="h-4 w-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                        ) : (
+                          <Send className="h-5 w-5" />
+                        )}
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
+            </>
           )}
-
-          <DialogFooter className="p-4 sm:p-6 border-t border-border/50 shrink-0">
-            <Button
-              variant="outline"
-              onClick={() => setIsTicketDialogOpen(false)}
-              className="w-full sm:w-auto h-9 sm:h-11 px-4 sm:px-6 border-2 hover:bg-accent/50 transition-all duration-200 text-xs sm:text-sm"
-            >
-              {t("tickets.dialog.close")}
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </main>

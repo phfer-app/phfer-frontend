@@ -2,19 +2,23 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Shield, Users, Ticket, Plus, X, RefreshCw, Search, Calendar, User, Mail, Clock, AlertCircle, Eye, CheckCircle, MessageSquare, History, CheckCircle2, XCircle } from "lucide-react"
+import { Shield, Users, Ticket, Plus, X, RefreshCw, Search, Calendar, User, Mail, Clock, AlertCircle, Eye, CheckCircle, MessageSquare, History, CheckCircle2, XCircle, Lock, Save, Edit, Trash2, FolderPlus, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 import { useLanguage } from "@/components/language-provider"
 import { isAuthenticated, getUser } from "@/lib/auth"
 import { useToast } from "@/hooks/use-toast"
 import { checkAdmin, getAdmins, addAdmin, removeAdmin, getUsers, getTickets, updateTicket, type Admin, type User, type Ticket } from "@/lib/admin"
-import { getTicketComments, getTicketStatusHistory, type TicketComment, type TicketStatusHistory } from "@/lib/tickets"
+import { getTicketComments, getTicketStatusHistory, addTicketComment, type TicketComment, type TicketStatusHistory } from "@/lib/tickets"
+import { getWorkspaces, getUserWorkspacePermissions, updateUserWorkspacePermissions, createWorkspace, updateWorkspace, deleteWorkspace, initializeWorkspaces, type Workspace } from "@/lib/workspace-permissions"
 import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Textarea } from "@/components/ui/textarea"
 
 export default function AdminPage() {
   const [mounted, setMounted] = useState(false)
@@ -37,6 +41,26 @@ export default function AdminPage() {
   const [ticketComments, setTicketComments] = useState<TicketComment[]>([])
   const [ticketHistory, setTicketHistory] = useState<TicketStatusHistory[]>([])
   const [isLoadingComments, setIsLoadingComments] = useState(false)
+  const [newComment, setNewComment] = useState("")
+  const [isAddingComment, setIsAddingComment] = useState(false)
+  const currentUser = getUser()
+  const [workspaces, setWorkspaces] = useState<Workspace[]>([])
+  const [userPermissions, setUserPermissions] = useState<Record<string, string[]>>({})
+  const [selectedUserPermissions, setSelectedUserPermissions] = useState<Record<string, string[]>>({})
+  const [isLoadingWorkspaces, setIsLoadingWorkspaces] = useState(false)
+  const [isSavingPermissions, setIsSavingPermissions] = useState(false)
+  const [selectedUserForPermissions, setSelectedUserForPermissions] = useState<string | null>(null)
+  const [isCreatingWorkspace, setIsCreatingWorkspace] = useState(false)
+  const [isEditingWorkspace, setIsEditingWorkspace] = useState(false)
+  const [isDeletingWorkspace, setIsDeletingWorkspace] = useState(false)
+  const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace | null>(null)
+  const [workspaceForm, setWorkspaceForm] = useState({ name: "", slug: "", description: "" })
+  const [isWorkspaceDialogOpen, setIsWorkspaceDialogOpen] = useState(false)
+  const [deleteWorkspaceDialogOpen, setDeleteWorkspaceDialogOpen] = useState(false)
+  const [workspaceToDelete, setWorkspaceToDelete] = useState<string | null>(null)
+  const [removeAdminDialogOpen, setRemoveAdminDialogOpen] = useState(false)
+  const [adminToRemove, setAdminToRemove] = useState<string | null>(null)
+  const [adminToRemoveName, setAdminToRemoveName] = useState<string>("")
   const router = useRouter()
   const { t } = useLanguage()
   const { toast } = useToast()
@@ -74,7 +98,8 @@ export default function AdminPage() {
     await Promise.all([
       loadUsers(),
       loadTickets(),
-      loadAdmins()
+      loadAdmins(),
+      loadWorkspaces()
     ])
   }
 
@@ -82,6 +107,13 @@ export default function AdminPage() {
     const result = await getUsers()
     if (result.success && result.users) {
       setUsers(result.users)
+      // Inicializar permissões vazias para cada usuário
+      const permissionsMap: Record<string, string[]> = {}
+      result.users.forEach(user => {
+        permissionsMap[user.id] = []
+      })
+      setUserPermissions(permissionsMap)
+      setSelectedUserPermissions(permissionsMap)
     }
   }
 
@@ -114,6 +146,295 @@ export default function AdminPage() {
     if (result.success && result.admins) {
       setAdmins(result.admins)
     }
+  }
+
+  const loadWorkspaces = async () => {
+    setIsLoadingWorkspaces(true)
+    try {
+      const result = await getWorkspaces()
+      if (result.success && result.workspaces) {
+        setWorkspaces(result.workspaces)
+        // Inicializar permissões vazias para cada usuário
+        const permissionsMap: Record<string, string[]> = {}
+        users.forEach(user => {
+          permissionsMap[user.id] = []
+        })
+        setUserPermissions(permissionsMap)
+        setSelectedUserPermissions(permissionsMap)
+      } else {
+        toast({
+          title: "Erro",
+          description: result.error || "Erro ao carregar workspaces",
+          variant: "destructive",
+        })
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message || "Erro ao carregar workspaces",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoadingWorkspaces(false)
+    }
+  }
+
+  const loadUserPermissions = async (userId: string) => {
+    try {
+      const result = await getUserWorkspacePermissions(userId)
+      if (result.success && result.userPermissions) {
+        setUserPermissions(prev => ({
+          ...prev,
+          [userId]: result.userPermissions || []
+        }))
+        setSelectedUserPermissions(prev => ({
+          ...prev,
+          [userId]: result.userPermissions || []
+        }))
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message || "Erro ao carregar permissões do usuário",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const handleSelectUserForPermissions = async (userId: string) => {
+    setSelectedUserForPermissions(userId)
+    // Carregar permissões do usuário se ainda não foram carregadas
+    if (!userPermissions[userId] || userPermissions[userId].length === 0) {
+      await loadUserPermissions(userId)
+    }
+  }
+
+  const handleToggleWorkspacePermission = (userId: string, workspaceId: string) => {
+    setSelectedUserPermissions(prev => {
+      const current = prev[userId] || []
+      const workspace = workspaces.find(w => w.id === workspaceId)
+      
+      // Se for o workspace padrão, não permitir remover
+      if (workspace?.is_default && current.includes(workspaceId)) {
+        toast({
+          title: "Aviso",
+          description: "Não é possível remover a permissão do workspace padrão (Meus Chamados)",
+          variant: "default",
+        })
+        return prev
+      }
+
+      const updated = current.includes(workspaceId)
+        ? current.filter(id => id !== workspaceId)
+        : [...current, workspaceId]
+      
+      return {
+        ...prev,
+        [userId]: updated
+      }
+    })
+  }
+
+  const handleSavePermissions = async () => {
+    if (!selectedUserForPermissions) return
+
+    setIsSavingPermissions(true)
+    try {
+      const workspaceIds = selectedUserPermissions[selectedUserForPermissions] || []
+      const result = await updateUserWorkspacePermissions(selectedUserForPermissions, workspaceIds)
+
+      if (result.success) {
+        toast({
+          title: t("admin.permissions.toast.success"),
+          description: t("admin.permissions.toast.permissions_updated"),
+        })
+        // Atualizar permissões salvas
+        setUserPermissions(prev => ({
+          ...prev,
+          [selectedUserForPermissions]: workspaceIds
+        }))
+      } else {
+        toast({
+          title: t("admin.permissions.toast.error"),
+          description: result.error || t("admin.permissions.toast.error_update_permissions"),
+          variant: "destructive",
+        })
+      }
+    } catch (error: any) {
+      toast({
+        title: t("admin.permissions.toast.error"),
+        description: error.message || t("admin.permissions.toast.error_update_permissions"),
+        variant: "destructive",
+      })
+    } finally {
+      setIsSavingPermissions(false)
+    }
+  }
+
+  const handleCreateWorkspace = async () => {
+    if (!workspaceForm.name.trim() || !workspaceForm.slug.trim()) {
+      toast({
+        title: t("admin.permissions.toast.error"),
+        description: t("admin.permissions.toast.name_slug_required"),
+        variant: "destructive",
+      })
+      return
+    }
+
+    setIsCreatingWorkspace(true)
+    try {
+      const result = await createWorkspace(
+        workspaceForm.name.trim(),
+        workspaceForm.slug.trim().toLowerCase().replace(/\s+/g, '-'),
+        workspaceForm.description.trim() || null
+      )
+
+      if (result.success) {
+        toast({
+          title: t("admin.permissions.toast.success"),
+          description: t("admin.permissions.toast.workspace_created"),
+        })
+        setWorkspaceForm({ name: "", slug: "", description: "" })
+        setIsWorkspaceDialogOpen(false)
+        loadWorkspaces()
+      } else {
+        toast({
+          title: t("admin.permissions.toast.error"),
+          description: result.error || t("admin.permissions.toast.error_create"),
+          variant: "destructive",
+        })
+      }
+    } catch (error: any) {
+      toast({
+        title: t("admin.permissions.toast.error"),
+        description: error.message || t("admin.permissions.toast.error_create"),
+        variant: "destructive",
+      })
+    } finally {
+      setIsCreatingWorkspace(false)
+    }
+  }
+
+  const handleEditWorkspace = async () => {
+    if (!selectedWorkspace || !workspaceForm.name.trim() || !workspaceForm.slug.trim()) {
+      toast({
+        title: t("admin.permissions.toast.error"),
+        description: t("admin.permissions.toast.name_slug_required"),
+        variant: "destructive",
+      })
+      return
+    }
+
+    setIsEditingWorkspace(true)
+    try {
+      const result = await updateWorkspace(
+        selectedWorkspace.id,
+        workspaceForm.name.trim(),
+        workspaceForm.slug.trim().toLowerCase().replace(/\s+/g, '-'),
+        workspaceForm.description.trim() || null
+      )
+
+      if (result.success) {
+        toast({
+          title: t("admin.permissions.toast.success"),
+          description: t("admin.permissions.toast.workspace_updated"),
+        })
+        setWorkspaceForm({ name: "", slug: "", description: "" })
+        setSelectedWorkspace(null)
+        setIsWorkspaceDialogOpen(false)
+        loadWorkspaces()
+      } else {
+        toast({
+          title: t("admin.permissions.toast.error"),
+          description: result.error || t("admin.permissions.toast.error_update"),
+          variant: "destructive",
+        })
+      }
+    } catch (error: any) {
+      toast({
+        title: t("admin.permissions.toast.error"),
+        description: error.message || t("admin.permissions.toast.error_update"),
+        variant: "destructive",
+      })
+    } finally {
+      setIsEditingWorkspace(false)
+    }
+  }
+
+  const handleOpenDeleteWorkspaceDialog = (workspaceId: string) => {
+    setWorkspaceToDelete(workspaceId)
+    setDeleteWorkspaceDialogOpen(true)
+  }
+
+  const handleConfirmDeleteWorkspace = async () => {
+    if (!workspaceToDelete) return
+
+    const workspaceId = workspaceToDelete
+    setIsDeletingWorkspace(true)
+    
+    // Fechar o modal primeiro antes de executar a ação
+    setDeleteWorkspaceDialogOpen(false)
+    
+    // Pequeno delay para garantir que o portal foi desmontado
+    await new Promise(resolve => setTimeout(resolve, 100))
+    
+    try {
+      const result = await deleteWorkspace(workspaceId)
+
+      if (result.success) {
+        toast({
+          title: t("admin.permissions.toast.success"),
+          description: t("admin.permissions.toast.workspace_deleted"),
+        })
+        loadWorkspaces()
+        // Limpar permissões se o workspace foi deletado
+        setUserPermissions(prev => {
+          const updated = { ...prev }
+          Object.keys(updated).forEach(userId => {
+            updated[userId] = updated[userId].filter(id => id !== workspaceId)
+          })
+          return updated
+        })
+        setSelectedUserPermissions(prev => {
+          const updated = { ...prev }
+          Object.keys(updated).forEach(userId => {
+            updated[userId] = updated[userId].filter(id => id !== workspaceId)
+          })
+          return updated
+        })
+      } else {
+        toast({
+          title: t("admin.permissions.toast.error"),
+          description: result.error || t("admin.permissions.toast.error_delete"),
+          variant: "destructive",
+        })
+      }
+    } catch (error: any) {
+      toast({
+        title: t("admin.permissions.toast.error"),
+        description: error.message || t("admin.permissions.toast.error_delete"),
+        variant: "destructive",
+      })
+    } finally {
+      setIsDeletingWorkspace(false)
+      setWorkspaceToDelete(null)
+    }
+  }
+
+  const handleOpenCreateWorkspaceDialog = () => {
+    setSelectedWorkspace(null)
+    setWorkspaceForm({ name: "", slug: "", description: "" })
+    setIsWorkspaceDialogOpen(true)
+  }
+
+  const handleOpenEditWorkspaceDialog = (workspace: Workspace) => {
+    setSelectedWorkspace(workspace)
+    setWorkspaceForm({
+      name: workspace.name,
+      slug: workspace.slug,
+      description: workspace.description || ""
+    })
+    setIsWorkspaceDialogOpen(true)
   }
 
   const handleAddAdmin = async () => {
@@ -159,26 +480,44 @@ export default function AdminPage() {
     setIsAddingAdmin(false)
   }
 
-  const handleRemoveAdmin = async (userId: string) => {
-    if (!confirm("Tem certeza que deseja remover este administrador?")) {
-      return
-    }
+  const handleOpenRemoveAdminDialog = (userId: string, userName: string) => {
+    setAdminToRemove(userId)
+    setAdminToRemoveName(userName)
+    setRemoveAdminDialogOpen(true)
+  }
+
+  const handleConfirmRemoveAdmin = async () => {
+    if (!adminToRemove) return
+
+    const userId = adminToRemove
+    const userName = adminToRemoveName
+    setIsRemovingAdmin(true)
+    
+    // Fechar o modal primeiro antes de executar a ação
+    setRemoveAdminDialogOpen(false)
+    
+    // Pequeno delay para garantir que o portal foi desmontado
+    await new Promise(resolve => setTimeout(resolve, 100))
 
     const result = await removeAdmin(userId)
     
     if (result.success) {
       toast({
-        title: "Sucesso",
-        description: "Administrador removido com sucesso!",
+        title: t("admin.admins.toast.success") || "Sucesso",
+        description: t("admin.admins.toast.admin_removed") || "Administrador removido com sucesso!",
       })
       loadAdmins()
     } else {
       toast({
-        title: "Erro",
-        description: result.error || "Erro ao remover administrador",
+        title: t("admin.admins.toast.error") || "Erro",
+        description: result.error || t("admin.admins.toast.error_remove") || "Erro ao remover administrador",
         variant: "destructive",
       })
     }
+    
+    setIsRemovingAdmin(false)
+    setAdminToRemove(null)
+    setAdminToRemoveName("")
   }
 
   if (!mounted || isLoading) {
@@ -250,6 +589,7 @@ export default function AdminPage() {
     setIsLoadingComments(true)
     setTicketComments([])
     setTicketHistory([])
+    setNewComment("")
     
     try {
       // Carregar comentários e histórico em paralelo
@@ -265,6 +605,20 @@ export default function AdminPage() {
       if (historyResult.success) {
         setTicketHistory(historyResult.history || [])
       }
+
+      // Scroll para o final após carregar (aumentar delay para garantir renderização)
+      setTimeout(() => {
+        const chatContainer = document.getElementById('ticket-chat-container')
+        if (chatContainer) {
+          // Forçar scroll após um pequeno delay adicional
+          setTimeout(() => {
+            chatContainer.scrollTo({
+              top: chatContainer.scrollHeight,
+              behavior: 'auto'
+            })
+          }, 100)
+        }
+      }, 400)
     } catch (error: any) {
       toast({
         title: "Erro",
@@ -273,6 +627,54 @@ export default function AdminPage() {
       })
     } finally {
       setIsLoadingComments(false)
+    }
+  }
+
+  const handleAddComment = async () => {
+    if (!selectedTicket || !newComment.trim()) return
+
+    setIsAddingComment(true)
+    try {
+      const result = await addTicketComment(selectedTicket.id, newComment.trim())
+
+      if (result.success) {
+        toast({
+          title: "Sucesso",
+          description: "Comentário adicionado com sucesso!",
+        })
+        
+        // Recarregar comentários
+        const commentsResult = await getTicketComments(selectedTicket.id)
+        if (commentsResult.success) {
+          setTicketComments(commentsResult.comments || [])
+        }
+        setNewComment("")
+        
+        // Scroll para o final da conversa após um pequeno delay
+        setTimeout(() => {
+          const chatContainer = document.getElementById('ticket-chat-container')
+          if (chatContainer) {
+            chatContainer.scrollTo({
+              top: chatContainer.scrollHeight,
+              behavior: 'smooth'
+            })
+          }
+        }, 150)
+      } else {
+        toast({
+          title: "Erro",
+          description: result.error || "Erro ao adicionar comentário",
+          variant: "destructive",
+        })
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message || "Erro ao adicionar comentário",
+        variant: "destructive",
+      })
+    } finally {
+      setIsAddingComment(false)
     }
   }
 
@@ -358,7 +760,7 @@ export default function AdminPage() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-4 md:mb-6 h-auto">
+          <TabsList className="grid w-full grid-cols-4 mb-4 md:mb-6 h-auto">
             <TabsTrigger value="users" className="flex items-center justify-center gap-1.5 md:gap-2 cursor-pointer text-xs md:text-sm px-2 md:px-4 py-2 md:py-3">
               <Users className="h-3.5 w-3.5 md:h-4 md:w-4" />
               <span className="hidden sm:inline">{t("admin.tabs.usuarios")}</span>
@@ -368,6 +770,11 @@ export default function AdminPage() {
               <Ticket className="h-3.5 w-3.5 md:h-4 md:w-4" />
               <span className="hidden sm:inline">{t("admin.tabs.tickets")}</span>
               <span className="sm:hidden">{t("admin.tabs.tickets_short")}</span>
+            </TabsTrigger>
+            <TabsTrigger value="permissions" className="flex items-center justify-center gap-1.5 md:gap-2 cursor-pointer text-xs md:text-sm px-2 md:px-4 py-2 md:py-3">
+              <Lock className="h-3.5 w-3.5 md:h-4 md:w-4" />
+              <span className="hidden sm:inline">{t("admin.tabs.permissions")}</span>
+              <span className="sm:hidden">{t("admin.tabs.permissions_short")}</span>
             </TabsTrigger>
             {isOwner && (
               <TabsTrigger value="admins" className="flex items-center justify-center gap-1.5 md:gap-2 cursor-pointer text-xs md:text-sm px-2 md:px-4 py-2 md:py-3">
@@ -528,7 +935,7 @@ export default function AdminPage() {
                   {filteredTickets.map((ticket) => (
                     <div
                       key={ticket.id}
-                      className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-4 md:p-6 hover:border-primary/30 transition-all group"
+                      className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-4 md:p-6 hover:border-primary/30 transition-all group cursor-default"
                     >
                       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                         {/* Conteúdo principal */}
@@ -600,7 +1007,7 @@ export default function AdminPage() {
                         <div className="shrink-0 w-full md:w-auto">
                           <Button
                             onClick={() => handleOpenTicket(ticket)}
-                            className="w-full md:w-auto flex items-center justify-center gap-2 cursor-pointer"
+                            className="w-full md:w-auto flex items-center justify-center gap-2 cursor-pointer hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
                             variant="outline"
                           >
                             <Eye className="h-4 w-4" />
@@ -612,6 +1019,222 @@ export default function AdminPage() {
                   ))}
                 </div>
               )}
+            </div>
+          </TabsContent>
+
+          {/* Permissions Tab */}
+          <TabsContent value="permissions" className="space-y-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input
+                  placeholder={t("admin.permissions.search_user")}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              <Button
+                onClick={loadWorkspaces}
+                variant="outline"
+                disabled={isLoadingWorkspaces}
+                className="flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
+              >
+                <RefreshCw className={`h-4 w-4 ${isLoadingWorkspaces ? 'animate-spin' : ''}`} />
+                {t("admin.permissions.update")}
+              </Button>
+              <Button
+                onClick={handleOpenCreateWorkspaceDialog}
+                className="flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
+              >
+                <FolderPlus className="h-4 w-4" />
+                {t("admin.permissions.new_workspace")}
+              </Button>
+            </div>
+
+            {/* Gerenciamento de Workspaces */}
+            <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-4 md:p-6 mb-4">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground">{t("admin.permissions.workspaces_available")}</h3>
+                  <p className="text-sm text-muted-foreground">{t("admin.permissions.workspaces_description")}</p>
+                </div>
+              </div>
+              <div className="space-y-2">
+                {workspaces.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    {t("admin.permissions.no_workspaces")}
+                  </div>
+                ) : (
+                  workspaces.map((workspace) => (
+                    <div
+                      key={workspace.id}
+                      className="flex items-center justify-between p-3 rounded-lg border border-border/50 hover:bg-muted/30 transition-colors"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="font-medium text-foreground">{workspace.name}</p>
+                          {workspace.is_default && (
+                            <Badge variant="outline" className="text-xs">
+                              {t("admin.permissions.default")}
+                            </Badge>
+                          )}
+                          <Badge variant="outline" className="text-xs text-muted-foreground">
+                            {workspace.slug}
+                          </Badge>
+                        </div>
+                        {workspace.description && (
+                          <p className="text-sm text-muted-foreground truncate">{workspace.description}</p>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0 ml-4">
+                        {!workspace.is_default && (
+                          <>
+                            <Button
+                              onClick={() => handleOpenEditWorkspaceDialog(workspace)}
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 w-8 p-0"
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              onClick={() => handleOpenDeleteWorkspaceDialog(workspace.id)}
+                              variant="ghost"
+                              size="sm"
+                              disabled={isDeletingWorkspace}
+                              className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Lista de usuários */}
+              <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl overflow-hidden">
+                <div className="p-4 border-b border-border/50">
+                  <h3 className="text-lg font-semibold text-foreground">{t("admin.permissions.users")}</h3>
+                  <p className="text-sm text-muted-foreground">{t("admin.permissions.select_user")}</p>
+                </div>
+                <div className="max-h-[600px] overflow-y-auto">
+                  {filteredUsers.length === 0 ? (
+                    <div className="p-8 text-center text-muted-foreground">
+                      {t("admin.permissions.no_users")}
+                    </div>
+                  ) : (
+                    <div className="p-2 space-y-2">
+                      {filteredUsers.map((user) => (
+                        <div
+                          key={user.id}
+                          onClick={() => handleSelectUserForPermissions(user.id)}
+                          className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                            selectedUserForPermissions === user.id
+                              ? 'border-primary bg-primary/10'
+                              : 'border-border/50 hover:border-primary/30 hover:bg-muted/30'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-foreground truncate">{user.name}</p>
+                              <p className="text-sm text-muted-foreground truncate">{user.email}</p>
+                            </div>
+                            {selectedUserForPermissions === user.id && (
+                              <CheckCircle className="h-5 w-5 text-primary shrink-0 ml-2" />
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Gerenciamento de permissões */}
+              <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl overflow-hidden">
+                <div className="p-4 border-b border-border/50">
+                  <h3 className="text-lg font-semibold text-foreground">{t("admin.permissions.workspace_permissions")}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedUserForPermissions
+                      ? t("admin.permissions.select_workspaces")
+                      : t("admin.permissions.select_user_to_start")}
+                  </p>
+                </div>
+                <div className="p-4">
+                  {!selectedUserForPermissions ? (
+                    <div className="text-center py-12 text-muted-foreground">
+                      <Lock className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                      <p>{t("admin.permissions.select_user_to_manage")}</p>
+                    </div>
+                  ) : isLoadingWorkspaces ? (
+                    <div className="text-center py-12">
+                      <div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin mx-auto" />
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {workspaces.map((workspace) => {
+                        const isSelected = (selectedUserPermissions[selectedUserForPermissions] || []).includes(workspace.id)
+                        const isDefault = workspace.is_default
+                        return (
+                          <div
+                            key={workspace.id}
+                            className={`p-4 rounded-lg border-2 ${
+                              isSelected
+                                ? 'border-primary bg-primary/10'
+                                : 'border-border/50 bg-muted/30'
+                            } ${isDefault ? 'opacity-100' : ''}`}
+                          >
+                            <div className="flex items-start gap-3">
+                              <Checkbox
+                                checked={isSelected}
+                                onCheckedChange={() => handleToggleWorkspacePermission(selectedUserForPermissions, workspace.id)}
+                                disabled={isDefault}
+                                className="mt-1"
+                              />
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <p className="font-semibold text-foreground">{workspace.name}</p>
+                                  {isDefault && (
+                                    <Badge variant="outline" className="text-xs">
+                                      {t("admin.permissions.default")}
+                                    </Badge>
+                                  )}
+                                </div>
+                                {workspace.description && (
+                                  <p className="text-sm text-muted-foreground">{workspace.description}</p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      })}
+                      <Button
+                        onClick={handleSavePermissions}
+                        disabled={isSavingPermissions || JSON.stringify(userPermissions[selectedUserForPermissions]) === JSON.stringify(selectedUserPermissions[selectedUserForPermissions])}
+                        className="w-full flex items-center justify-center gap-2"
+                      >
+                        {isSavingPermissions ? (
+                          <>
+                            <RefreshCw className="h-4 w-4 animate-spin" />
+                            {t("admin.permissions.saving")}
+                          </>
+                        ) : (
+                          <>
+                            <Save className="h-4 w-4" />
+                            {t("admin.permissions.save_permissions")}
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </TabsContent>
 
@@ -676,9 +1299,10 @@ export default function AdminPage() {
                               <td className="px-6 py-4 text-sm">
                                 {!admin.is_owner && (
                                   <Button
-                                    onClick={() => handleRemoveAdmin(admin.user_id)}
+                                    onClick={() => handleOpenRemoveAdminDialog(admin.user_id, adminUser?.email || adminUser?.name || 'este administrador')}
                                     variant="ghost"
                                     size="sm"
+                                    disabled={isRemovingAdmin}
                                     className="text-destructive hover:text-destructive hover:bg-destructive/10 cursor-pointer"
                                   >
                                     <X className="h-4 w-4" />
@@ -723,9 +1347,10 @@ export default function AdminPage() {
                           {!admin.is_owner && (
                             <div>
                               <Button
-                                onClick={() => handleRemoveAdmin(admin.user_id)}
+                                onClick={() => handleOpenRemoveAdminDialog(admin.user_id, adminUser?.email || adminUser?.name || 'este administrador')}
                                 variant="ghost"
                                 size="sm"
+                                disabled={isRemovingAdmin}
                                 className="w-full text-destructive hover:text-destructive hover:bg-destructive/10 cursor-pointer"
                               >
                                 <X className="h-4 w-4 mr-2" />
@@ -744,224 +1369,464 @@ export default function AdminPage() {
         </Tabs>
       </div>
 
-      {/* Dialog para visualizar e gerenciar ticket */}
+      {/* Dialog para visualizar e gerenciar ticket - Layout de Chat Moderno */}
       <Dialog open={isTicketDialogOpen} onOpenChange={setIsTicketDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[95vh] sm:max-h-[90vh] flex flex-col p-0 gap-0">
-          <DialogHeader className="p-4 sm:p-6 border-b border-border/50 shrink-0">
-            <DialogTitle className="text-lg sm:text-2xl font-bold line-clamp-2">{selectedTicket?.titulo}</DialogTitle>
-            <DialogDescription className="text-sm sm:text-base mt-1">
-              Gerencie o status e prioridade deste ticket
+        <DialogContent className="!max-w-[95vw] !w-[95vw] !max-h-[98vh] !h-[98vh] flex flex-col p-0 gap-0 bg-background m-0">
+          {selectedTicket && (
+            <>
+              {/* Header Compacto com Informações e Controles */}
+              <div className="p-4 sm:p-6 border-b border-border/50 bg-card/50 backdrop-blur-sm shrink-0">
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <DialogTitle className="text-xl sm:text-2xl font-bold mb-3 line-clamp-2">{selectedTicket.titulo}</DialogTitle>
+                      <div className="flex flex-wrap items-center gap-3 text-sm">
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <User className="h-4 w-4 shrink-0" />
+                          <span className="truncate">{selectedTicket.user?.name || 'Usuário'}</span>
+                        </div>
+                        <span className="text-muted-foreground">·</span>
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Mail className="h-4 w-4 shrink-0" />
+                          <span className="truncate max-w-[200px]">{selectedTicket.user?.email || 'N/A'}</span>
+                        </div>
+                        <span className="text-muted-foreground">·</span>
+                        <Badge variant="outline" className="text-xs">{selectedTicket.categoria}</Badge>
+                        <span className="text-muted-foreground">·</span>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <Calendar className="h-3.5 w-3.5 shrink-0" />
+                          <span>{new Date(selectedTicket.created_at).toLocaleDateString('pt-BR', { 
+                            day: '2-digit', 
+                            month: 'short', 
+                            year: 'numeric'
+                          })}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-3 border-t border-border/30">
+                    <div className="flex items-center gap-2 flex-1">
+                      <Label htmlFor="status" className="text-xs font-semibold whitespace-nowrap min-w-[60px]">Status:</Label>
+                      <Select value={ticketStatus} onValueChange={setTicketStatus}>
+                        <SelectTrigger id="status" className="h-9 flex-1 text-xs">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="aberto">Aberto</SelectItem>
+                          <SelectItem value="visto">Visto</SelectItem>
+                          <SelectItem value="em_andamento">Em Andamento</SelectItem>
+                          <SelectItem value="resolvido">Resolvido</SelectItem>
+                          <SelectItem value="fechado">Fechado</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="flex items-center gap-2 flex-1">
+                      <Label htmlFor="prioridade" className="text-xs font-semibold whitespace-nowrap min-w-[80px]">Prioridade:</Label>
+                      <Select value={ticketPriority} onValueChange={setTicketPriority}>
+                        <SelectTrigger id="prioridade" className="h-9 flex-1 text-xs">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="baixa">Baixa</SelectItem>
+                          <SelectItem value="media">Média</SelectItem>
+                          <SelectItem value="alta">Alta</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <Button
+                      onClick={handleUpdateTicket}
+                      disabled={isUpdatingTicket}
+                      size="sm"
+                      className="h-9 text-xs shrink-0 sm:min-w-[100px]"
+                    >
+                      {isUpdatingTicket ? (
+                        <span className="flex items-center gap-2">
+                          <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                          Salvando...
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-2">
+                          <CheckCircle className="h-3.5 w-3.5" />
+                          Salvar
+                        </span>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Área de Chat */}
+              <div className="flex-1 flex flex-col min-h-0 bg-gradient-to-b from-muted/10 to-background overflow-hidden">
+                {/* Container de Mensagens com Scroll */}
+                <div 
+                  id="ticket-chat-container"
+                  className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4"
+                  style={{ height: 'calc(98vh - 280px)', minHeight: '400px' }}
+                >
+                  {isLoadingComments ? (
+                    <div className="flex items-center justify-center h-full min-h-[300px]">
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="h-8 w-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+                        <span className="text-sm text-muted-foreground">Carregando conversa...</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      {/* Mensagem Inicial - Descrição do Ticket (do Usuário) */}
+                      <div className="flex items-start gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                        <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0 border-2 border-primary/20">
+                          <User className="h-4 w-4 text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0 max-w-[85%] sm:max-w-[75%]">
+                          <div className="bg-card rounded-2xl rounded-tl-sm p-4 shadow-md border border-border/50">
+                            <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap break-words">
+                              {selectedTicket.descricao}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2 mt-2 px-1">
+                            <span className="text-xs font-medium text-foreground">
+                              {selectedTicket.user?.name || 'Usuário'}
+                            </span>
+                            <span className="text-xs text-muted-foreground">·</span>
+                            <span className="text-xs text-muted-foreground">
+                              {new Date(selectedTicket.created_at).toLocaleDateString('pt-BR', { 
+                                day: '2-digit', 
+                                month: 'short', 
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Comentários como Mensagens de Chat */}
+                      {ticketComments.map((comment, index) => {
+                        const isAdminComment = comment.user_id !== selectedTicket.user_id
+                        
+                        return (
+                          <div 
+                            key={comment.id} 
+                            className={`flex items-start gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300 ${
+                              isAdminComment ? 'flex-row-reverse' : ''
+                            }`}
+                            style={{ animationDelay: `${index * 50}ms` }}
+                          >
+                            <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 border-2 ${
+                              isAdminComment 
+                                ? 'bg-primary text-primary-foreground border-primary/30' 
+                                : 'bg-muted text-muted-foreground border-border/50'
+                            }`}>
+                              {isAdminComment ? (
+                                <Shield className="h-4 w-4" />
+                              ) : (
+                                <User className="h-4 w-4" />
+                              )}
+                            </div>
+                            <div className={`flex-1 min-w-0 max-w-[85%] sm:max-w-[75%] ${isAdminComment ? 'flex flex-col items-end' : ''}`}>
+                              <div className={`rounded-2xl p-4 shadow-md border max-w-full ${
+                                isAdminComment
+                                  ? 'bg-primary text-primary-foreground rounded-tr-sm border-primary/20'
+                                  : 'bg-card rounded-tl-sm border-border/50'
+                              }`}>
+                                <p className={`text-sm leading-relaxed whitespace-pre-wrap break-words ${
+                                  isAdminComment ? 'text-primary-foreground' : 'text-foreground'
+                                }`}>
+                                  {comment.comment}
+                                </p>
+                              </div>
+                              <div className={`flex items-center gap-2 mt-2 px-1 ${isAdminComment ? 'flex-row-reverse' : ''}`}>
+                                <span className={`text-xs font-medium ${
+                                  isAdminComment ? 'text-primary' : 'text-foreground'
+                                }`}>
+                                  {isAdminComment ? (comment.user?.name || 'Administrador') : (comment.user?.name || 'Usuário')}
+                                </span>
+                                <span className="text-xs text-muted-foreground">·</span>
+                                <span className="text-xs text-muted-foreground">
+                                  {new Date(comment.created_at).toLocaleDateString('pt-BR', { 
+                                    day: '2-digit', 
+                                    month: 'short', 
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </>
+                  )}
+                </div>
+
+                {/* Input de Comentário para Admin */}
+                <div className="p-4 sm:p-6 border-t border-border/50 bg-card/80 backdrop-blur-sm shrink-0">
+                  <div className="flex items-end gap-3">
+                    <div className="flex-1 relative">
+                      <Textarea
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        placeholder="Digite sua resposta ao usuário..."
+                        rows={3}
+                        className="resize-none text-sm border-2 border-border/50 focus:border-primary/50 bg-background pr-12"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                            e.preventDefault()
+                            handleAddComment()
+                          }
+                        }}
+                        disabled={isAddingComment || selectedTicket.status === 'resolvido' || selectedTicket.status === 'fechado'}
+                      />
+                      <p className="text-xs text-muted-foreground mt-1.5 flex items-center gap-1">
+                        <span>Pressione</span>
+                        <kbd className="px-1.5 py-0.5 text-xs font-semibold text-muted-foreground bg-muted border border-border rounded">Ctrl</kbd>
+                        <span>+</span>
+                        <kbd className="px-1.5 py-0.5 text-xs font-semibold text-muted-foreground bg-muted border border-border rounded">Enter</kbd>
+                        <span>para enviar</span>
+                      </p>
+                    </div>
+                    <Button
+                      onClick={handleAddComment}
+                      disabled={isAddingComment || !newComment.trim() || selectedTicket.status === 'resolvido' || selectedTicket.status === 'fechado'}
+                      size="lg"
+                      className="h-12 w-12 p-0 shrink-0"
+                    >
+                      {isAddingComment ? (
+                        <span className="h-4 w-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                      ) : (
+                        <Send className="h-5 w-5" />
+                      )}
+                    </Button>
+                  </div>
+                  {(selectedTicket.status === 'resolvido' || selectedTicket.status === 'fechado') && (
+                    <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1.5">
+                      <AlertCircle className="h-3.5 w-3.5" />
+                      Não é possível adicionar comentários em tickets {selectedTicket.status === 'resolvido' ? 'resolvidos' : 'fechados'}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog para criar/editar workspace */}
+      <Dialog open={isWorkspaceDialogOpen} onOpenChange={setIsWorkspaceDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>
+              {selectedWorkspace ? t("admin.permissions.edit_workspace") : t("admin.permissions.create_workspace")}
+            </DialogTitle>
+            <DialogDescription>
+              {selectedWorkspace
+                ? t("admin.permissions.update_workspace_info")
+                : t("admin.permissions.create_workspace_description")}
             </DialogDescription>
           </DialogHeader>
 
-          {selectedTicket && (
-            <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
-              {/* Descrição completa */}
-              <div>
-                <Label className="text-xs sm:text-sm font-semibold mb-2 block">Descrição</Label>
-                <p className="text-xs sm:text-sm text-muted-foreground bg-muted/50 p-3 sm:p-4 rounded-lg leading-relaxed whitespace-pre-wrap">
-                  {selectedTicket.descricao}
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="workspace-name">{t("admin.permissions.workspace_name")}</Label>
+              <Input
+                id="workspace-name"
+                placeholder={t("admin.permissions.workspace_name_placeholder")}
+                value={workspaceForm.name}
+                onChange={(e) => setWorkspaceForm(prev => ({ ...prev, name: e.target.value }))}
+                className="mt-2"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="workspace-slug">{t("admin.permissions.workspace_slug")}</Label>
+              <Input
+                id="workspace-slug"
+                placeholder={t("admin.permissions.workspace_slug_placeholder")}
+                value={workspaceForm.slug}
+                onChange={(e) => {
+                  const slug = e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-_]/g, '')
+                  setWorkspaceForm(prev => ({ ...prev, slug }))
+                }}
+                className="mt-2"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                {t("admin.permissions.workspace_slug_hint")}
+              </p>
+            </div>
+
+            <div>
+              <Label htmlFor="workspace-description">{t("admin.permissions.workspace_description")}</Label>
+              <Textarea
+                id="workspace-description"
+                placeholder={t("admin.permissions.workspace_description_placeholder")}
+                value={workspaceForm.description}
+                onChange={(e) => setWorkspaceForm(prev => ({ ...prev, description: e.target.value }))}
+                className="mt-2 min-h-[100px]"
+              />
+            </div>
+
+            {selectedWorkspace && (
+              <div className="bg-muted/50 p-3 rounded-lg">
+                <p className="text-sm text-muted-foreground">
+                  {t("admin.permissions.workspace_edit_warning")}
                 </p>
               </div>
+            )}
+          </div>
 
-              {/* Informações do usuário */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                <div>
-                  <Label className="text-xs sm:text-sm font-semibold mb-2 block">Usuário</Label>
-                  <div className="flex items-center gap-2 text-xs sm:text-sm">
-                    <User className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground shrink-0" />
-                    <span className="truncate">{selectedTicket.user?.name || 'Usuário'}</span>
-                  </div>
-                </div>
-                <div>
-                  <Label className="text-xs sm:text-sm font-semibold mb-2 block">E-mail</Label>
-                  <div className="flex items-center gap-2 text-xs sm:text-sm">
-                    <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground shrink-0" />
-                    <span className="truncate break-all">{selectedTicket.user?.email || 'N/A'}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Status e Prioridade */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                <div>
-                  <Label htmlFor="status" className="text-xs sm:text-sm font-semibold mb-2 block">
-                    Status
-                  </Label>
-                  <Select value={ticketStatus} onValueChange={setTicketStatus}>
-                    <SelectTrigger id="status" className="h-9 sm:h-10 text-xs sm:text-sm">
-                      <SelectValue placeholder="Selecione o status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="aberto">Aberto</SelectItem>
-                      <SelectItem value="visto">Visto pelo Administrador</SelectItem>
-                      <SelectItem value="em_andamento">Em Andamento</SelectItem>
-                      <SelectItem value="resolvido">Resolvido</SelectItem>
-                      <SelectItem value="fechado">Fechado</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label htmlFor="prioridade" className="text-xs sm:text-sm font-semibold mb-2 block">
-                    Prioridade
-                  </Label>
-                  <Select value={ticketPriority} onValueChange={setTicketPriority}>
-                    <SelectTrigger id="prioridade" className="h-9 sm:h-10 text-xs sm:text-sm">
-                      <SelectValue placeholder="Selecione a prioridade" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="baixa">Baixa</SelectItem>
-                      <SelectItem value="media">Média</SelectItem>
-                      <SelectItem value="alta">Alta</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              {/* Informações adicionais */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-4 border-t border-border/50">
-                <div>
-                  <Label className="text-xs sm:text-sm font-semibold mb-2 block">Categoria</Label>
-                  <Badge variant="outline" className="text-xs sm:text-sm">{selectedTicket.categoria}</Badge>
-                </div>
-                <div>
-                  <Label className="text-xs sm:text-sm font-semibold mb-2 block">Data de Criação</Label>
-                  <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-                    <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-                    <span className="break-words">{new Date(selectedTicket.created_at).toLocaleDateString('pt-BR', { 
-                      day: '2-digit', 
-                      month: 'short', 
-                      year: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Histórico de Status */}
-              <div className="pt-4 border-t border-border/50">
-                <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                  <History className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" />
-                  <Label className="text-xs sm:text-sm font-semibold">Histórico de Atualizações</Label>
-                </div>
-                {isLoadingComments ? (
-                  <div className="text-center py-4 sm:py-6 text-muted-foreground">
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="h-6 w-6 sm:h-8 sm:w-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-                      <span className="text-xs sm:text-sm">Carregando histórico...</span>
-                    </div>
-                  </div>
-                ) : ticketHistory.length === 0 ? (
-                  <div className="text-center py-4 sm:py-6 text-muted-foreground text-xs sm:text-sm bg-muted/30 rounded-lg border border-dashed border-border/50">
-                    Nenhuma atualização de status registrada
-                  </div>
-                ) : (
-                  <div className="space-y-2 sm:space-y-3 max-h-40 sm:max-h-48 overflow-y-auto pr-1 sm:pr-2">
-                    {ticketHistory.map((item) => (
-                      <div key={item.id} className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 bg-muted/30 rounded-lg">
-                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-primary mt-2 shrink-0" />
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs sm:text-sm font-medium leading-relaxed">
-                            Status alterado de <span className="text-muted-foreground">{item.old_status ? getStatusLabel(item.old_status) : 'N/A'}</span> para <span className="text-primary">{getStatusLabel(item.new_status)}</span>
-                            {item.user && (
-                              <span className="text-[10px] sm:text-xs text-muted-foreground ml-1 sm:ml-2">
-                                por {item.user.name}
-                              </span>
-                            )}
-                          </p>
-                          <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">
-                            {new Date(item.created_at).toLocaleDateString('pt-BR', { 
-                              day: '2-digit', 
-                              month: 'short', 
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Comentários */}
-              <div className="pt-4 border-t border-border/50">
-                <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                  <MessageSquare className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" />
-                  <Label className="text-xs sm:text-sm font-semibold">Comentários do Usuário</Label>
-                </div>
-                
-                {/* Lista de comentários */}
-                {isLoadingComments ? (
-                  <div className="text-center py-4 sm:py-6 text-muted-foreground">
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="h-6 w-6 sm:h-8 sm:w-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-                      <span className="text-xs sm:text-sm">Carregando comentários...</span>
-                    </div>
-                  </div>
-                ) : ticketComments.length === 0 ? (
-                  <div className="text-center py-4 sm:py-6 text-muted-foreground text-xs sm:text-sm bg-muted/30 rounded-lg border border-dashed border-border/50">
-                    Nenhum comentário ainda
-                  </div>
-                ) : (
-                  <div className="space-y-2 sm:space-y-3 max-h-48 sm:max-h-60 overflow-y-auto pr-1 sm:pr-2">
-                    {ticketComments.map((comment) => (
-                      <div key={comment.id} className="p-2 sm:p-3 bg-muted/30 rounded-lg">
-                        <p className="text-xs sm:text-sm text-foreground mb-2 leading-relaxed whitespace-pre-wrap break-words">{comment.comment}</p>
-                        <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/30">
-                          <span className="text-[10px] sm:text-xs text-muted-foreground truncate">
-                            {comment.user?.name || 'Usuário'}
-                          </span>
-                          <span className="text-[10px] sm:text-xs text-muted-foreground shrink-0 whitespace-nowrap">
-                            {new Date(comment.created_at).toLocaleDateString('pt-BR', { 
-                              day: '2-digit', 
-                              month: 'short', 
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          <DialogFooter className="p-4 sm:p-6 border-t border-border/50 shrink-0 gap-2 sm:gap-3">
+          <DialogFooter>
             <Button
               variant="outline"
-              onClick={() => setIsTicketDialogOpen(false)}
-              disabled={isUpdatingTicket}
-              className="w-full sm:w-auto h-9 sm:h-10 text-xs sm:text-sm"
+              onClick={() => {
+                setIsWorkspaceDialogOpen(false)
+                setWorkspaceForm({ name: "", slug: "", description: "" })
+                setSelectedWorkspace(null)
+              }}
+              disabled={isCreatingWorkspace || isEditingWorkspace}
             >
-              Cancelar
+              {t("admin.permissions.cancel")}
             </Button>
             <Button
-              onClick={handleUpdateTicket}
-              disabled={isUpdatingTicket}
-              className="flex items-center gap-2 w-full sm:w-auto h-9 sm:h-10 text-xs sm:text-sm"
+              onClick={selectedWorkspace ? handleEditWorkspace : handleCreateWorkspace}
+              disabled={isCreatingWorkspace || isEditingWorkspace || !workspaceForm.name.trim() || !workspaceForm.slug.trim()}
             >
-              {isUpdatingTicket ? (
+              {isCreatingWorkspace || isEditingWorkspace ? (
                 <>
-                  <RefreshCw className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin" />
-                  Atualizando...
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  {selectedWorkspace ? t("admin.permissions.saving") : t("admin.permissions.creating")}
                 </>
               ) : (
                 <>
-                  <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  Salvar Alterações
+                  <Save className="h-4 w-4 mr-2" />
+                  {selectedWorkspace ? t("admin.permissions.save_changes") : t("admin.permissions.create_workspace_button")}
                 </>
               )}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Dialog de confirmação para deletar workspace */}
+      {deleteWorkspaceDialogOpen && workspaceToDelete && (
+        <AlertDialog 
+          open={deleteWorkspaceDialogOpen} 
+          onOpenChange={(open) => {
+            if (!open) {
+              if (!isDeletingWorkspace) {
+                setDeleteWorkspaceDialogOpen(false)
+                // Delay para garantir que o portal foi desmontado antes de limpar o estado
+                setTimeout(() => {
+                  setWorkspaceToDelete(null)
+                }, 200)
+              }
+            }
+          }}
+        >
+          <AlertDialogContent className="bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center gap-2 text-destructive">
+                <AlertCircle className="h-5 w-5" />
+                {t("admin.permissions.dialog.delete_workspace.title") || "Deletar Workspace"}
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-muted-foreground pt-2">
+                {t("admin.permissions.dialog.delete_workspace.description") || "Tem certeza que deseja deletar este workspace? Todas as permissões associadas serão removidas. Esta ação não pode ser desfeita."}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="gap-3">
+              <AlertDialogCancel 
+                disabled={isDeletingWorkspace}
+                onClick={() => {
+                  setDeleteWorkspaceDialogOpen(false)
+                  setTimeout(() => {
+                    setWorkspaceToDelete(null)
+                  }, 200)
+                }}
+              >
+                {t("admin.permissions.cancel") || "Cancelar"}
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleConfirmDeleteWorkspace()
+                }}
+                disabled={isDeletingWorkspace}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                {isDeletingWorkspace ? (
+                  <span className="flex items-center gap-2">
+                    <span className="h-4 w-4 border-2 border-destructive-foreground/30 border-t-destructive-foreground rounded-full animate-spin" />
+                    {t("admin.permissions.dialog.delete_workspace.deleting") || "Deletando..."}
+                  </span>
+                ) : (
+                  t("admin.permissions.dialog.delete_workspace.confirm") || "Deletar"
+                )}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
+
+      {/* Dialog de confirmação para remover admin */}
+      {removeAdminDialogOpen && adminToRemove && (
+        <AlertDialog 
+          open={removeAdminDialogOpen} 
+          onOpenChange={(open) => {
+            if (!open) {
+              if (!isRemovingAdmin) {
+                setRemoveAdminDialogOpen(false)
+                // Delay para garantir que o portal foi desmontado antes de limpar o estado
+                setTimeout(() => {
+                  setAdminToRemove(null)
+                  setAdminToRemoveName("")
+                }, 200)
+              }
+            }
+          }}
+        >
+          <AlertDialogContent className="bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center gap-2 text-destructive">
+                <AlertCircle className="h-5 w-5" />
+                {t("admin.admins.dialog.remove.title") || "Remover Administrador"}
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-muted-foreground pt-2">
+                {(t("admin.admins.dialog.remove.description") || `Tem certeza que deseja remover {name} como administrador? Esta ação não pode ser desfeita.`).replace("{name}", adminToRemoveName)}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="gap-3">
+              <AlertDialogCancel 
+                disabled={isRemovingAdmin}
+                onClick={() => {
+                  setRemoveAdminDialogOpen(false)
+                  setTimeout(() => {
+                    setAdminToRemove(null)
+                    setAdminToRemoveName("")
+                  }, 200)
+                }}
+              >
+                {t("admin.permissions.cancel") || "Cancelar"}
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleConfirmRemoveAdmin()
+                }}
+                disabled={isRemovingAdmin}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                {isRemovingAdmin ? (
+                  <span className="flex items-center gap-2">
+                    <span className="h-4 w-4 border-2 border-destructive-foreground/30 border-t-destructive-foreground rounded-full animate-spin" />
+                    {t("admin.admins.dialog.remove.removing") || "Removendo..."}
+                  </span>
+                ) : (
+                  t("admin.admins.dialog.remove.confirm") || "Remover"
+                )}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </main>
   )
 }
