@@ -746,50 +746,50 @@ export default function AdminPage() {
 
       {/* Dialog para visualizar e gerenciar ticket */}
       <Dialog open={isTicketDialogOpen} onOpenChange={setIsTicketDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold">{selectedTicket?.titulo}</DialogTitle>
-            <DialogDescription>
+        <DialogContent className="max-w-3xl max-h-[95vh] sm:max-h-[90vh] flex flex-col p-0 gap-0">
+          <DialogHeader className="p-4 sm:p-6 border-b border-border/50 shrink-0">
+            <DialogTitle className="text-lg sm:text-2xl font-bold line-clamp-2">{selectedTicket?.titulo}</DialogTitle>
+            <DialogDescription className="text-sm sm:text-base mt-1">
               Gerencie o status e prioridade deste ticket
             </DialogDescription>
           </DialogHeader>
 
           {selectedTicket && (
-            <div className="space-y-6 py-4">
+            <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
               {/* Descrição completa */}
               <div>
-                <Label className="text-sm font-semibold mb-2 block">Descrição</Label>
-                <p className="text-sm text-muted-foreground bg-muted/50 p-4 rounded-lg">
+                <Label className="text-xs sm:text-sm font-semibold mb-2 block">Descrição</Label>
+                <p className="text-xs sm:text-sm text-muted-foreground bg-muted/50 p-3 sm:p-4 rounded-lg leading-relaxed whitespace-pre-wrap">
                   {selectedTicket.descricao}
                 </p>
               </div>
 
               {/* Informações do usuário */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <Label className="text-sm font-semibold mb-2 block">Usuário</Label>
-                  <div className="flex items-center gap-2 text-sm">
-                    <User className="h-4 w-4 text-muted-foreground" />
-                    <span>{selectedTicket.user?.name || 'Usuário'}</span>
+                  <Label className="text-xs sm:text-sm font-semibold mb-2 block">Usuário</Label>
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <User className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground shrink-0" />
+                    <span className="truncate">{selectedTicket.user?.name || 'Usuário'}</span>
                   </div>
                 </div>
                 <div>
-                  <Label className="text-sm font-semibold mb-2 block">E-mail</Label>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
-                    <span>{selectedTicket.user?.email || 'N/A'}</span>
+                  <Label className="text-xs sm:text-sm font-semibold mb-2 block">E-mail</Label>
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground shrink-0" />
+                    <span className="truncate break-all">{selectedTicket.user?.email || 'N/A'}</span>
                   </div>
                 </div>
               </div>
 
               {/* Status e Prioridade */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <Label htmlFor="status" className="text-sm font-semibold mb-2 block">
+                  <Label htmlFor="status" className="text-xs sm:text-sm font-semibold mb-2 block">
                     Status
                   </Label>
                   <Select value={ticketStatus} onValueChange={setTicketStatus}>
-                    <SelectTrigger id="status">
+                    <SelectTrigger id="status" className="h-9 sm:h-10 text-xs sm:text-sm">
                       <SelectValue placeholder="Selecione o status" />
                     </SelectTrigger>
                     <SelectContent>
@@ -803,11 +803,11 @@ export default function AdminPage() {
                 </div>
 
                 <div>
-                  <Label htmlFor="prioridade" className="text-sm font-semibold mb-2 block">
+                  <Label htmlFor="prioridade" className="text-xs sm:text-sm font-semibold mb-2 block">
                     Prioridade
                   </Label>
                   <Select value={ticketPriority} onValueChange={setTicketPriority}>
-                    <SelectTrigger id="prioridade">
+                    <SelectTrigger id="prioridade" className="h-9 sm:h-10 text-xs sm:text-sm">
                       <SelectValue placeholder="Selecione a prioridade" />
                     </SelectTrigger>
                     <SelectContent>
@@ -820,18 +820,18 @@ export default function AdminPage() {
               </div>
 
               {/* Informações adicionais */}
-              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/50">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-4 border-t border-border/50">
                 <div>
-                  <Label className="text-sm font-semibold mb-2 block">Categoria</Label>
-                  <Badge variant="outline">{selectedTicket.categoria}</Badge>
+                  <Label className="text-xs sm:text-sm font-semibold mb-2 block">Categoria</Label>
+                  <Badge variant="outline" className="text-xs sm:text-sm">{selectedTicket.categoria}</Badge>
                 </div>
                 <div>
-                  <Label className="text-sm font-semibold mb-2 block">Data de Criação</Label>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Calendar className="h-4 w-4" />
-                    <span>{new Date(selectedTicket.created_at).toLocaleDateString('pt-BR', { 
+                  <Label className="text-xs sm:text-sm font-semibold mb-2 block">Data de Criação</Label>
+                  <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+                    <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                    <span className="break-words">{new Date(selectedTicket.created_at).toLocaleDateString('pt-BR', { 
                       day: '2-digit', 
-                      month: '2-digit', 
+                      month: 'short', 
                       year: 'numeric',
                       hour: '2-digit',
                       minute: '2-digit'
@@ -842,36 +842,39 @@ export default function AdminPage() {
 
               {/* Histórico de Status */}
               <div className="pt-4 border-t border-border/50">
-                <div className="flex items-center gap-2 mb-4">
-                  <History className="h-5 w-5 text-primary" />
-                  <Label className="text-sm font-semibold">Histórico de Atualizações</Label>
+                <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                  <History className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" />
+                  <Label className="text-xs sm:text-sm font-semibold">Histórico de Atualizações</Label>
                 </div>
                 {isLoadingComments ? (
-                  <div className="text-center py-4 text-muted-foreground">
-                    Carregando histórico...
+                  <div className="text-center py-4 sm:py-6 text-muted-foreground">
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="h-6 w-6 sm:h-8 sm:w-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+                      <span className="text-xs sm:text-sm">Carregando histórico...</span>
+                    </div>
                   </div>
                 ) : ticketHistory.length === 0 ? (
-                  <div className="text-center py-4 text-muted-foreground text-sm">
+                  <div className="text-center py-4 sm:py-6 text-muted-foreground text-xs sm:text-sm bg-muted/30 rounded-lg border border-dashed border-border/50">
                     Nenhuma atualização de status registrada
                   </div>
                 ) : (
-                  <div className="space-y-3 max-h-40 overflow-y-auto">
+                  <div className="space-y-2 sm:space-y-3 max-h-40 sm:max-h-48 overflow-y-auto pr-1 sm:pr-2">
                     {ticketHistory.map((item) => (
-                      <div key={item.id} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
-                        <div className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
-                        <div className="flex-1">
-                          <p className="text-sm font-medium">
+                      <div key={item.id} className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 bg-muted/30 rounded-lg">
+                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-primary mt-2 shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs sm:text-sm font-medium leading-relaxed">
                             Status alterado de <span className="text-muted-foreground">{item.old_status ? getStatusLabel(item.old_status) : 'N/A'}</span> para <span className="text-primary">{getStatusLabel(item.new_status)}</span>
                             {item.user && (
-                              <span className="text-xs text-muted-foreground ml-2">
+                              <span className="text-[10px] sm:text-xs text-muted-foreground ml-1 sm:ml-2">
                                 por {item.user.name}
                               </span>
                             )}
                           </p>
-                          <p className="text-xs text-muted-foreground mt-1">
+                          <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">
                             {new Date(item.created_at).toLocaleDateString('pt-BR', { 
                               day: '2-digit', 
-                              month: '2-digit', 
+                              month: 'short', 
                               year: 'numeric',
                               hour: '2-digit',
                               minute: '2-digit'
@@ -886,33 +889,36 @@ export default function AdminPage() {
 
               {/* Comentários */}
               <div className="pt-4 border-t border-border/50">
-                <div className="flex items-center gap-2 mb-4">
-                  <MessageSquare className="h-5 w-5 text-primary" />
-                  <Label className="text-sm font-semibold">Comentários do Usuário</Label>
+                <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                  <MessageSquare className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" />
+                  <Label className="text-xs sm:text-sm font-semibold">Comentários do Usuário</Label>
                 </div>
                 
                 {/* Lista de comentários */}
                 {isLoadingComments ? (
-                  <div className="text-center py-4 text-muted-foreground">
-                    Carregando comentários...
+                  <div className="text-center py-4 sm:py-6 text-muted-foreground">
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="h-6 w-6 sm:h-8 sm:w-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+                      <span className="text-xs sm:text-sm">Carregando comentários...</span>
+                    </div>
                   </div>
                 ) : ticketComments.length === 0 ? (
-                  <div className="text-center py-4 text-muted-foreground text-sm">
+                  <div className="text-center py-4 sm:py-6 text-muted-foreground text-xs sm:text-sm bg-muted/30 rounded-lg border border-dashed border-border/50">
                     Nenhum comentário ainda
                   </div>
                 ) : (
-                  <div className="space-y-3 max-h-60 overflow-y-auto">
+                  <div className="space-y-2 sm:space-y-3 max-h-48 sm:max-h-60 overflow-y-auto pr-1 sm:pr-2">
                     {ticketComments.map((comment) => (
-                      <div key={comment.id} className="p-3 bg-muted/30 rounded-lg">
-                        <p className="text-sm text-foreground mb-2">{comment.comment}</p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs text-muted-foreground">
+                      <div key={comment.id} className="p-2 sm:p-3 bg-muted/30 rounded-lg">
+                        <p className="text-xs sm:text-sm text-foreground mb-2 leading-relaxed whitespace-pre-wrap break-words">{comment.comment}</p>
+                        <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/30">
+                          <span className="text-[10px] sm:text-xs text-muted-foreground truncate">
                             {comment.user?.name || 'Usuário'}
                           </span>
-                          <span className="text-xs text-muted-foreground">
+                          <span className="text-[10px] sm:text-xs text-muted-foreground shrink-0 whitespace-nowrap">
                             {new Date(comment.created_at).toLocaleDateString('pt-BR', { 
                               day: '2-digit', 
-                              month: '2-digit', 
+                              month: 'short', 
                               year: 'numeric',
                               hour: '2-digit',
                               minute: '2-digit'
@@ -927,27 +933,28 @@ export default function AdminPage() {
             </div>
           )}
 
-          <DialogFooter>
+          <DialogFooter className="p-4 sm:p-6 border-t border-border/50 shrink-0 gap-2 sm:gap-3">
             <Button
               variant="outline"
               onClick={() => setIsTicketDialogOpen(false)}
               disabled={isUpdatingTicket}
+              className="w-full sm:w-auto h-9 sm:h-10 text-xs sm:text-sm"
             >
               Cancelar
             </Button>
             <Button
               onClick={handleUpdateTicket}
               disabled={isUpdatingTicket}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 w-full sm:w-auto h-9 sm:h-10 text-xs sm:text-sm"
             >
               {isUpdatingTicket ? (
                 <>
-                  <RefreshCw className="h-4 w-4 animate-spin" />
+                  <RefreshCw className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin" />
                   Atualizando...
                 </>
               ) : (
                 <>
-                  <CheckCircle className="h-4 w-4" />
+                  <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   Salvar Alterações
                 </>
               )}

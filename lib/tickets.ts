@@ -80,6 +80,16 @@ export async function createTicket(data: CreateTicketData): Promise<TicketRespon
       body: JSON.stringify(data),
     })
 
+    // Se for 401, o token expirou - fazer logout automático
+    if (response.status === 401) {
+      const { handleUnauthorized } = await import('@/lib/auth')
+      await handleUnauthorized()
+      return {
+        success: false,
+        error: 'Token expirado. Você foi desconectado.'
+      }
+    }
+
     const result = await response.json()
 
     if (!response.ok) {
@@ -125,6 +135,16 @@ export async function getUserTickets(): Promise<TicketResponse> {
       },
     })
 
+    // Se for 401, o token expirou - fazer logout automático
+    if (response.status === 401) {
+      const { handleUnauthorized } = await import('@/lib/auth')
+      await handleUnauthorized()
+      return {
+        success: false,
+        error: 'Token expirado. Você foi desconectado.'
+      }
+    }
+
     const result = await response.json()
 
     if (!response.ok) {
@@ -168,6 +188,16 @@ export async function getTicketById(ticketId: string): Promise<TicketResponse> {
         'Authorization': `Bearer ${token}`,
       },
     })
+
+    // Se for 401, o token expirou - fazer logout automático
+    if (response.status === 401) {
+      const { handleUnauthorized } = await import('@/lib/auth')
+      await handleUnauthorized()
+      return {
+        success: false,
+        error: 'Token expirado. Você foi desconectado.'
+      }
+    }
 
     const result = await response.json()
 
@@ -214,6 +244,16 @@ export async function addTicketComment(ticketId: string, comment: string): Promi
       body: JSON.stringify({ comment }),
     })
 
+    // Se for 401, o token expirou - fazer logout automático
+    if (response.status === 401) {
+      const { handleUnauthorized } = await import('@/lib/auth')
+      await handleUnauthorized()
+      return {
+        success: false,
+        error: 'Token expirado. Você foi desconectado.'
+      }
+    }
+
     const result = await response.json()
 
     if (!response.ok) {
@@ -258,6 +298,16 @@ export async function getTicketComments(ticketId: string): Promise<{ success: bo
       },
     })
 
+    // Se for 401, o token expirou - fazer logout automático
+    if (response.status === 401) {
+      const { handleUnauthorized } = await import('@/lib/auth')
+      await handleUnauthorized()
+      return {
+        success: false,
+        error: 'Token expirado. Você foi desconectado.'
+      }
+    }
+
     const result = await response.json()
 
     if (!response.ok) {
@@ -301,6 +351,16 @@ export async function getTicketStatusHistory(ticketId: string): Promise<{ succes
         'Authorization': `Bearer ${token}`,
       },
     })
+
+    // Se for 401, o token expirou - fazer logout automático
+    if (response.status === 401) {
+      const { handleUnauthorized } = await import('@/lib/auth')
+      await handleUnauthorized()
+      return {
+        success: false,
+        error: 'Token expirado. Você foi desconectado.'
+      }
+    }
 
     const result = await response.json()
 

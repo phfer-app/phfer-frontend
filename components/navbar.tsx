@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
-import { Menu, X, Languages, Palette, ChevronDown, User, LogOut, Ticket, Briefcase, Shield } from "lucide-react"
+import { Menu, X, Languages, Palette, ChevronDown, User, LogOut, Ticket, Briefcase, Shield, Folder, LayoutDashboard } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import {
@@ -30,6 +30,7 @@ const navLinks = [
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [isMobileMenuExpanded, setIsMobileMenuExpanded] = useState(false)
+  const [isWorkspaceExpanded, setIsWorkspaceExpanded] = useState(false)
   const [isLanguageExpanded, setIsLanguageExpanded] = useState(false)
   const [isThemeExpanded, setIsThemeExpanded] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
@@ -293,14 +294,50 @@ export function Navbar() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
-                {/* Meus Chamados */}
-                <button
-                  onClick={() => router.push("/chamados")}
-                  className="px-6 py-2 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer text-muted-foreground hover:text-primary hover:bg-muted/80 flex items-center gap-2"
-                >
-                  <Ticket className="h-4 w-4" />
-                  {t("nav.meus_chamados")}
-                </button>
+                {/* Meu Workspace */}
+                <div className="relative inline-flex items-center group">
+                  <button
+                    onClick={() => router.push("/workspace")}
+                    className={`px-6 py-2 text-sm font-medium rounded-l-lg transition-all duration-200 cursor-pointer flex items-center gap-2 ${
+                      pathname === "/workspace" || pathname.startsWith("/workspace") || pathname === "/chamados"
+                        ? "text-primary bg-primary/10"
+                        : "text-muted-foreground hover:text-primary hover:bg-muted/80"
+                    }`}
+                  >
+                    <LayoutDashboard className="h-4 w-4" />
+                    {t("nav.meu_workspace") || "Meu Workspace"}
+                  </button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        className={`h-[36px] w-8 p-0 rounded-r-lg rounded-l-none border-l border-border/30 transition-all duration-200 flex items-center justify-center ${
+                          pathname === "/workspace" || pathname.startsWith("/workspace") || pathname === "/chamados"
+                            ? "bg-primary/10 hover:bg-primary/15 text-primary"
+                            : "hover:bg-muted/80 text-muted-foreground hover:text-primary"
+                        }`}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <ChevronDown className="h-3.5 w-3.5" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="center" className="w-56 bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-xl p-2">
+                      <DropdownMenuItem 
+                        onClick={() => router.push("/chamados")}
+                        className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-primary/10 hover:text-primary transition-all duration-200 rounded-lg m-1"
+                      >
+                        <Ticket className="h-4 w-4" />
+                        <span className="font-medium">{t("workspace.meus_chamados") || "Meus Chamados"}</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => router.push("/workspace/pasta-pessoal")}
+                        className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-primary/10 hover:text-primary transition-all duration-200 rounded-lg m-1"
+                      >
+                        <Folder className="h-4 w-4" />
+                        <span className="font-medium">{t("workspace.pasta_pessoal") || "Pasta Pessoal"}</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
                 {/* Solicitar Serviços */}
                 <button
                   onClick={() => router.push("/solicitar-servicos")}
@@ -509,6 +546,7 @@ export function Navbar() {
                 setIsOpen(!isOpen)
                 if (isOpen) {
                   setIsMobileMenuExpanded(false)
+                  setIsWorkspaceExpanded(false)
                   setIsLanguageExpanded(false)
                   setIsThemeExpanded(false)
                 }
@@ -539,6 +577,7 @@ export function Navbar() {
               onClick={() => {
                 setIsOpen(false)
                 setIsMobileMenuExpanded(false)
+                setIsWorkspaceExpanded(false)
                 setIsLanguageExpanded(false)
                 setIsThemeExpanded(false)
               }}
@@ -556,6 +595,7 @@ export function Navbar() {
                     onClick={() => {
                       setIsOpen(false)
                       setIsMobileMenuExpanded(false)
+                      setIsWorkspaceExpanded(false)
                       setIsLanguageExpanded(false)
                       setIsThemeExpanded(false)
                     }}
@@ -608,17 +648,70 @@ export function Navbar() {
                         </div>
                       </div>
                       
-                      {/* Meus Chamados */}
-                      <button
-                        onClick={() => {
-                          setIsOpen(false)
-                          router.push("/chamados")
-                        }}
-                        className="flex items-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-foreground border-border/30 hover:border-primary/30 bg-transparent hover:bg-muted/30"
-                      >
-                        <Ticket className="h-4 w-4" />
-                        {t("nav.meus_chamados")}
-                      </button>
+                      {/* Meu Workspace */}
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => {
+                              setIsOpen(false)
+                              router.push("/workspace")
+                            }}
+                            className={`flex-1 flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer ${
+                              pathname === "/workspace" || pathname.startsWith("/workspace") || pathname === "/chamados"
+                                ? "text-primary border-primary/50 bg-transparent hover:bg-primary/5"
+                                : "text-foreground border-border/30 hover:border-primary/30 bg-transparent hover:bg-muted/30"
+                            }`}
+                          >
+                            <LayoutDashboard className="h-4 w-4" />
+                            <span>{t("nav.meu_workspace") || "Meu Workspace"}</span>
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setIsWorkspaceExpanded(!isWorkspaceExpanded)
+                            }}
+                            className={`px-2 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer ${
+                              pathname === "/workspace" || pathname.startsWith("/workspace") || pathname === "/chamados"
+                                ? "text-primary border-primary/50 bg-transparent hover:bg-primary/5"
+                                : "text-foreground border-border/30 hover:border-primary/30 bg-transparent hover:bg-muted/30"
+                            }`}
+                          >
+                            <ChevronDown 
+                              className={`h-4 w-4 transition-transform duration-300 ${
+                                isWorkspaceExpanded ? "rotate-180" : ""
+                              }`}
+                            />
+                          </button>
+                        </div>
+                        
+                        {/* Expanded Workspace Items */}
+                        <div 
+                          className={`overflow-hidden transition-all duration-300 space-y-1.5 pl-3 ${
+                            isWorkspaceExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                          }`}
+                        >
+                          <button
+                            onClick={() => {
+                              setIsOpen(false)
+                              router.push("/chamados")
+                            }}
+                            className="flex items-center gap-2 w-full px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 group border-2 cursor-pointer text-foreground border-transparent hover:border-border/30 hover:text-primary"
+                          >
+                            <Ticket className="h-4 w-4" />
+                            <span className="group-hover:translate-x-1 transition-transform">{t("workspace.meus_chamados") || "Meus Chamados"}</span>
+                          </button>
+                          <button
+                            onClick={() => {
+                              setIsOpen(false)
+                              router.push("/workspace/pasta-pessoal")
+                            }}
+                            className="flex items-center gap-2 w-full px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 group border-2 cursor-pointer text-foreground border-transparent hover:border-border/30 hover:text-primary"
+                          >
+                            <Folder className="h-4 w-4" />
+                            <span className="group-hover:translate-x-1 transition-transform">{t("workspace.pasta_pessoal") || "Pasta Pessoal"}</span>
+                          </button>
+                        </div>
+                      </div>
                       
                       {/* Solicitar Serviços */}
                       <button

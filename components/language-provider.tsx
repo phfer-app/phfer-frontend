@@ -23,10 +23,20 @@ const translations = {
     "nav.login": "Entrar",
     "nav.cadastre_se": "Cadastre-se",
     "nav.meus_chamados": "Meus Chamados",
+    "nav.meu_workspace": "Meu Workspace",
     "nav.solicitar_servicos": "Solicitar Serviços",
     "nav.painel_administrativo": "Painel Administrativo",
     "nav.desconectar": "Desconectar",
     "nav.usuario_logado": "Usuário logado",
+    
+    // Workspace
+    "workspace.title": "Meu Workspace",
+    "workspace.subtitle": "Gerencie suas ferramentas e recursos em um só lugar",
+    "workspace.meus_chamados": "Meus Chamados",
+    "workspace.meus_chamados_desc": "Visualize e gerencie todos os seus chamados e tickets",
+    "workspace.pasta_pessoal": "Pasta Pessoal",
+    "workspace.pasta_pessoal_desc": "Acesse seus arquivos e documentos pessoais",
+    "workspace.ver_tudo": "Ver Tudo",
     
     // Hero
     "hero.title1": "Especialista em",
@@ -457,10 +467,20 @@ const translations = {
     "nav.login": "Sign In",
     "nav.cadastre_se": "Sign Up",
     "nav.meus_chamados": "My Tickets",
+    "nav.meu_workspace": "My Workspace",
     "nav.solicitar_servicos": "Request Services",
     "nav.painel_administrativo": "Admin Panel",
     "nav.desconectar": "Logout",
     "nav.usuario_logado": "Logged in user",
+    
+    // Workspace
+    "workspace.title": "My Workspace",
+    "workspace.subtitle": "Manage your tools and resources in one place",
+    "workspace.meus_chamados": "My Tickets",
+    "workspace.meus_chamados_desc": "View and manage all your tickets and requests",
+    "workspace.pasta_pessoal": "Personal Folder",
+    "workspace.pasta_pessoal_desc": "Access your personal files and documents",
+    "workspace.ver_tudo": "View All",
     
     // Hero
     "hero.title1": "Specialist in",

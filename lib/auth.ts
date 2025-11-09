@@ -165,6 +165,12 @@ export async function verifyToken(token: string): Promise<{ valid: boolean; user
       body: JSON.stringify({ token }),
     })
 
+    // Se for 401, o token expirou - fazer logout automático
+    if (response.status === 401) {
+      await handleUnauthorized()
+      return { valid: false }
+    }
+
     const result = await response.json()
 
     if (!response.ok || !result.success) {
@@ -204,6 +210,34 @@ export async function logout(): Promise<void> {
   // Remover dados do localStorage
   localStorage.removeItem('token')
   localStorage.removeItem('user')
+}
+
+/**
+ * Faz logout automático e redireciona para login quando token expira
+ */
+export async function handleUnauthorized(): Promise<void> {
+  // Remover dados do localStorage
+  localStorage.removeItem('token')
+  localStorage.removeItem('user')
+  
+  // Redirecionar para login apenas se estiver no cliente
+  if (typeof window !== 'undefined') {
+    // Evitar redirecionamento em loop verificando se já não está na página de login
+    if (window.location.pathname !== '/login' && window.location.pathname !== '/cadastro') {
+      window.location.href = '/login'
+    }
+  }
+}
+
+/**
+ * Verifica se a resposta é 401 e faz logout automático
+ */
+export function checkUnauthorized(response: Response): boolean {
+  if (response.status === 401) {
+    handleUnauthorized()
+    return true
+  }
+  return false
 }
 
 /**

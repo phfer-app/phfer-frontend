@@ -86,14 +86,15 @@ export async function checkAdmin(): Promise<AdminResponse> {
       }
     }
 
-    // Se for 401, o token pode estar inválido ou expirado
+    // Se for 401, o token expirou - fazer logout automático
     if (response.status === 401) {
-      // Não é um erro crítico, apenas retorna false
+      const { handleUnauthorized } = await import('@/lib/auth')
+      await handleUnauthorized()
       return {
         success: false,
         isAdmin: false,
         isOwner: false,
-        error: 'Token inválido ou expirado'
+        error: 'Token expirado. Você foi desconectado.'
       }
     }
 
@@ -158,6 +159,16 @@ export async function getAdmins(): Promise<AdminResponse> {
       },
     })
 
+    // Se for 401, o token expirou - fazer logout automático
+    if (response.status === 401) {
+      const { handleUnauthorized } = await import('@/lib/auth')
+      await handleUnauthorized()
+      return {
+        success: false,
+        error: 'Token expirado. Você foi desconectado.'
+      }
+    }
+
     const result = await response.json()
 
     if (!response.ok) {
@@ -202,6 +213,16 @@ export async function addAdmin(userId: string): Promise<AdminResponse> {
       },
       body: JSON.stringify({ userId }),
     })
+
+    // Se for 401, o token expirou - fazer logout automático
+    if (response.status === 401) {
+      const { handleUnauthorized } = await import('@/lib/auth')
+      await handleUnauthorized()
+      return {
+        success: false,
+        error: 'Token expirado. Você foi desconectado.'
+      }
+    }
 
     const result = await response.json()
 
@@ -249,6 +270,16 @@ export async function removeAdmin(userId: string): Promise<AdminResponse> {
       body: JSON.stringify({ userId }),
     })
 
+    // Se for 401, o token expirou - fazer logout automático
+    if (response.status === 401) {
+      const { handleUnauthorized } = await import('@/lib/auth')
+      await handleUnauthorized()
+      return {
+        success: false,
+        error: 'Token expirado. Você foi desconectado.'
+      }
+    }
+
     const result = await response.json()
 
     if (!response.ok) {
@@ -293,6 +324,16 @@ export async function getUsers(): Promise<AdminResponse> {
       },
     })
 
+    // Se for 401, o token expirou - fazer logout automático
+    if (response.status === 401) {
+      const { handleUnauthorized } = await import('@/lib/auth')
+      await handleUnauthorized()
+      return {
+        success: false,
+        error: 'Token expirado. Você foi desconectado.'
+      }
+    }
+
     const result = await response.json()
 
     if (!response.ok) {
@@ -336,6 +377,16 @@ export async function getTickets(): Promise<AdminResponse> {
         'Authorization': `Bearer ${token}`,
       },
     })
+
+    // Se for 401, o token expirou - fazer logout automático
+    if (response.status === 401) {
+      const { handleUnauthorized } = await import('@/lib/auth')
+      await handleUnauthorized()
+      return {
+        success: false,
+        error: 'Token expirado. Você foi desconectado.'
+      }
+    }
 
     const result = await response.json()
 
@@ -384,6 +435,16 @@ export async function updateTicket(ticketId: string, data: { status?: string; pr
       },
       body: JSON.stringify(data),
     })
+
+    // Se for 401, o token expirou - fazer logout automático
+    if (response.status === 401) {
+      const { handleUnauthorized } = await import('@/lib/auth')
+      await handleUnauthorized()
+      return {
+        success: false,
+        error: 'Token expirado. Você foi desconectado.'
+      }
+    }
 
     const result = await response.json()
 
