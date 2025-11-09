@@ -1460,8 +1460,8 @@ export default function AdminPage() {
                 {/* Container de Mensagens com Scroll */}
                 <div 
                   id="ticket-chat-container"
-                  className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4"
-                  style={{ height: 'calc(98vh - 280px)', minHeight: '400px' }}
+                  className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3"
+                  style={{ height: 'calc(98vh - 360px)', minHeight: '200px', maxHeight: 'calc(98vh - 360px)' }}
                 >
                   {isLoadingComments ? (
                     <div className="flex items-center justify-center h-full min-h-[300px]">
@@ -1473,22 +1473,22 @@ export default function AdminPage() {
                   ) : (
                     <>
                       {/* Mensagem Inicial - Descrição do Ticket (do Usuário) */}
-                      <div className="flex items-start gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                        <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0 border-2 border-primary/20">
-                          <User className="h-4 w-4 text-primary" />
+                      <div className="flex items-start gap-2.5 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 border-2 border-primary/20">
+                          <User className="h-3.5 w-3.5 text-primary" />
                         </div>
                         <div className="flex-1 min-w-0 max-w-[85%] sm:max-w-[75%]">
-                          <div className="bg-card rounded-2xl rounded-tl-sm p-4 shadow-md border border-border/50">
-                            <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap break-words">
+                          <div className="bg-card rounded-xl rounded-tl-sm p-3 shadow-md border border-border/50">
+                            <p className="text-xs sm:text-sm text-foreground leading-relaxed whitespace-pre-wrap break-words">
                               {selectedTicket.descricao}
                             </p>
                           </div>
-                          <div className="flex items-center gap-2 mt-2 px-1">
-                            <span className="text-xs font-medium text-foreground">
+                          <div className="flex items-center gap-1.5 mt-1.5 px-1">
+                            <span className="text-[10px] sm:text-xs font-medium text-foreground">
                               {selectedTicket.user?.name || 'Usuário'}
                             </span>
-                            <span className="text-xs text-muted-foreground">·</span>
-                            <span className="text-xs text-muted-foreground">
+                            <span className="text-[10px] sm:text-xs text-muted-foreground">·</span>
+                            <span className="text-[10px] sm:text-xs text-muted-foreground">
                               {new Date(selectedTicket.created_at).toLocaleDateString('pt-BR', { 
                                 day: '2-digit', 
                                 month: 'short', 
@@ -1507,42 +1507,42 @@ export default function AdminPage() {
                         return (
                           <div 
                             key={comment.id} 
-                            className={`flex items-start gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300 ${
+                            className={`flex items-start gap-2.5 animate-in fade-in slide-in-from-bottom-2 duration-300 ${
                               isAdminComment ? 'flex-row-reverse' : ''
                             }`}
                             style={{ animationDelay: `${index * 50}ms` }}
                           >
-                            <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 border-2 ${
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 border-2 ${
                               isAdminComment 
                                 ? 'bg-primary text-primary-foreground border-primary/30' 
                                 : 'bg-muted text-muted-foreground border-border/50'
                             }`}>
                               {isAdminComment ? (
-                                <Shield className="h-4 w-4" />
+                                <Shield className="h-3.5 w-3.5" />
                               ) : (
-                                <User className="h-4 w-4" />
+                                <User className="h-3.5 w-3.5" />
                               )}
                             </div>
                             <div className={`flex-1 min-w-0 max-w-[85%] sm:max-w-[75%] ${isAdminComment ? 'flex flex-col items-end' : ''}`}>
-                              <div className={`rounded-2xl p-4 shadow-md border max-w-full ${
+                              <div className={`rounded-xl p-3 shadow-md border max-w-full ${
                                 isAdminComment
                                   ? 'bg-primary text-primary-foreground rounded-tr-sm border-primary/20'
                                   : 'bg-card rounded-tl-sm border-border/50'
                               }`}>
-                                <p className={`text-sm leading-relaxed whitespace-pre-wrap break-words ${
+                                <p className={`text-xs sm:text-sm leading-relaxed whitespace-pre-wrap break-words ${
                                   isAdminComment ? 'text-primary-foreground' : 'text-foreground'
                                 }`}>
                                   {comment.comment}
                                 </p>
                               </div>
-                              <div className={`flex items-center gap-2 mt-2 px-1 ${isAdminComment ? 'flex-row-reverse' : ''}`}>
-                                <span className={`text-xs font-medium ${
+                              <div className={`flex items-center gap-1.5 mt-1.5 px-1 ${isAdminComment ? 'flex-row-reverse' : ''}`}>
+                                <span className={`text-[10px] sm:text-xs font-medium ${
                                   isAdminComment ? 'text-primary' : 'text-foreground'
                                 }`}>
                                   {isAdminComment ? (comment.user?.name || 'Administrador') : (comment.user?.name || 'Usuário')}
                                 </span>
-                                <span className="text-xs text-muted-foreground">·</span>
-                                <span className="text-xs text-muted-foreground">
+                                <span className="text-[10px] sm:text-xs text-muted-foreground">·</span>
+                                <span className="text-[10px] sm:text-xs text-muted-foreground">
                                   {new Date(comment.created_at).toLocaleDateString('pt-BR', { 
                                     day: '2-digit', 
                                     month: 'short', 
@@ -1560,15 +1560,15 @@ export default function AdminPage() {
                 </div>
 
                 {/* Input de Comentário para Admin */}
-                <div className="p-4 sm:p-6 border-t border-border/50 bg-card/80 backdrop-blur-sm shrink-0">
-                  <div className="flex items-end gap-3">
+                <div className="p-3 sm:p-4 border-t border-border/50 bg-card/80 backdrop-blur-sm shrink-0">
+                  <div className="flex items-center gap-2.5">
                     <div className="flex-1 relative">
                       <Textarea
                         value={newComment}
                         onChange={(e) => setNewComment(e.target.value)}
                         placeholder="Digite sua resposta ao usuário..."
-                        rows={3}
-                        className="resize-none text-sm border-2 border-border/50 focus:border-primary/50 bg-background pr-12"
+                        rows={2}
+                        className="resize-none text-sm border-2 border-border/50 focus:border-primary/50 bg-background min-h-[60px]"
                         onKeyDown={(e) => {
                           if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
                             e.preventDefault()
@@ -1577,11 +1577,11 @@ export default function AdminPage() {
                         }}
                         disabled={isAddingComment || selectedTicket.status === 'resolvido' || selectedTicket.status === 'fechado'}
                       />
-                      <p className="text-xs text-muted-foreground mt-1.5 flex items-center gap-1">
+                      <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 flex items-center gap-1">
                         <span>Pressione</span>
-                        <kbd className="px-1.5 py-0.5 text-xs font-semibold text-muted-foreground bg-muted border border-border rounded">Ctrl</kbd>
+                        <kbd className="px-1 py-0.5 text-[10px] font-semibold text-muted-foreground bg-muted border border-border rounded">Ctrl</kbd>
                         <span>+</span>
-                        <kbd className="px-1.5 py-0.5 text-xs font-semibold text-muted-foreground bg-muted border border-border rounded">Enter</kbd>
+                        <kbd className="px-1 py-0.5 text-[10px] font-semibold text-muted-foreground bg-muted border border-border rounded">Enter</kbd>
                         <span>para enviar</span>
                       </p>
                     </div>
@@ -1589,18 +1589,18 @@ export default function AdminPage() {
                       onClick={handleAddComment}
                       disabled={isAddingComment || !newComment.trim() || selectedTicket.status === 'resolvido' || selectedTicket.status === 'fechado'}
                       size="lg"
-                      className="h-12 w-12 p-0 shrink-0"
+                      className="h-[60px] w-[60px] p-0 shrink-0 cursor-pointer"
                     >
                       {isAddingComment ? (
                         <span className="h-4 w-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
                       ) : (
-                        <Send className="h-5 w-5" />
+                        <Send className="h-4 w-4" />
                       )}
                     </Button>
                   </div>
                   {(selectedTicket.status === 'resolvido' || selectedTicket.status === 'fechado') && (
-                    <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1.5">
-                      <AlertCircle className="h-3.5 w-3.5" />
+                    <p className="text-[10px] sm:text-xs text-muted-foreground mt-2 flex items-center gap-1.5">
+                      <AlertCircle className="h-3 w-3" />
                       Não é possível adicionar comentários em tickets {selectedTicket.status === 'resolvido' ? 'resolvidos' : 'fechados'}
                     </p>
                   )}
