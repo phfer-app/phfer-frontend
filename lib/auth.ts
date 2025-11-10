@@ -312,3 +312,225 @@ export async function refreshAdminStatus(): Promise<void> {
   }
 }
 
+/**
+ * Login com Google usando Supabase OAuth
+ */
+export async function loginWithGoogle(): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { supabase } = await import('@/lib/supabase')
+    
+    // Obter a URL atual para redirecionar após o login
+    // IMPORTANTE: O Supabase com PKCE precisa do código no hash, não na query string
+    // Por isso, vamos redirecionar para /auth/callback que processará o código
+    const redirectUrl = `${window.location.origin}/auth/callback`
+    
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: redirectUrl,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
+        // Forçar o Supabase a usar hash em vez de query string
+        skipBrowserRedirect: false,
+      },
+    })
+
+    if (error) {
+      console.error('Erro ao iniciar login com Google:', error)
+      return {
+        success: false,
+        error: error.message || 'Erro ao fazer login com Google'
+      }
+    }
+
+    // O redirecionamento será feito automaticamente pelo Supabase
+    return {
+      success: true
+    }
+  } catch (error: any) {
+    console.error('Erro no login com Google:', error)
+    return {
+      success: false,
+      error: error.message || 'Erro ao fazer login com Google'
+    }
+  }
+}
+
+/**
+ * Processa o callback do OAuth e sincroniza com o backend
+ */
+export async function handleOAuthCallback(): Promise<AuthResponse> {
+  try {
+    const { supabase } = await import('@/lib/supabase')
+    
+    // Processar o código OAuth da URL
+    // O Supabase com detectSessionInUrl: true e flowType: 'pkce' processa automaticamente
+    // Mas precisamos garantir que o código seja processado corretamente
+    
+    // Verificar se há código na query string
+    const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null
+    const code = searchParams?.get('code')
+    
+    // Se houver código na query string, precisamos mover para o hash
+    // O Supabase PKCE processa automaticamente códigos no hash, não na query string
+    // O code verifier está armazenado no localStorage e só funciona com hash
+    if (code && typeof window !== 'undefined') {
+      // Mover o código da query string para o hash
+      // O Supabase precisa do código no hash para processar com PKCE
+      const newHash = `#code=${code}`
+      window.location.hash = newHash
+      
+      // Remover o código da query string da URL
+      const newUrl = new URL(window.location.href)
+      newUrl.searchParams.delete('code')
+      window.history.replaceState({}, '', newUrl.pathname + newUrl.search + newHash)
+      
+      // Aguardar um pouco para o Supabase detectar e processar o hash
+      await new Promise(resolve => setTimeout(resolve, 1000))
+    }
+    
+    // Chamar getSession() para processar a sessão
+    // O Supabase vai processar automaticamente o código do hash com PKCE
+    // O code verifier será recuperado automaticamente do localStorage
+    const { data: sessionData, error: sessionInitError } = await supabase.auth.getSession()
+    
+    if (sessionInitError) {
+      console.error('Erro ao inicializar sessão:', sessionInitError)
+      // Se houver erro, pode ser que o code verifier não esteja disponível
+      // Tentar novamente após um delay maior
+      await new Promise(resolve => setTimeout(resolve, 1000))
+    }
+    
+    // Aguardar um pouco mais para garantir que a sessão seja processada
+    await new Promise(resolve => setTimeout(resolve, 500))
+    
+    // Verificar se há uma sessão no Supabase
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+    
+    if (sessionError || !session) {
+      return {
+        success: false,
+        error: 'Não foi possível obter a sessão do Google. Por favor, tente novamente.'
+      }
+    }
+
+    // Obter informações do usuário do Supabase
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
+    
+    if (userError || !user) {
+      return {
+        success: false,
+        error: 'Não foi possível obter informações do usuário'
+      }
+    }
+
+    // Sincronizar com o backend
+    // Passar o token da sessão do Supabase para o backend usar
+    console.log('🔄 Sincronizando com o backend...')
+    console.log('  - Supabase User ID:', user.id)
+    console.log('  - Email:', user.email)
+    console.log('  - Name:', user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'Usuário')
+    console.log('  - API URL:', API_URL)
+    
+    const requestBody = {
+      supabase_user_id: user.id,
+      email: user.email,
+      name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'Usuário',
+      avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture,
+      access_token: session.access_token, // Passar o token da sessão do Supabase
+    }
+    
+    console.log('📤 Enviando requisição para:', `${API_URL}/auth/google/callback`)
+    console.log('📦 Body:', { ...requestBody, access_token: '***' }) // Não logar o token completo
+    
+    const response = await fetch(`${API_URL}/auth/google/callback`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    })
+
+    console.log('📥 Resposta recebida:', response.status, response.statusText)
+    
+    if (!response.ok) {
+      const errorText = await response.text()
+      console.error('❌ Erro na resposta do servidor:', response.status, errorText)
+      await supabase.auth.signOut()
+      return {
+        success: false,
+        error: `Erro ao sincronizar com o servidor: ${response.status} ${response.statusText}`
+      }
+    }
+
+    const result = await response.json()
+    console.log('📦 Resultado do backend:', { ...result, token: result.token ? '***' : null })
+
+    if (!result.success) {
+      console.error('❌ Erro no resultado do backend:', result.error)
+      // Fazer logout do Supabase se houver erro
+      await supabase.auth.signOut()
+      return {
+        success: false,
+        error: result.error || 'Erro ao sincronizar com o servidor'
+      }
+    }
+    
+    console.log('✅ Sincronização com o backend concluída com sucesso')
+
+    // Limpar hash e query string da URL
+    if (typeof window !== 'undefined') {
+      const cleanUrl = window.location.pathname
+      window.history.replaceState(null, '', cleanUrl)
+    }
+
+    // Salvar token e usuário no localStorage
+    if (result.token) {
+      localStorage.setItem('token', result.token)
+      console.log('✅ Token salvo no localStorage')
+    } else {
+      console.error('❌ Token não recebido do backend')
+    }
+    
+    if (result.user) {
+      const userData = {
+        ...result.user,
+        is_admin: result.user.is_admin || false,
+        is_owner: result.user.is_owner || false
+      }
+      localStorage.setItem('user', JSON.stringify(userData))
+      console.log('✅ Usuário salvo no localStorage:', userData)
+    } else {
+      console.error('❌ Usuário não recebido do backend')
+    }
+
+    // Verificar se os dados foram salvos corretamente
+    const savedToken = localStorage.getItem('token')
+    const savedUser = localStorage.getItem('user')
+    
+    if (!savedToken || !savedUser) {
+      console.error('❌ Erro ao salvar dados no localStorage')
+      return {
+        success: false,
+        error: 'Erro ao salvar dados de autenticação'
+      }
+    }
+
+    // NÃO fazer logout do Supabase imediatamente
+    // O token JWT do Supabase é válido mesmo sem sessão ativa
+    // Fazer logout invalidaria a sessão e o token não funcionaria mais
+    // O logout será feito automaticamente quando o token expirar ou quando o usuário fizer logout manualmente
+    
+    console.log('✅ Login com Google concluído com sucesso')
+    return result
+  } catch (error: any) {
+    console.error('Erro no callback OAuth:', error)
+    return {
+      success: false,
+      error: error.message || 'Erro ao processar login com Google'
+    }
+  }
+}
+

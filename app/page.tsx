@@ -1,5 +1,7 @@
 "use client"
 
+import { useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { HeroSection } from "@/components/hero-section"
 import { CTAParallaxSection } from "@/components/cta-parallax-section"
 import { AboutSection } from "@/components/about-section"
@@ -54,6 +56,17 @@ function BlogPage() {
 
 export default function Home() {
   const { currentRoute } = useNavigation()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // Processar código OAuth se estiver presente na URL
+  useEffect(() => {
+    const code = searchParams.get('code')
+    if (code) {
+      // Redirecionar para a página de callback para processar o código
+      router.replace(`/auth/callback?code=${code}`)
+    }
+  }, [searchParams, router])
 
   return (
     <main>

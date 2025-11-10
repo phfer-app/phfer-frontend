@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
-import { Shield, Users, Ticket as TicketIcon, Plus, X, RefreshCw, Search, Calendar, User as UserIcon, Mail, Clock, AlertCircle, Eye, CheckCircle, MessageSquare, History, CheckCircle2, XCircle, Lock, Save, Edit, Trash2, FolderPlus, Send, Filter } from "lucide-react"
+import { Shield, Users, Ticket as TicketIcon, Plus, X, RefreshCw, Search, Calendar, User as UserIcon, Mail, Clock, AlertCircle, Eye, CheckCircle, MessageSquare, History, CheckCircle2, XCircle, Lock, Save, Edit, Trash2, FolderPlus, Send, Filter, Settings, ChevronDown, ChevronUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -43,6 +43,7 @@ export default function AdminPage() {
   const [isLoadingComments, setIsLoadingComments] = useState(false)
   const [newComment, setNewComment] = useState("")
   const [isAddingComment, setIsAddingComment] = useState(false)
+  const [showTicketControls, setShowTicketControls] = useState(false) // Para mobile
   const currentUser = getUser()
   const [workspaces, setWorkspaces] = useState<Workspace[]>([])
   const [userPermissions, setUserPermissions] = useState<Record<string, string[]>>({})
@@ -695,6 +696,7 @@ export default function AdminPage() {
     setSelectedTicket(ticket)
     setTicketStatus(ticket.status)
     setTicketPriority(ticket.prioridade)
+    setShowTicketControls(false) // Resetar para oculto no mobile
     setIsTicketDialogOpen(true)
     setIsLoadingComments(true)
     setTicketComments([])
@@ -1075,16 +1077,16 @@ export default function AdminPage() {
                   <div className="space-y-2">
                     <Label htmlFor="filter-status" className="text-xs font-medium">Status</Label>
                     <Select value={filterStatus} onValueChange={setFilterStatus}>
-                      <SelectTrigger id="filter-status" className="h-9 text-xs">
+                      <SelectTrigger id="filter-status" className="h-9 text-xs cursor-pointer">
                         <SelectValue placeholder="Todos os status" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">Todos os status</SelectItem>
-                        <SelectItem value="aberto">Aberto</SelectItem>
-                        <SelectItem value="visto">Visto</SelectItem>
-                        <SelectItem value="em_andamento">Em Andamento</SelectItem>
-                        <SelectItem value="resolvido">Resolvido</SelectItem>
-                        <SelectItem value="fechado">Fechado</SelectItem>
+                        <SelectItem value="all" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">Todos os status</SelectItem>
+                        <SelectItem value="aberto" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">Aberto</SelectItem>
+                        <SelectItem value="visto" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">Visto</SelectItem>
+                        <SelectItem value="em_andamento" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">Em Andamento</SelectItem>
+                        <SelectItem value="resolvido" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">Resolvido</SelectItem>
+                        <SelectItem value="fechado" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">Fechado</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -1093,14 +1095,14 @@ export default function AdminPage() {
                   <div className="space-y-2">
                     <Label htmlFor="filter-priority" className="text-xs font-medium">Prioridade</Label>
                     <Select value={filterPriority} onValueChange={setFilterPriority}>
-                      <SelectTrigger id="filter-priority" className="h-9 text-xs">
+                      <SelectTrigger id="filter-priority" className="h-9 text-xs cursor-pointer">
                         <SelectValue placeholder="Todas as prioridades" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">Todas as prioridades</SelectItem>
-                        <SelectItem value="baixa">Baixa</SelectItem>
-                        <SelectItem value="media">Média</SelectItem>
-                        <SelectItem value="alta">Alta</SelectItem>
+                        <SelectItem value="all" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">Todas as prioridades</SelectItem>
+                        <SelectItem value="baixa" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">Baixa</SelectItem>
+                        <SelectItem value="media" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">Média</SelectItem>
+                        <SelectItem value="alta" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">Alta</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -1322,7 +1324,7 @@ export default function AdminPage() {
                               onClick={() => handleOpenEditWorkspaceDialog(workspace)}
                               variant="ghost"
                               size="sm"
-                              className="h-8 w-8 p-0"
+                              className="h-8 w-8 p-0 hover:bg-[#141414]! cursor-pointer"
                             >
                               <Edit className="h-4 w-4" />
                             </Button>
@@ -1331,7 +1333,7 @@ export default function AdminPage() {
                               variant="ghost"
                               size="sm"
                               disabled={isDeletingWorkspace}
-                              className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                              className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-[#141414]! cursor-pointer"
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
@@ -1598,12 +1600,17 @@ export default function AdminPage() {
       </div>
 
       {/* Dialog para visualizar e gerenciar ticket - Layout de Chat Moderno */}
-      <Dialog open={isTicketDialogOpen} onOpenChange={setIsTicketDialogOpen}>
-        <DialogContent className="!max-w-[95vw] !w-[95vw] !max-h-[98vh] !h-[98vh] flex flex-col p-0 gap-0 bg-background m-0">
+      <Dialog open={isTicketDialogOpen} onOpenChange={(open) => {
+        setIsTicketDialogOpen(open)
+        if (!open) {
+          setShowTicketControls(false) // Resetar quando fechar
+        }
+      }}>
+        <DialogContent className="!max-w-[100vw] !w-[100vw] !max-h-[100vh] !h-[100vh] !top-0 !left-0 !translate-x-0 !translate-y-0 !rounded-none md:!max-w-[95vw] md:!w-[95vw] md:!max-h-[98vh] md:!h-[98vh] md:!top-[50%] md:!left-[50%] md:!translate-x-[-50%] md:!translate-y-[-50%] md:!rounded-lg flex flex-col p-0 gap-0 bg-background m-0">
           {selectedTicket && (
             <>
               {/* Header Compacto com Informações e Controles */}
-              <div className="p-4 sm:p-6 border-b border-border/50 bg-card/50 backdrop-blur-sm shrink-0">
+              <div className="p-4 sm:p-6 border-b border-border/50 bg-card/50 backdrop-blur-sm shrink-0 relative">
                 <div className="flex flex-col gap-4">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
@@ -1632,32 +1639,50 @@ export default function AdminPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-3 border-t border-border/30">
+                  {/* Botão para mostrar/ocultar controles no mobile - Posicionado abaixo do botão de fechar */}
+                  <div className="md:hidden absolute top-16 right-4">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowTicketControls(!showTicketControls)}
+                      className="h-8 w-8 p-0 cursor-pointer hover:bg-transparent! dark:hover:bg-transparent! hover:text-primary"
+                    >
+                      {showTicketControls ? (
+                        <ChevronUp className="h-4 w-4" />
+                      ) : (
+                        <Settings className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                  {/* Controles de Status, Prioridade e Salvar - Ocultos no mobile por padrão */}
+                  <div className={`flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-3 border-t border-border/30 transition-all duration-300 ${
+                    showTicketControls ? "max-h-96 opacity-100" : "max-h-0 opacity-0 overflow-hidden"
+                  } md:!max-h-none md:!opacity-100`}>
                     <div className="flex items-center gap-2 flex-1">
                       <Label htmlFor="status" className="text-xs font-semibold whitespace-nowrap min-w-[60px]">Status:</Label>
                       <Select value={ticketStatus} onValueChange={setTicketStatus}>
-                        <SelectTrigger id="status" className="h-9 flex-1 text-xs">
+                        <SelectTrigger id="status" className="h-9 flex-1 text-xs cursor-pointer">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="aberto">Aberto</SelectItem>
-                          <SelectItem value="visto">Visto</SelectItem>
-                          <SelectItem value="em_andamento">Em Andamento</SelectItem>
-                          <SelectItem value="resolvido">Resolvido</SelectItem>
-                          <SelectItem value="fechado">Fechado</SelectItem>
+                          <SelectItem value="aberto" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">Aberto</SelectItem>
+                          <SelectItem value="visto" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">Visto</SelectItem>
+                          <SelectItem value="em_andamento" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">Em Andamento</SelectItem>
+                          <SelectItem value="resolvido" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">Resolvido</SelectItem>
+                          <SelectItem value="fechado" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">Fechado</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <div className="flex items-center gap-2 flex-1">
                       <Label htmlFor="prioridade" className="text-xs font-semibold whitespace-nowrap min-w-[80px]">Prioridade:</Label>
                       <Select value={ticketPriority} onValueChange={setTicketPriority}>
-                        <SelectTrigger id="prioridade" className="h-9 flex-1 text-xs">
+                        <SelectTrigger id="prioridade" className="h-9 flex-1 text-xs cursor-pointer">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="baixa">Baixa</SelectItem>
-                          <SelectItem value="media">Média</SelectItem>
-                          <SelectItem value="alta">Alta</SelectItem>
+                          <SelectItem value="baixa" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">Baixa</SelectItem>
+                          <SelectItem value="media" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">Média</SelectItem>
+                          <SelectItem value="alta" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">Alta</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -1665,7 +1690,7 @@ export default function AdminPage() {
                       onClick={handleUpdateTicket}
                       disabled={isUpdatingTicket}
                       size="sm"
-                      className="h-9 text-xs shrink-0 sm:min-w-[100px]"
+                      className="h-9 text-xs shrink-0 sm:min-w-[100px] cursor-pointer"
                     >
                       {isUpdatingTicket ? (
                         <span className="flex items-center gap-2">
@@ -1688,8 +1713,7 @@ export default function AdminPage() {
                 {/* Container de Mensagens com Scroll */}
                 <div 
                   id="ticket-chat-container"
-                  className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3"
-                  style={{ height: 'calc(98vh - 360px)', minHeight: '200px', maxHeight: 'calc(98vh - 360px)' }}
+                  className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 pb-4"
                 >
                   {isLoadingComments ? (
                     <div className="flex items-center justify-center h-full min-h-[300px]">
@@ -1788,7 +1812,7 @@ export default function AdminPage() {
                 </div>
 
                 {/* Input de Comentário para Admin */}
-                <div className="px-3 sm:px-4 pt-3 sm:pt-4 pb-0 border-t border-border/50 bg-card/80 backdrop-blur-sm shrink-0">
+                <div className="px-3 sm:px-4 pt-3 sm:pt-4 pb-3 sm:pb-4 border-t border-border/50 bg-card/80 backdrop-blur-sm shrink-0 mt-auto">
                   <div className="flex items-center gap-2.5">
                     <div className="flex-1 relative">
                       <Textarea
@@ -1911,12 +1935,14 @@ export default function AdminPage() {
                 setSelectedWorkspace(null)
               }}
               disabled={isCreatingWorkspace || isEditingWorkspace}
+              className="cursor-pointer"
             >
               {t("admin.permissions.cancel")}
             </Button>
             <Button
               onClick={selectedWorkspace ? handleEditWorkspace : handleCreateWorkspace}
               disabled={isCreatingWorkspace || isEditingWorkspace || !workspaceForm.name.trim() || !workspaceForm.slug.trim()}
+              className="cursor-pointer"
             >
               {isCreatingWorkspace || isEditingWorkspace ? (
                 <>

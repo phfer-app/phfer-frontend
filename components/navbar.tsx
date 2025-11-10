@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
-import { Menu, X, Languages, Palette, ChevronDown, User, LogOut, Ticket, Briefcase, Shield, Folder, LayoutDashboard } from "lucide-react"
+import { Menu, X, Languages, Palette, ChevronDown, User, LogOut, Ticket, Briefcase, Shield, Folder, LayoutDashboard, Edit } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import {
@@ -37,12 +37,18 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
+  const [isPagesDropdownOpen, setIsPagesDropdownOpen] = useState(false)
+  const [isWorkspaceDropdownOpen, setIsWorkspaceDropdownOpen] = useState(false)
+  const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false)
+  const [isThemeDropdownOpen, setIsThemeDropdownOpen] = useState(false)
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false)
   const { theme, setTheme } = useTheme()
   const { language, setLanguage, t } = useLanguage()
   const { currentRoute, setCurrentRoute } = useNavigation()
   const [mounted, setMounted] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userEmail, setUserEmail] = useState<string | null>(null)
+  const [userName, setUserName] = useState<string | null>(null)
   const [isAdmin, setIsAdmin] = useState(false)
   const [userWorkspaces, setUserWorkspaces] = useState<Workspace[]>([])
   const [isLoadingWorkspaces, setIsLoadingWorkspaces] = useState(false)
@@ -133,6 +139,7 @@ export function Navbar() {
         const user = getUser()
         const token = localStorage.getItem('token')
         setUserEmail(user?.email || null)
+        setUserName(user?.name || null)
         
         // Verificar se é admin apenas se tiver token
         if (token) {
@@ -172,6 +179,7 @@ export function Navbar() {
         }
       } else {
         setUserEmail(null)
+        setUserName(null)
         setIsAdmin(false)
         setUserWorkspaces([])
       }
@@ -255,6 +263,7 @@ export function Navbar() {
       await logout()
       setIsLoggedIn(false)
       setUserEmail(null)
+      setUserName(null)
       toast({
         title: "Logout realizado",
         description: "Você foi desconectado com sucesso.",
@@ -295,12 +304,17 @@ export function Navbar() {
             <span className="absolute inset-0 bg-primary/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-0"></span>
           </button>
 
-          {/* Desktop Navigation - Center */}
-          <div className="hidden md:flex items-center gap-2 absolute left-1/2 -translate-x-1/2">
+          {/* Desktop Controls - Right */}
+          <div className="hidden md:flex items-center gap-2 ml-auto">
+            {/* Navigation Items - Right side */}
             {isLoggedIn ? (
               <>
                 {/* Rota atual com Dropdown quando logado */}
-                <div className="relative inline-flex items-center group">
+                <div 
+                  className="relative inline-flex items-center group"
+                  onMouseEnter={() => setIsPagesDropdownOpen(true)}
+                  onMouseLeave={() => setIsPagesDropdownOpen(false)}
+                >
                   <button
                     onClick={(e) => {
                       const currentLink = navLinks.find(l => l.route === currentRoute)
@@ -308,7 +322,7 @@ export function Navbar() {
                         handleNavClick(e, currentLink.route)
                       }
                     }}
-                    className={`px-4 py-1.5 text-sm font-medium rounded-l-lg transition-all duration-200 cursor-pointer ${
+                    className={`px-3 py-1.5 text-sm font-medium rounded-l-lg transition-all duration-200 cursor-pointer h-8 ${
                       currentRoute === "home" || currentRoute === "about" || currentRoute === "career" || currentRoute === "blog"
                         ? "text-primary bg-primary/10"
                         : "text-muted-foreground hover:text-primary hover:bg-muted/80"
@@ -316,27 +330,37 @@ export function Navbar() {
                   >
                     {t(navLinks.find(l => l.route === currentRoute)?.labelKey || "nav.inicio")}
                   </button>
-                  <DropdownMenu modal={false}>
+                  <DropdownMenu 
+                    modal={false}
+                    open={isPagesDropdownOpen}
+                    onOpenChange={setIsPagesDropdownOpen}
+                  >
                     <DropdownMenuTrigger asChild>
                       <button
-                        className={`h-[36px] w-8 p-0 rounded-r-lg rounded-l-none border-l border-border/30 transition-all duration-200 flex items-center justify-center ${
+                        className={`h-8 w-6 p-0 rounded-r-lg rounded-l-none border-l border-border/30 transition-all duration-200 flex items-center justify-center ${
                           currentRoute === "home" || currentRoute === "about" || currentRoute === "career" || currentRoute === "blog"
                             ? "bg-primary/10 hover:bg-primary/15 text-primary"
                             : "hover:bg-muted/80 text-muted-foreground hover:text-primary"
                         }`}
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <ChevronDown className="h-3.5 w-3.5" />
+                        <ChevronDown className="h-3 w-3" />
                       </button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="center" collisionPadding={8} className="w-52 bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-xl p-2">
+                    <DropdownMenuContent 
+                      align="center" 
+                      collisionPadding={8} 
+                      className="w-52 bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-xl p-1.5"
+                      onMouseEnter={() => setIsPagesDropdownOpen(true)}
+                      onMouseLeave={() => setIsPagesDropdownOpen(false)}
+                    >
                       {navLinks
                         .filter(link => link.route !== currentRoute)
                         .map((link) => (
                           <DropdownMenuItem 
                             key={link.route}
                             onClick={(e) => handleNavClick(e, link.route)}
-                            className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-primary/10 hover:text-primary transition-all duration-200 rounded-lg m-1 text-sm"
+                            className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors duration-200 rounded-lg m-0.5 text-sm"
                           >
                             <span className="font-medium">{t(link.labelKey)}</span>
                           </DropdownMenuItem>
@@ -345,38 +369,52 @@ export function Navbar() {
                   </DropdownMenu>
                 </div>
                 {/* Meu Workspace */}
-                <div className="relative inline-flex items-center group">
+                <div 
+                  className="relative inline-flex items-center group"
+                  onMouseEnter={() => setIsWorkspaceDropdownOpen(true)}
+                  onMouseLeave={() => setIsWorkspaceDropdownOpen(false)}
+                >
                   <button
                     onClick={() => router.push("/workspace")}
-                    className={`px-4 py-1.5 text-sm font-medium rounded-l-lg transition-all duration-200 cursor-pointer flex items-center gap-2 ${
+                    className={`px-3 py-1.5 text-sm font-medium rounded-l-lg transition-all duration-200 cursor-pointer flex items-center gap-2 h-8 ${
                       pathname === "/workspace" || pathname.startsWith("/workspace") || pathname === "/chamados"
                         ? "text-primary bg-primary/10"
                         : "text-muted-foreground hover:text-primary hover:bg-muted/80"
                     }`}
                   >
-                    <LayoutDashboard className="h-4 w-4" />
+                    <LayoutDashboard className="h-3.5 w-3.5" />
                     {t("nav.meu_workspace") || "Meu Workspace"}
                   </button>
-                  <DropdownMenu modal={false}>
+                  <DropdownMenu 
+                    modal={false}
+                    open={isWorkspaceDropdownOpen}
+                    onOpenChange={setIsWorkspaceDropdownOpen}
+                  >
                     <DropdownMenuTrigger asChild>
                       <button
-                        className={`h-[36px] w-8 p-0 rounded-r-lg rounded-l-none border-l border-border/30 transition-all duration-200 flex items-center justify-center ${
+                        className={`h-8 w-6 p-0 rounded-r-lg rounded-l-none border-l border-border/30 transition-all duration-200 flex items-center justify-center ${
                           pathname === "/workspace" || pathname.startsWith("/workspace") || pathname === "/chamados"
                             ? "bg-primary/10 hover:bg-primary/15 text-primary"
                             : "hover:bg-muted/80 text-muted-foreground hover:text-primary"
                         }`}
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <ChevronDown className="h-3.5 w-3.5" />
+                        <ChevronDown className="h-3 w-3" />
                       </button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="center" collisionPadding={8} className="w-56 bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-xl p-2">
+                    <DropdownMenuContent 
+                      align="center" 
+                      collisionPadding={8} 
+                      className="w-56 bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-xl p-1.5"
+                      onMouseEnter={() => setIsWorkspaceDropdownOpen(true)}
+                      onMouseLeave={() => setIsWorkspaceDropdownOpen(false)}
+                    >
                       {isLoadingWorkspaces ? (
-                        <div className="px-4 py-3 text-sm text-muted-foreground text-center">
+                        <div className="px-2.5 py-1.5 text-sm text-muted-foreground text-center">
                           {t("workspace.loading")}
                         </div>
                       ) : userWorkspaces.length === 0 ? (
-                        <div className="px-4 py-3 text-sm text-muted-foreground text-center">
+                        <div className="px-2.5 py-1.5 text-sm text-muted-foreground text-center">
                           {t("workspace.empty")}
                         </div>
                       ) : (
@@ -409,9 +447,9 @@ export function Navbar() {
                             <DropdownMenuItem 
                               key={workspace.id}
                               onClick={() => router.push(route)}
-                              className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-primary/10 hover:text-primary transition-all duration-200 rounded-lg m-1 text-sm"
+                              className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors duration-200 rounded-lg m-0.5 text-sm"
                             >
-                              <Icon className="h-4 w-4" />
+                              <Icon className="h-3.5 w-3.5" />
                               <span className="font-medium">{translatedName}</span>
                             </DropdownMenuItem>
                           )
@@ -423,11 +461,69 @@ export function Navbar() {
                 {/* Solicitar Serviços */}
                 <button
                   onClick={() => router.push("/solicitar-servicos")}
-                  className="px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer text-muted-foreground hover:text-primary hover:bg-muted/80 flex items-center gap-2"
+                  className="px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer text-muted-foreground hover:text-primary hover:bg-muted/80 flex items-center gap-2 h-8"
                 >
-                  <Briefcase className="h-4 w-4" />
+                  <Briefcase className="h-3.5 w-3.5" />
                   {t("nav.solicitar_servicos")}
                 </button>
+
+                {/* Language Dropdown */}
+                <DropdownMenu 
+                  modal={false} 
+                  open={isLanguageDropdownOpen}
+                  onOpenChange={setIsLanguageDropdownOpen}
+                >
+                  <div 
+                    onMouseEnter={() => setIsLanguageDropdownOpen(true)}
+                    onMouseLeave={() => setIsLanguageDropdownOpen(false)}
+                  >
+                    <DropdownMenuTrigger asChild>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 px-2.5 rounded-lg hover:bg-transparent! dark:hover:bg-transparent! hover:text-primary transition-colors cursor-pointer flex items-center gap-1.5" 
+                        title={language === "pt" ? "Português" : "English"}
+                      >
+                        <Languages className="h-4 w-4 cursor-pointer" />
+                        <ChevronDown className="h-3 w-3 cursor-pointer opacity-60" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent 
+                      align="end" 
+                      collisionPadding={8} 
+                      className="w-48 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl"
+                      onMouseEnter={() => setIsLanguageDropdownOpen(true)}
+                      onMouseLeave={() => setIsLanguageDropdownOpen(false)}
+                    >
+                      <DropdownMenuItem 
+                        onClick={() => setLanguage("pt")} 
+                        className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                      >
+                        <span className="text-xl">🇧🇷</span>
+                        <div className="flex flex-col">
+                          <span className="font-medium">Português</span>
+                          <span className="text-xs text-muted-foreground">Portuguese</span>
+                        </div>
+                        {language === "pt" && (
+                          <div className="ml-auto w-2 h-2 rounded-full bg-primary" />
+                        )}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => setLanguage("en")} 
+                        className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                      >
+                        <span className="text-xl">🇺🇸</span>
+                        <div className="flex flex-col">
+                          <span className="font-medium">English</span>
+                          <span className="text-xs text-muted-foreground">Inglês</span>
+                        </div>
+                        {language === "en" && (
+                          <div className="ml-auto w-2 h-2 rounded-full bg-primary" />
+                        )}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </div>
+                </DropdownMenu>
               </>
             ) : (
               // Links normais quando não logado
@@ -435,7 +531,7 @@ export function Navbar() {
                 <button
                   key={link.route}
                   onClick={(e) => handleNavClick(e, link.route)}
-                  className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer ${
+                  className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer h-8 ${
                     currentRoute === link.route
                       ? "text-primary bg-primary/10"
                       : "text-muted-foreground hover:text-primary hover:bg-muted/80"
@@ -445,167 +541,231 @@ export function Navbar() {
                 </button>
               ))
             )}
-          </div>
 
-          {/* Desktop Controls - Right */}
-          <div className="hidden md:flex items-center gap-3">
-            {/* Language Dropdown */}
-            <DropdownMenu modal={false}>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-8 px-2.5 rounded-lg hover:bg-muted/80 transition-colors cursor-pointer flex items-center gap-2" 
-                  title={language === "pt" ? "Português" : "English"}
+            {/* Language Dropdown - When not logged in */}
+            {!isLoggedIn && (
+              <DropdownMenu 
+                modal={false} 
+                open={isLanguageDropdownOpen}
+                onOpenChange={setIsLanguageDropdownOpen}
+              >
+                <div 
+                  onMouseEnter={() => setIsLanguageDropdownOpen(true)}
+                  onMouseLeave={() => setIsLanguageDropdownOpen(false)}
                 >
-                  <Languages className="h-5 w-5 cursor-pointer" />
-                  <ChevronDown className="h-3 w-3 cursor-pointer opacity-60" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" collisionPadding={8} className="w-48 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl">
-                <DropdownMenuItem 
-                  onClick={() => setLanguage("pt")} 
-                  className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-slate-800/50 dark:hover:bg-slate-700/50 transition-colors rounded-lg m-1 text-sm"
-                >
-                  <span className="text-xl">🇧🇷</span>
-                  <div className="flex flex-col">
-                    <span className="font-medium">Português</span>
-                    <span className="text-xs text-muted-foreground">Portuguese</span>
-                  </div>
-                  {language === "pt" && (
-                    <div className="ml-auto w-2 h-2 rounded-full bg-primary" />
-                  )}
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => setLanguage("en")} 
-                  className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-slate-800/50 dark:hover:bg-slate-700/50 transition-colors rounded-lg m-1 text-sm"
-                >
-                  <span className="text-xl">🇺🇸</span>
-                  <div className="flex flex-col">
-                    <span className="font-medium">English</span>
-                    <span className="text-xs text-muted-foreground">Inglês</span>
-                  </div>
-                  {language === "en" && (
-                    <div className="ml-auto w-2 h-2 rounded-full bg-primary" />
-                  )}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="h-8 px-2.5 rounded-lg hover:bg-transparent! dark:hover:bg-transparent! hover:text-primary transition-colors cursor-pointer flex items-center gap-1.5" 
+                      title={language === "pt" ? "Português" : "English"}
+                    >
+                      <Languages className="h-4 w-4 cursor-pointer" />
+                      <ChevronDown className="h-3 w-3 cursor-pointer opacity-60" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent 
+                    align="end" 
+                    collisionPadding={8} 
+                    className="w-48 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl"
+                    onMouseEnter={() => setIsLanguageDropdownOpen(true)}
+                    onMouseLeave={() => setIsLanguageDropdownOpen(false)}
+                  >
+                    <DropdownMenuItem 
+                      onClick={() => setLanguage("pt")} 
+                      className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                    >
+                      <span className="text-xl">🇧🇷</span>
+                      <div className="flex flex-col">
+                        <span className="font-medium">Português</span>
+                        <span className="text-xs text-muted-foreground">Portuguese</span>
+                      </div>
+                      {language === "pt" && (
+                        <div className="ml-auto w-2 h-2 rounded-full bg-primary" />
+                      )}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={() => setLanguage("en")} 
+                      className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                    >
+                      <span className="text-xl">🇺🇸</span>
+                      <div className="flex flex-col">
+                        <span className="font-medium">English</span>
+                        <span className="text-xs text-muted-foreground">Inglês</span>
+                      </div>
+                      {language === "en" && (
+                        <div className="ml-auto w-2 h-2 rounded-full bg-primary" />
+                      )}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </div>
+              </DropdownMenu>
+            )}
 
             {/* Theme Toggle - Dropdown */}
-            <DropdownMenu modal={false}>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-8 px-2.5 rounded-lg hover:bg-muted/80 transition-colors cursor-pointer flex items-center gap-2" 
-                  title={theme === "dark" ? "Tema escuro" : theme === "light" ? "Tema claro" : "Tema do sistema"}
-                >
-                  <Palette className="h-5 w-5 cursor-pointer" />
-                  <ChevronDown className="h-3 w-3 cursor-pointer opacity-60" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" collisionPadding={8} className="w-48 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl">
-                <DropdownMenuItem 
-                  onClick={() => setTheme("light")} 
-                  className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-slate-800/50 dark:hover:bg-slate-700/50 transition-colors rounded-lg m-1 text-sm"
-                >
-                  <div className="w-5 h-5 rounded-full bg-yellow-400 border border-yellow-500/30 flex items-center justify-center">
-                    <span className="text-xs">☀️</span>
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="font-medium">Claro</span>
-                    <span className="text-xs text-muted-foreground">Light</span>
-                  </div>
-                  {theme === "light" && (
-                    <div className="ml-auto w-2 h-2 rounded-full bg-primary" />
-                  )}
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => setTheme("dark")} 
-                  className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-slate-800/50 dark:hover:bg-slate-700/50 transition-colors rounded-lg m-1 text-sm"
-                >
-                  <div className="w-5 h-5 rounded-full bg-slate-700 border border-slate-600/30 flex items-center justify-center">
-                    <span className="text-xs">🌙</span>
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="font-medium">Escuro</span>
-                    <span className="text-xs text-muted-foreground">Dark</span>
-                  </div>
-                  {theme === "dark" && (
-                    <div className="ml-auto w-2 h-2 rounded-full bg-primary" />
-                  )}
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => setTheme("system")} 
-                  className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-slate-800/50 dark:hover:bg-slate-700/50 transition-colors rounded-lg m-1 text-sm"
-                >
-                  <div className="w-5 h-5 rounded-full bg-linear-to-br from-yellow-400 to-slate-700 border border-border/30 flex items-center justify-center">
-                    <span className="text-xs">💻</span>
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="font-medium">Sistema</span>
-                    <span className="text-xs text-muted-foreground">System</span>
-                  </div>
-                  {theme === "system" && (
-                    <div className="ml-auto w-2 h-2 rounded-full bg-primary" />
-                  )}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Auth Buttons or User Dropdown */}
-            {isLoggedIn && userEmail ? (
-              <DropdownMenu modal={false}>
+            <DropdownMenu 
+              modal={false}
+              open={isThemeDropdownOpen}
+              onOpenChange={setIsThemeDropdownOpen}
+            >
+              <div
+                onMouseEnter={() => setIsThemeDropdownOpen(true)}
+                onMouseLeave={() => setIsThemeDropdownOpen(false)}
+              >
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="h-8 px-3 rounded-lg hover:bg-muted/80 transition-colors cursor-pointer flex items-center gap-2 border border-border/50" 
+                    className="h-8 px-2.5 rounded-lg hover:bg-transparent! dark:hover:bg-transparent! hover:text-primary transition-colors cursor-pointer flex items-center gap-1.5" 
+                    title={theme === "dark" ? "Tema escuro" : theme === "light" ? "Tema claro" : "Tema do sistema"}
                   >
-                    <User className="h-4 w-4" />
-                    <span className="text-sm font-medium max-w-[120px] truncate">{userEmail}</span>
-                    <ChevronDown className="h-3 w-3 opacity-60" />
+                    <Palette className="h-4 w-4 cursor-pointer" />
+                    <ChevronDown className="h-3 w-3 cursor-pointer opacity-60" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" collisionPadding={8} className="w-56 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl">
-                  <div className="px-3 py-2">
-                    <p className="text-sm font-medium">{userEmail}</p>
-                    <p className="text-xs text-muted-foreground">{t("nav.usuario_logado")}</p>
-                  </div>
-                  <DropdownMenuSeparator />
+                <DropdownMenuContent 
+                  align="end" 
+                  collisionPadding={8} 
+                  className="w-48 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl"
+                  onMouseEnter={() => setIsThemeDropdownOpen(true)}
+                  onMouseLeave={() => setIsThemeDropdownOpen(false)}
+                >
                   <DropdownMenuItem 
-                    onClick={() => {
-                      router.push("/workspace")
-                    }}
-                    className="flex items-center gap-2 px-4 py-3 cursor-pointer hover:bg-primary/10 text-primary hover:text-primary transition-colors rounded-lg m-1"
+                    onClick={() => setTheme("light")} 
+                    className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
                   >
-                    <LayoutDashboard className="h-4 w-4" />
-                    <span>{t("nav.meu_workspace")}</span>
+                    <div className="w-5 h-5 rounded-full bg-yellow-400 border border-yellow-500/30 flex items-center justify-center">
+                      <span className="text-xs">☀️</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-medium">Claro</span>
+                      <span className="text-xs text-muted-foreground">Light</span>
+                    </div>
+                    {theme === "light" && (
+                      <div className="ml-auto w-2 h-2 rounded-full bg-primary" />
+                    )}
                   </DropdownMenuItem>
-                  {isAdmin && (
-                    <>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem 
-                        onClick={() => {
-                          router.push("/admin")
-                        }}
-                        className="flex items-center gap-2 px-4 py-3 cursor-pointer hover:bg-primary/10 text-primary hover:text-primary transition-colors rounded-lg m-1"
-                      >
-                        <Shield className="h-4 w-4" />
-                        <span>{t("nav.painel_administrativo")}</span>
-                      </DropdownMenuItem>
-                    </>
-                  )}
-                  <DropdownMenuSeparator />
                   <DropdownMenuItem 
-                    onClick={handleLogout}
-                    className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-destructive/10 text-destructive hover:text-destructive transition-colors rounded-lg m-1 text-sm"
+                    onClick={() => setTheme("dark")} 
+                    className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
                   >
-                    <LogOut className="h-4 w-4" />
-                    <span>{t("nav.desconectar")}</span>
+                    <div className="w-5 h-5 rounded-full bg-slate-700 border border-slate-600/30 flex items-center justify-center">
+                      <span className="text-xs">🌙</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-medium">Escuro</span>
+                      <span className="text-xs text-muted-foreground">Dark</span>
+                    </div>
+                    {theme === "dark" && (
+                      <div className="ml-auto w-2 h-2 rounded-full bg-primary" />
+                    )}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={() => setTheme("system")} 
+                    className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                  >
+                    <div className="w-5 h-5 rounded-full bg-linear-to-br from-yellow-400 to-slate-700 border border-border/30 flex items-center justify-center">
+                      <span className="text-xs">💻</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-medium">Sistema</span>
+                      <span className="text-xs text-muted-foreground">System</span>
+                    </div>
+                    {theme === "system" && (
+                      <div className="ml-auto w-2 h-2 rounded-full bg-primary" />
+                    )}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
+              </div>
+            </DropdownMenu>
+
+            {/* Auth Buttons or User Dropdown */}
+            {isLoggedIn && userEmail ? (
+              <DropdownMenu 
+                modal={false}
+                open={isUserDropdownOpen}
+                onOpenChange={setIsUserDropdownOpen}
+              >
+                <div
+                  onMouseEnter={() => setIsUserDropdownOpen(true)}
+                  onMouseLeave={() => setIsUserDropdownOpen(false)}
+                >
+                  <DropdownMenuTrigger asChild>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="h-8 px-3 rounded-lg hover:bg-transparent! dark:hover:bg-transparent! hover:text-primary transition-colors cursor-pointer flex items-center gap-2 border border-border/50" 
+                    >
+                      <User className="h-3.5 w-3.5" />
+                      <span className="text-sm font-medium max-w-[120px] truncate">{userEmail}</span>
+                      <ChevronDown className="h-2.5 w-2.5 opacity-60" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent 
+                    align="end" 
+                    collisionPadding={8} 
+                    className="w-56 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl p-1.5"
+                    onMouseEnter={() => setIsUserDropdownOpen(true)}
+                    onMouseLeave={() => setIsUserDropdownOpen(false)}
+                  >
+                    <div className="px-2 py-1.5">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 border-2 border-primary/20 flex items-center justify-center shrink-0">
+                          <User className="h-5 w-5 text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          {userName && (
+                            <p className="text-sm font-semibold text-foreground truncate mb-0.5">{userName}</p>
+                          )}
+                          <p className="text-xs font-medium truncate">{userEmail}</p>
+                          <p className="text-xs text-muted-foreground">{t("nav.usuario_logado")}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem 
+                      onClick={() => {
+                        router.push("/editar-perfil")
+                      }}
+                      className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                    >
+                      <Edit className="h-3.5 w-3.5" />
+                      <span>{t("nav.editar_perfil") || "Editar perfil"}</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem 
+                      onClick={() => {
+                        router.push("/workspace")
+                      }}
+                      className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                    >
+                      <LayoutDashboard className="h-3.5 w-3.5" />
+                      <span>{t("nav.meu_workspace")}</span>
+                    </DropdownMenuItem>
+                    {isAdmin && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem 
+                          onClick={() => {
+                            router.push("/admin")
+                          }}
+                          className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                        >
+                          <Shield className="h-3.5 w-3.5" />
+                          <span>{t("nav.painel_administrativo")}</span>
+                        </DropdownMenuItem>
+                      </>
+                    )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem 
+                      onClick={handleLogout}
+                      className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-destructive hover:text-destructive focus:text-destructive transition-colors rounded-lg m-0.5 text-sm"
+                    >
+                      <LogOut className="h-3.5 w-3.5" />
+                      <span>{t("nav.desconectar")}</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </div>
               </DropdownMenu>
             ) : (
               <>
@@ -908,11 +1068,28 @@ export function Navbar() {
                     {isLoggedIn && userEmail ? (
                       <>
                         <div className="px-3 py-3 rounded-lg border-2 border-border/30 bg-muted/20">
-                          <div className="flex items-center gap-2 mb-2">
-                            <User className="h-4 w-4 text-primary" />
-                            <span className="text-xs font-medium text-muted-foreground">{t("nav.usuario_logado")}</span>
+                          <div className="flex items-start gap-3 mb-3">
+                            <div className="w-10 h-10 rounded-full bg-primary/10 border-2 border-primary/20 flex items-center justify-center shrink-0">
+                              <User className="h-5 w-5 text-primary" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              {userName && (
+                                <p className="text-sm font-semibold text-foreground truncate mb-0.5">{userName}</p>
+                              )}
+                              <p className="text-xs font-medium text-foreground truncate">{userEmail}</p>
+                              <p className="text-xs text-muted-foreground">{t("nav.usuario_logado")}</p>
+                            </div>
                           </div>
-                          <p className="text-sm font-medium text-foreground truncate">{userEmail}</p>
+                          <button
+                            onClick={() => {
+                              setIsOpen(false)
+                              router.push("/editar-perfil")
+                            }}
+                            className="flex items-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-foreground border-border/30 hover:border-primary/30 bg-transparent hover:bg-muted/30"
+                          >
+                            <Edit className="h-4 w-4" />
+                            {t("nav.editar_perfil") || "Editar perfil"}
+                          </button>
                         </div>
                         {/* Painel Administrativo - Separado para melhor visibilidade */}
                         {isAdmin && (

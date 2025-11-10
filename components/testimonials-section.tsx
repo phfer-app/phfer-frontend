@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Star, ChevronLeft, ChevronRight } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
 import { SectionCorners } from "@/components/section-corners"
+import { useScrollAnimation } from "@/hooks/use-scroll-animation"
 
 type Testimonial = {
   name: string
@@ -18,6 +19,8 @@ export function TestimonialsSection() {
   const { t } = useLanguage()
   const [currentIndex, setCurrentIndex] = useState(0)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
+  const sectionRef = useRef<HTMLElement>(null)
+  const isVisible = useScrollAnimation(sectionRef)
   
   const testimonials = [
     {
@@ -95,7 +98,7 @@ export function TestimonialsSection() {
   }, [testimonials.length])
   
   return (
-    <section id="testimonials" className="py-24 relative overflow-hidden">
+    <section ref={sectionRef} id="testimonials" className="py-24 relative overflow-hidden">
       <SectionCorners />
       {/* Gradient background */}
       <div className="absolute inset-0 -z-10 bg-linear-to-br from-background via-background to-primary/5" />
@@ -106,7 +109,9 @@ export function TestimonialsSection() {
 
       <div className="container mx-auto px-2 md:px-4 relative z-10 max-w-[95%]">
         {/* Header */}
-        <div className="mb-12 max-w-3xl">
+        <div className={`mb-12 max-w-3xl transition-all duration-500 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        }`}>
           <Badge className="mb-2 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
             {t("testimonials.badge")}
           </Badge>

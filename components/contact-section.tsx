@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -10,10 +10,13 @@ import { Badge } from "@/components/ui/badge"
 import { Mail, Linkedin, Github, MessageSquare, MapPin, Phone, Instagram, Send } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
 import { SectionCorners } from "@/components/section-corners"
+import { useScrollAnimation } from "@/hooks/use-scroll-animation"
 
 export function ContactSection() {
   const { t } = useLanguage()
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const sectionRef = useRef<HTMLElement>(null)
+  const isVisible = useScrollAnimation(sectionRef)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,7 +34,7 @@ export function ContactSection() {
   ]
 
   return (
-    <section id="contact" className="relative py-24 overflow-hidden">
+    <section ref={sectionRef} id="contact" className="relative py-24 overflow-hidden">
       <SectionCorners />
       {/* Background gradient */}
       <div className="absolute inset-0 -z-10 bg-linear-to-br from-background via-background to-primary/5" />
@@ -51,7 +54,9 @@ export function ContactSection() {
 
       <div className="container mx-auto px-2 md:px-4 relative z-10 max-w-[95%]">
         {/* Header */}
-        <div className="mb-12">
+        <div className={`mb-12 transition-all duration-500 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        }`}>
           <Badge className="mb-2 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
             {t("contact.badge")}
           </Badge>

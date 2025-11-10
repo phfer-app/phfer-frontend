@@ -110,7 +110,7 @@ export default function SolicitarServicosPage() {
           <Button
             variant="ghost"
             onClick={() => router.back()}
-            className="mb-6 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+            className="mb-6 text-muted-foreground hover:bg-transparent! dark:hover:bg-transparent! hover:text-primary transition-colors cursor-pointer"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             {t("services.back")}
@@ -162,17 +162,17 @@ export default function SolicitarServicosPage() {
                 <Select value={categoria} onValueChange={setCategoria}>
                   <SelectTrigger 
                 id="categoria"
-                    className="w-full h-12 px-4 text-sm border-2 border-border/50 bg-background/50 focus:border-primary/50 focus:bg-background transition-all duration-200 group-hover:border-primary/30"
+                    className="w-full h-12 px-4 text-sm border-2 border-border/50 bg-background/50 focus:border-primary/50 focus:bg-background transition-all duration-200 group-hover:border-primary/30 cursor-pointer"
                   >
                     <SelectValue placeholder={t("services.form.category.select")} />
                   </SelectTrigger>
                   <SelectContent className="bg-card/95 backdrop-blur-xl border border-border/50">
-                    <SelectItem value="desenvolvimento_web">{t("services.form.category.web")}</SelectItem>
-                    <SelectItem value="desenvolvimento_mobile">{t("services.form.category.mobile")}</SelectItem>
-                    <SelectItem value="design">{t("services.form.category.design")}</SelectItem>
-                    <SelectItem value="consultoria">{t("services.form.category.consultoria")}</SelectItem>
-                    <SelectItem value="manutencao">{t("services.form.category.manutencao")}</SelectItem>
-                    <SelectItem value="outro">{t("services.form.category.outro")}</SelectItem>
+                    <SelectItem value="desenvolvimento_web" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">{t("services.form.category.web")}</SelectItem>
+                    <SelectItem value="desenvolvimento_mobile" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">{t("services.form.category.mobile")}</SelectItem>
+                    <SelectItem value="design" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">{t("services.form.category.design")}</SelectItem>
+                    <SelectItem value="consultoria" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">{t("services.form.category.consultoria")}</SelectItem>
+                    <SelectItem value="manutencao" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">{t("services.form.category.manutencao")}</SelectItem>
+                    <SelectItem value="outro" className="focus:bg-transparent! data-highlighted:bg-transparent! focus:text-primary data-highlighted:text-primary cursor-pointer">{t("services.form.category.outro")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

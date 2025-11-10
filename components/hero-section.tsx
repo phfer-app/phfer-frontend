@@ -7,6 +7,7 @@ import { useLanguage } from "@/components/language-provider"
 import { useNavigation } from "@/components/navigation-provider"
 import { SectionCorners } from "@/components/section-corners"
 import { IntegratedChatbot } from "@/components/integrated-chatbot"
+import { HowItWorksSection } from "@/components/how-it-works-section"
 
 const rotatingWords = {
   pt: ["sistemas", "softwares"],
@@ -317,6 +318,9 @@ export function HeroSection() {
           </div>
         </div>
       </div>
+
+      {/* How It Works Section */}
+      <HowItWorksSection />
 
       {/* Scroll indicator - Bottom center */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20">

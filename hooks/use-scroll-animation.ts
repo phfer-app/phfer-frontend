@@ -1,69 +1,33 @@
 "use client"
 
-import { useEffect } from "react"
+import { useState, useEffect, RefObject } from "react"
 
-export function useScrollReveal() {
+export function useScrollAnimation(ref: RefObject<HTMLElement>): boolean {
+  const [isVisible, setIsVisible] = useState(false)
+
   useEffect(() => {
-    const observerOptions = {
-      threshold: 0.15,
-      rootMargin: "0px 0px -50px 0px",
-    }
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
         if (entry.isIntersecting) {
-          // Add active class to trigger animation
-          entry.target.classList.add("active")
-          
-          // Also trigger animations for child elements
-          const revealItems = entry.target.querySelectorAll(".reveal-item")
-          revealItems.forEach((item, index) => {
-            setTimeout(() => {
-              item.classList.add("active", `delay-${index + 1}`)
-            }, index * 50)
-          })
-          
-          observer.unobserve(entry.target)
+          setIsVisible(true)
         }
-      })
-    }, observerOptions)
+      },
+      {
+        threshold: 0.05, // Mais acelerado - aparece mais cedo
+        rootMargin: "0px 0px -50px 0px", // Menos margem - aparece mais rápido
+      }
+    )
 
-    // Observe all reveal elements
-    const revealElements = document.querySelectorAll(".reveal-section, .reveal-content")
-    revealElements.forEach((el) => observer.observe(el))
+    if (ref.current) {
+      observer.observe(ref.current)
+    }
 
     return () => {
-      revealElements.forEach((el) => observer.unobserve(el))
-    }
-  }, [])
-}
-
-export function initScrollReveal() {
-  if (typeof window === "undefined") return
-
-  const observerOptions = {
-    threshold: 0.15,
-    rootMargin: "0px 0px -50px 0px",
-  }
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("active")
-
-        // Stagger animations for child elements
-        const revealItems = entry.target.querySelectorAll(".reveal-item")
-        revealItems.forEach((item, index) => {
-          setTimeout(() => {
-            item.classList.add("active", `delay-${(index % 4) + 1}`)
-          }, index * 50)
-        })
-
-        observer.unobserve(entry.target)
+      if (ref.current) {
+        observer.unobserve(ref.current)
       }
-    })
-  }, observerOptions)
+    }
+  }, [ref])
 
-  const revealElements = document.querySelectorAll(".reveal-section, .reveal-content")
-  revealElements.forEach((el) => observer.observe(el))
+  return isVisible
 }

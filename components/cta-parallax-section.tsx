@@ -1,14 +1,19 @@
 "use client"
 
+import { useRef } from "react"
 import { ArrowRight, Sparkles } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
 import { SectionCorners } from "@/components/section-corners"
+import { useScrollAnimation } from "@/hooks/use-scroll-animation"
 
 export function CTAParallaxSection() {
   const { t } = useLanguage()
+  const sectionRef = useRef<HTMLElement>(null)
+  const isVisible = useScrollAnimation(sectionRef)
 
   return (
     <section
+      ref={sectionRef}
       className="relative py-16 md:py-24 overflow-hidden"
     >
       <SectionCorners />
@@ -41,7 +46,9 @@ export function CTAParallaxSection() {
       />
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-4xl mx-auto">
+        <div className={`max-w-4xl mx-auto transition-all duration-500 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        }`}>
           {/* Header with animated icon */}
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 mb-6">

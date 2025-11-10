@@ -336,7 +336,7 @@ export default function ChamadosPage() {
                   {t("tickets.title")}
                 </h1>
               </div>
-              <p className="text-muted-foreground text-sm ml-14">
+              <p className="text-muted-foreground text-sm ml-14 -mt-1">
                 {t("tickets.subtitle")}
               </p>
             </div>
@@ -345,14 +345,14 @@ export default function ChamadosPage() {
                 onClick={loadTickets}
                 variant="outline"
                 disabled={isLoading}
-                className="px-5 h-11 border-2 hover:bg-accent/50 transition-all duration-200"
+                className="px-4 py-2 border-2 hover:bg-accent/50 transition-all duration-200 cursor-pointer"
               >
                 <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
                 {t("tickets.update")}
               </Button>
               <Button
                 onClick={() => router.push("/solicitar-servicos")}
-                className="px-6 h-11 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-200"
+                className="px-4 py-2 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground transition-all duration-200 cursor-pointer"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 {t("tickets.new")}
@@ -418,9 +418,9 @@ export default function ChamadosPage() {
                     key={filter.value}
                     variant={filterStatus === filter.value ? "default" : "outline"}
                     onClick={() => setFilterStatus(filter.value)}
-                    className={`h-9 px-4 border-2 transition-all duration-200 ${
+                    className={`px-4 py-2 border-2 transition-all duration-200 cursor-pointer ${
                       filterStatus === filter.value
-                        ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
+                        ? "bg-primary text-primary-foreground"
                         : "hover:bg-accent/50 hover:border-primary/30"
                     }`}
                   >
@@ -465,7 +465,7 @@ export default function ChamadosPage() {
                 {chamados.length === 0 && (
                   <Button
                     onClick={() => router.push("/solicitar-servicos")}
-                    className="px-8 h-12 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-200"
+                    className="px-4 py-2 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground transition-all duration-200 cursor-pointer"
                   >
                     <Plus className="h-5 w-5 mr-2" />
                     {t("tickets.create_first")}
@@ -551,7 +551,7 @@ export default function ChamadosPage() {
 
       {/* Dialog para visualizar detalhes do ticket - Layout de Chat Moderno */}
       <Dialog open={isTicketDialogOpen} onOpenChange={setIsTicketDialogOpen}>
-        <DialogContent className="!max-w-[95vw] !w-[95vw] !max-h-[98vh] !h-[98vh] flex flex-col p-0 gap-0 bg-background m-0">
+        <DialogContent className="!max-w-[100vw] !w-[100vw] !max-h-[100vh] !h-[100vh] !top-0 !left-0 !translate-x-0 !translate-y-0 !rounded-none md:!max-w-[95vw] md:!w-[95vw] md:!max-h-[98vh] md:!h-[98vh] md:!top-[50%] md:!left-[50%] md:!translate-x-[-50%] md:!translate-y-[-50%] md:!rounded-lg flex flex-col p-0 gap-0 bg-background m-0">
           {selectedTicket && (
             <>
               {/* Header Compacto com Informações */}
@@ -594,7 +594,11 @@ export default function ChamadosPage() {
                 <div 
                   id="ticket-chat-container-user"
                   className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3"
-                  style={{ height: 'calc(98vh - 320px)', minHeight: '200px', maxHeight: 'calc(98vh - 320px)' }}
+                  style={{ 
+                    height: 'calc(100vh - 280px)', 
+                    minHeight: '200px', 
+                    maxHeight: 'calc(100vh - 280px)',
+                  }}
                 >
                   {isLoadingComments ? (
                     <div className="flex items-center justify-center h-full min-h-[300px]">

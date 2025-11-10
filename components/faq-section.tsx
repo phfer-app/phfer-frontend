@@ -1,14 +1,17 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { Badge } from "@/components/ui/badge"
 import { ChevronDown } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
 import { SectionCorners } from "@/components/section-corners"
+import { useScrollAnimation } from "@/hooks/use-scroll-animation"
 
 export function FAQSection() {
   const [openId, setOpenId] = useState<number | null>(null)
   const { t } = useLanguage()
+  const sectionRef = useRef<HTMLElement>(null)
+  const isVisible = useScrollAnimation(sectionRef)
   
   const faqs = [
     {
@@ -48,7 +51,7 @@ export function FAQSection() {
   }
 
   return (
-    <section id="faq" className="py-24 relative overflow-hidden">
+    <section ref={sectionRef} id="faq" className="py-24 relative overflow-hidden">
       <SectionCorners />
       {/* Background blur elements - Padrão vertical */}
       <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl opacity-40 -z-10"></div>
@@ -64,7 +67,9 @@ export function FAQSection() {
 
       <div className="container mx-auto px-2 md:px-4 relative max-w-[95%]">
         {/* Header */}
-        <div className="mb-12">
+        <div className={`mb-12 transition-all duration-500 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        }`}>
           <Badge className="mb-2 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
             {t("faq.badge")}
           </Badge>
@@ -77,7 +82,9 @@ export function FAQSection() {
         </div>
 
         {/* FAQ Items */}
-        <div className="max-w-3xl mx-auto space-y-4">
+        <div className={`max-w-3xl mx-auto space-y-4 transition-all duration-500 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        }`} style={{ transitionDelay: "200ms" }}>
           {faqs.map((faq) => (
             <div
               key={faq.id}
