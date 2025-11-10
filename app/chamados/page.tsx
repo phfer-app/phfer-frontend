@@ -323,7 +323,7 @@ export default function ChamadosPage() {
         <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-gradient-to-br from-secondary/15 to-transparent rounded-full blur-3xl opacity-60" />
       </div>
 
-      <div className="w-full max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12 relative z-10">
+      <div className="w-full max-w-[95%] mx-auto px-2 md:px-4 py-8 md:py-12 relative z-10">
         {/* Header */}
         <div className="mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
@@ -332,11 +332,11 @@ export default function ChamadosPage() {
                 <div className="p-2 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/20">
                   <Ticket className="h-6 w-6 text-primary" />
                 </div>
-                <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent">
                   {t("tickets.title")}
                 </h1>
               </div>
-              <p className="text-muted-foreground text-sm md:text-base ml-14">
+              <p className="text-muted-foreground text-sm ml-14">
                 {t("tickets.subtitle")}
               </p>
             </div>
@@ -441,7 +441,7 @@ export default function ChamadosPage() {
                 <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 border-2 border-primary/20 flex items-center justify-center mb-6">
                   <div className="h-10 w-10 border-3 border-primary/30 border-t-primary rounded-full animate-spin" />
                 </div>
-                <h3 className="text-xl font-semibold text-foreground mb-2">
+                <h3 className="text-lg font-semibold text-foreground mb-2">
                   {t("tickets.loading")}
                 </h3>
                 <p className="text-sm text-muted-foreground">Carregando seus chamados...</p>
@@ -453,7 +453,7 @@ export default function ChamadosPage() {
                 <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 border-2 border-primary/20 flex items-center justify-center mb-6">
                   <Ticket className="h-10 w-10 text-primary" />
                 </div>
-                <h3 className="text-xl font-semibold text-foreground mb-2">
+                <h3 className="text-lg font-semibold text-foreground mb-2">
                   {t("tickets.empty")}
                 </h3>
                 <p className="text-muted-foreground mb-8 max-w-md">
@@ -491,7 +491,7 @@ export default function ChamadosPage() {
                           </div>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors duration-200">
+                          <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors duration-200">
                             {chamado.titulo}
                           </h3>
                           <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed mb-4">
@@ -559,7 +559,7 @@ export default function ChamadosPage() {
                 <div className="flex flex-col gap-4">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
-                      <DialogTitle className="text-xl sm:text-2xl font-bold mb-3 line-clamp-2">{selectedTicket.titulo}</DialogTitle>
+                      <DialogTitle className="text-2xl font-bold mb-3 line-clamp-2">{selectedTicket.titulo}</DialogTitle>
                       <div className="flex flex-wrap items-center gap-3 text-sm">
                         <Badge className={`${getStatusColor(selectedTicket.status)} text-xs font-semibold px-2.5 py-1 border-2 flex items-center gap-1.5 w-fit`}>
                           {getStatusIcon(selectedTicket.status)}

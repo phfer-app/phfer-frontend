@@ -117,20 +117,20 @@ export function ProjectsSection() {
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className="mb-16 max-w-3xl">
-          <Badge className="mb-4 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
+        <div className="mb-12 max-w-3xl">
+          <Badge className="mb-2 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
             {t("projects.badge")}
           </Badge>
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-balance">
+          <h2 className="text-2xl font-bold mb-2 text-balance">
             {t("projects.title")} <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">{t("projects.title2")}</span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl text-sm md:text-base">
+          <p className="text-muted-foreground max-w-2xl text-sm">
             {t("projects.description")}
           </p>
         </div>
 
         {/* Staggered Grid */}
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[95%] mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-max">
             {projects.map((project, index) => (
               <div

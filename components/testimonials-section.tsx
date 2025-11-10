@@ -104,16 +104,16 @@ export function TestimonialsSection() {
       <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl opacity-50" />
       <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-secondary/10 rounded-full blur-3xl opacity-50" />
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-2 md:px-4 relative z-10 max-w-[95%]">
         {/* Header */}
-        <div className="mb-16 max-w-3xl">
-          <Badge className="mb-4 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
+        <div className="mb-12 max-w-3xl">
+          <Badge className="mb-2 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
             {t("testimonials.badge")}
           </Badge>
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-balance">
+          <h2 className="text-2xl font-bold mb-2 text-balance">
             {t("testimonials.title")} <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">{t("testimonials.title2")}</span> {t("testimonials.title3")}
           </h2>
-          <p className="text-muted-foreground text-base">
+          <p className="text-muted-foreground text-sm">
             {t("testimonials.description")}
           </p>
         </div>

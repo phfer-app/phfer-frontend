@@ -160,7 +160,7 @@ export default function WorkspacePage() {
         <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-gradient-to-br from-secondary/15 to-transparent rounded-full blur-3xl opacity-60" />
       </div>
 
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-8 md:py-12 relative z-10">
+      <div className="w-full max-w-[95%] mx-auto px-2 sm:px-3 md:px-4 py-8 md:py-12 relative z-10">
         {/* Header */}
         <div className="mb-8 md:mb-12">
           <div className="flex items-center justify-between mb-4">
@@ -168,7 +168,7 @@ export default function WorkspacePage() {
               <div className="p-2 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/20">
                 <Briefcase className="h-6 w-6 text-primary" />
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent">
                 {t("workspace.title") || "Meu Workspace"}
               </h1>
             </div>
@@ -183,7 +183,7 @@ export default function WorkspacePage() {
               <span className="hidden sm:inline">{t("workspace.update")}</span>
             </Button>
           </div>
-          <p className="text-muted-foreground text-sm md:text-base ml-14">
+          <p className="text-muted-foreground text-sm ml-14">
             {t("workspace.subtitle") || "Gerencie suas ferramentas e recursos em um só lugar"}
           </p>
         </div>
@@ -220,10 +220,10 @@ export default function WorkspacePage() {
                       <ArrowRight className={`h-5 w-5 ${card.iconColor} opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 shrink-0`} />
                     </div>
                     
-                    <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors duration-200 break-words">
+                    <h3 className="text-lg font-bold text-foreground mb-3 group-hover:text-primary transition-colors duration-200 break-words">
                       {card.title}
                     </h3>
-                    <p className="text-sm md:text-base text-muted-foreground leading-relaxed flex-1 break-words">
+                    <p className="text-sm text-muted-foreground leading-relaxed flex-1 break-words">
                       {card.description}
                     </p>
                   </div>

@@ -33,16 +33,16 @@ export function BlogSection() {
       <div className="absolute bottom-1/2 right-1/3 w-16 h-16 border border-secondary/15 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
       <div className="absolute top-2/3 left-1/5 w-18 h-18 border border-primary/15 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }} />
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-2 md:px-4 relative z-10 max-w-[95%]">
         {/* Header */}
-        <div className="mb-16 max-w-3xl">
-          <Badge className="mb-4 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
+        <div className="mb-12 max-w-3xl">
+          <Badge className="mb-2 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
             {t("blog.badge")}
           </Badge>
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-balance">
+          <h2 className="text-2xl font-bold mb-2 text-balance">
             {t("blog.title")} <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">{t("blog.title2")}</span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl text-sm md:text-base">
+          <p className="text-muted-foreground max-w-2xl text-sm">
             {t("blog.description")}
           </p>
         </div>

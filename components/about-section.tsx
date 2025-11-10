@@ -88,16 +88,16 @@ export function AboutSection() {
       <div className="absolute top-1/4 right-1/5 w-24 h-24 border border-primary/20 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
       <div className="absolute bottom-1/4 left-1/5 w-20 h-20 border border-secondary/20 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-2 md:px-4 relative z-10 max-w-[95%]">
         {/* Header */}
-        <div className="mb-16 max-w-3xl">
-          <Badge className="mb-4 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
+        <div className="mb-12 max-w-3xl">
+          <Badge className="mb-2 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
             {t("about.badge")}
           </Badge>
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-balance">
+          <h2 className="text-2xl font-bold mb-2 text-balance">
             {t("about.title")} <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">{t("about.title2")}</span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl text-sm md:text-base">
+          <p className="text-muted-foreground max-w-2xl text-sm">
             {t("about.description")}
           </p>
         </div>

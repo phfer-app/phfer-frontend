@@ -96,10 +96,10 @@ export default function LoginPage() {
         <div className="hidden lg:flex flex-col items-center justify-center px-8 xl:px-16 py-12">
           <div className="max-w-md space-y-6">
             <div className="space-y-4">
-              <h1 className="text-4xl xl:text-5xl font-bold bg-linear-to-r from-primary via-secondary to-primary bg-clip-text text-transparent leading-tight">
+              <h1 className="text-2xl font-bold bg-linear-to-r from-primary via-secondary to-primary bg-clip-text text-transparent leading-tight">
                 {t("auth.login.title")}
               </h1>
-              <p className="text-lg xl:text-xl text-muted-foreground leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 {t("auth.login.subtitle")}
               </p>
             </div>

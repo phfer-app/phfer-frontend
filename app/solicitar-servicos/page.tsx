@@ -104,7 +104,7 @@ export default function SolicitarServicosPage() {
         <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-secondary/15 rounded-full blur-3xl opacity-60" />
       </div>
 
-      <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-8 md:py-12 relative z-10">
+      <div className="w-full max-w-[95%] mx-auto px-2 sm:px-3 md:px-4 py-8 md:py-12 relative z-10">
         {/* Header */}
         <div className="mb-8 md:mb-12">
           <Button
@@ -120,12 +120,12 @@ export default function SolicitarServicosPage() {
               <Briefcase className="h-6 w-6 text-primary" />
             </div>
             <div className="flex-1">
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent mb-3">
-                {t("services.title")}
-              </h1>
-              <p className="text-muted-foreground text-base md:text-lg">
-                {t("services.subtitle")}
-              </p>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent mb-3">
+            {t("services.title")}
+          </h1>
+              <p className="text-muted-foreground text-sm">
+            {t("services.subtitle")}
+          </p>
             </div>
           </div>
         </div>
@@ -135,34 +135,34 @@ export default function SolicitarServicosPage() {
           <form onSubmit={handleSubmit} className="p-6 md:p-8 lg:p-10 space-y-8">
             {/* Título e Categoria em Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Título */}
+            {/* Título */}
               <div className="space-y-3 group">
                 <Label htmlFor="titulo" className="flex items-center gap-2 text-sm font-semibold text-foreground">
                   <FileText className="h-4 w-4 text-primary" />
-                  {t("services.form.title")}
-                </Label>
+                {t("services.form.title")}
+              </Label>
                 <div className="relative">
-                  <Input
-                    id="titulo"
-                    type="text"
-                    placeholder={t("services.form.title.placeholder")}
-                    value={titulo}
-                    onChange={(e) => setTitulo(e.target.value)}
-                    className="h-12 px-4 text-base border-2 border-border/50 bg-background/50 focus:border-primary/50 focus:bg-background transition-all duration-200 group-hover:border-primary/30"
-                  />
+              <Input
+                id="titulo"
+                type="text"
+                placeholder={t("services.form.title.placeholder")}
+                value={titulo}
+                onChange={(e) => setTitulo(e.target.value)}
+                    className="h-12 px-4 text-sm border-2 border-border/50 bg-background/50 focus:border-primary/50 focus:bg-background transition-all duration-200 group-hover:border-primary/30"
+              />
                 </div>
-              </div>
+            </div>
 
-              {/* Categoria */}
+            {/* Categoria */}
               <div className="space-y-3 group">
                 <Label htmlFor="categoria" className="flex items-center gap-2 text-sm font-semibold text-foreground">
                   <Tag className="h-4 w-4 text-primary" />
-                  {t("services.form.category")}
-                </Label>
+                {t("services.form.category")}
+              </Label>
                 <Select value={categoria} onValueChange={setCategoria}>
                   <SelectTrigger 
-                    id="categoria"
-                    className="w-full h-12 px-4 text-base border-2 border-border/50 bg-background/50 focus:border-primary/50 focus:bg-background transition-all duration-200 group-hover:border-primary/30"
+                id="categoria"
+                    className="w-full h-12 px-4 text-sm border-2 border-border/50 bg-background/50 focus:border-primary/50 focus:bg-background transition-all duration-200 group-hover:border-primary/30"
                   >
                     <SelectValue placeholder={t("services.form.category.select")} />
                   </SelectTrigger>
@@ -190,7 +190,7 @@ export default function SolicitarServicosPage() {
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
                 rows={10}
-                className="min-h-[200px] text-base border-2 border-border/50 bg-background/50 focus:border-primary/50 focus:bg-background transition-all duration-200 resize-none group-hover:border-primary/30"
+                className="min-h-[200px] text-sm border-2 border-border/50 bg-background/50 focus:border-primary/50 focus:bg-background transition-all duration-200 resize-none group-hover:border-primary/30"
               />
               <p className="text-xs text-muted-foreground flex items-center gap-1">
                 <AlertCircle className="h-3 w-3" />
@@ -267,23 +267,23 @@ export default function SolicitarServicosPage() {
 
             {/* Submit Button */}
             <div className="pt-4 border-t border-border/50">
-              <Button
-                type="submit"
+            <Button
+              type="submit"
                 disabled={isLoading || !titulo || !categoria || !descricao}
-                className="w-full h-12 md:h-14 text-base md:text-lg font-semibold bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isLoading ? (
+                className="w-full h-12 md:h-14 text-sm font-semibold bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? (
                   <span className="flex items-center gap-3">
                     <span className="h-5 w-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                    {t("services.form.submitting")}
-                  </span>
-                ) : (
+                  {t("services.form.submitting")}
+                </span>
+              ) : (
                   <span className="flex items-center gap-3">
                     <Send className="h-5 w-5" />
-                    {t("services.form.submit")}
-                  </span>
-                )}
-              </Button>
+                  {t("services.form.submit")}
+                </span>
+              )}
+            </Button>
             </div>
           </form>
         </div>

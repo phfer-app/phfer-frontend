@@ -49,16 +49,16 @@ export function ContactSection() {
       <div className="absolute top-1/2 right-1/4 w-20 h-20 border border-primary/15 rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
       <div className="absolute bottom-1/2 left-1/3 w-16 h-16 border border-secondary/15 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-2 md:px-4 relative z-10 max-w-[95%]">
         {/* Header */}
-        <div className="mb-16">
-          <Badge className="mb-4 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
+        <div className="mb-12">
+          <Badge className="mb-2 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
             {t("contact.badge")}
           </Badge>
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-balance">
+          <h2 className="text-2xl font-bold mb-2 text-balance">
             {t("contact.title")} <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">{t("contact.title2")}</span>
           </h2>
-          <p className="text-muted-foreground text-sm md:text-base">
+          <p className="text-muted-foreground text-sm">
             {t("contact.description")}
           </p>
         </div>

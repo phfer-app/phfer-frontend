@@ -80,6 +80,7 @@
   /* optional: --font-sans, --font-serif, --font-mono if they are applied in the layout.tsx */
   --font-sans: "Geist", "Geist Fallback";
   --font-mono: "Geist Mono", "Geist Mono Fallback";
+  --max-width-8xl: 96rem;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -151,6 +152,24 @@
       linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, 0.01) 25%, rgba(255, 255, 255, 0.01) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.01) 75%, rgba(255, 255, 255, 0.01) 76%, transparent 77%, transparent);
     background-size: 80px 80px;
     background-attachment: fixed;
+  }
+
+  /* Typography - Padrão global */
+  p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  h1, h2 {
+    font-size: 24px;
+    line-height: 1.3;
+    font-weight: 700;
+  }
+
+  h3 {
+    font-size: 18px;
+    line-height: 1.4;
+    font-weight: 600;
   }
 }
 
