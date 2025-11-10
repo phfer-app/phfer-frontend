@@ -13,13 +13,51 @@ export function FloatingRadioPlayer() {
   const [isMinimized, setIsMinimized] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [position, setPosition] = useState({ x: 20, y: 80 })
+  const [mounted, setMounted] = useState(false)
+  const hasLoadedFromStorage = useRef(false)
   const dragStartPos = useRef({ x: 0, y: 0 })
   const playerRef = useRef<HTMLDivElement>(null)
 
-  // Initialize minimized state based on screen size
+  // Marcar como montado após a hidratação
   useEffect(() => {
-    setIsMinimized(isMobile)
+    setMounted(true)
+  }, [])
+
+  // Carregar e gerenciar estado de minimização do localStorage
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    
+    // No mobile, sempre minimizar (não salva preferência)
+    if (isMobile) {
+      setIsMinimized(true)
+      return
+    }
+    
+    // Em desktop, carregar preferência salva
+    if (!hasLoadedFromStorage.current) {
+      // Primeira carga: carregar do localStorage
+      const savedMinimized = localStorage.getItem("radio-minimized")
+      if (savedMinimized !== null) {
+        setIsMinimized(savedMinimized === "true")
+      }
+      hasLoadedFromStorage.current = true
+    } else {
+      // Após primeira carga: quando volta para desktop, restaurar preferência
+      const savedMinimized = localStorage.getItem("radio-minimized")
+      if (savedMinimized !== null) {
+        setIsMinimized(savedMinimized === "true")
+      }
+    }
   }, [isMobile])
+
+  // Salvar estado de minimização no localStorage quando mudar (apenas em desktop)
+  useEffect(() => {
+    if (!hasLoadedFromStorage.current) return
+    if (isMobile) return // No mobile não salva, pois sempre é minimizado
+    if (typeof window === "undefined") return
+    
+    localStorage.setItem("radio-minimized", isMinimized.toString())
+  }, [isMinimized, isMobile])
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newVolume = parseFloat(e.target.value)
@@ -32,6 +70,9 @@ export function FloatingRadioPlayer() {
   }
 
   const getVolumeIcon = () => {
+    // Durante a hidratação, sempre retornar Volume2 para consistência
+    // Após a montagem, usar o valor real do volume
+    if (!mounted) return <Volume2 className="h-4 w-4" />
     if (isMuted || volume === 0) return <VolumeX className="h-4 w-4" />
     if (volume < 0.5) return <Volume1 className="h-4 w-4" />
     return <Volume2 className="h-4 w-4" />

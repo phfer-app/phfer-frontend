@@ -141,6 +141,12 @@ export function BlogSection() {
 function RadioPlayer() {
   const { t } = useLanguage()
   const { audio, isPlaying, setIsPlaying, volume, setVolume, isMuted, setIsMuted } = useAudio()
+  const [mounted, setMounted] = useState(false)
+
+  // Marcar como montado após a hidratação
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const togglePlay = () => {
     if (!audio) return
@@ -165,6 +171,9 @@ function RadioPlayer() {
   }
 
   const getVolumeIcon = () => {
+    // Durante a hidratação, sempre retornar Volume2 para consistência
+    // Após a montagem, usar o valor real do volume
+    if (!mounted) return <Volume2 className="h-5 w-5" />
     if (isMuted || volume === 0) return <VolumeX className="h-5 w-5" />
     if (volume < 0.5) return <Volume1 className="h-5 w-5" />
     return <Volume2 className="h-5 w-5" />
