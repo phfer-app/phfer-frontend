@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { Shield, Users, Ticket, Plus, X, RefreshCw, Search, Calendar, User, Mail, Clock, AlertCircle, Eye, CheckCircle, MessageSquare, History, CheckCircle2, XCircle, Lock, Save, Edit, Trash2, FolderPlus, Send, Filter } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -73,6 +73,78 @@ export default function AdminPage() {
     setMounted(true)
     checkAdminAccess()
   }, [])
+
+  // Ref para rastrear o número de comentários anterior
+  const previousCommentsCountRef = useRef(0)
+
+  // Polling para atualizar comentários e status quando o modal estiver aberto
+  useEffect(() => {
+    if (!isTicketDialogOpen || !selectedTicket) {
+      previousCommentsCountRef.current = 0
+      return
+    }
+
+    // Inicializar contador quando o modal abre
+    previousCommentsCountRef.current = ticketComments.length
+
+    const pollInterval = setInterval(async () => {
+      try {
+        // Atualizar comentários
+        const commentsResult = await getTicketComments(selectedTicket.id)
+        if (commentsResult.success && commentsResult.comments) {
+          const newCommentsCount = commentsResult.comments.length
+          const hasNewComments = newCommentsCount > previousCommentsCountRef.current
+          
+          setTicketComments(commentsResult.comments)
+          previousCommentsCountRef.current = newCommentsCount
+          
+          // Scroll automático apenas se houver novos comentários
+          if (hasNewComments) {
+            setTimeout(() => {
+              const chatContainer = document.getElementById('ticket-chat-container')
+              if (chatContainer) {
+                const wasScrolledToBottom = 
+                  chatContainer.scrollHeight - chatContainer.scrollTop <= chatContainer.clientHeight + 100
+                
+                if (wasScrolledToBottom) {
+                  chatContainer.scrollTo({
+                    top: chatContainer.scrollHeight,
+                    behavior: 'smooth'
+                  })
+                }
+              }
+            }, 100)
+          }
+        }
+
+        // Atualizar status do ticket
+        const ticketResult = await getTickets()
+        if (ticketResult.success && ticketResult.tickets) {
+          const updatedTicket = ticketResult.tickets.find(t => t.id === selectedTicket.id)
+          if (updatedTicket) {
+            // Atualizar ticket na lista
+            setTickets(prevTickets => 
+              prevTickets.map(t => t.id === updatedTicket.id ? updatedTicket : t)
+            )
+            
+            // Atualizar ticket selecionado e status se mudou
+            setSelectedTicket(prev => {
+              if (!prev) return prev
+              if (updatedTicket.status !== prev.status) {
+                setTicketStatus(updatedTicket.status)
+                return updatedTicket
+              }
+              return updatedTicket
+            })
+          }
+        }
+      } catch (error) {
+        console.error('Erro ao atualizar ticket:', error)
+      }
+    }, 3000) // Verificar a cada 3 segundos
+
+    return () => clearInterval(pollInterval)
+  }, [isTicketDialogOpen, selectedTicket?.id])
 
   const checkAdminAccess = async () => {
     if (!isAuthenticated()) {
@@ -681,7 +753,7 @@ export default function AdminPage() {
           description: "Comentário adicionado com sucesso!",
         })
         
-        // Recarregar comentários
+        // Recarregar comentários imediatamente
         const commentsResult = await getTicketComments(selectedTicket.id)
         if (commentsResult.success) {
           setTicketComments(commentsResult.comments || [])
@@ -731,6 +803,24 @@ export default function AdminPage() {
           title: "Sucesso",
           description: "Ticket atualizado com sucesso!",
         })
+        
+        // Atualizar ticket na lista imediatamente
+        setTickets(prevTickets => 
+          prevTickets.map(t => 
+            t.id === selectedTicket.id 
+              ? { ...t, status: ticketStatus, prioridade: ticketPriority, updated_at: new Date().toISOString() }
+              : t
+          )
+        )
+        
+        // Atualizar ticket selecionado
+        setSelectedTicket(prev => prev ? {
+          ...prev,
+          status: ticketStatus,
+          prioridade: ticketPriority,
+          updated_at: new Date().toISOString()
+        } : null)
+        
         // Recarregar histórico após atualizar
         if (selectedTicket) {
           const historyResult = await getTicketStatusHistory(selectedTicket.id)
@@ -738,6 +828,8 @@ export default function AdminPage() {
             setTicketHistory(historyResult.history || [])
           }
         }
+        
+        // Recarregar lista completa (polling vai manter atualizado)
         loadTickets()
       } else {
         toast({

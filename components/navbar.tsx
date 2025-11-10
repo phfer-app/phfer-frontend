@@ -274,7 +274,7 @@ export function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 w-full max-w-full transition-all duration-300 ${
         isVisible 
           ? "translate-y-0 opacity-100" 
           : "-translate-y-full opacity-0 pointer-events-none"
@@ -284,7 +284,7 @@ export function Navbar() {
           : "bg-background/60 backdrop-blur-md border-b border-border/30"
       }`}
     >
-      <div className="container mx-auto px-4 md:px-8">
+      <div className="container mx-auto px-4 md:px-8 max-w-full overflow-x-hidden">
         <div className="flex items-center justify-between h-16 md:h-14">
           {/* Logo - Left */}
           <button 
@@ -316,7 +316,7 @@ export function Navbar() {
                   >
                     {t(navLinks.find(l => l.route === currentRoute)?.labelKey || "nav.inicio")}
                   </button>
-                  <DropdownMenu>
+                  <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                       <button
                         className={`h-[36px] w-8 p-0 rounded-r-lg rounded-l-none border-l border-border/30 transition-all duration-200 flex items-center justify-center ${
@@ -329,7 +329,7 @@ export function Navbar() {
                         <ChevronDown className="h-3.5 w-3.5" />
                       </button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="center" className="w-52 bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-xl p-2">
+                    <DropdownMenuContent align="center" collisionPadding={8} className="w-52 bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-xl p-2">
                       {navLinks
                         .filter(link => link.route !== currentRoute)
                         .map((link) => (
@@ -357,7 +357,7 @@ export function Navbar() {
                     <LayoutDashboard className="h-4 w-4" />
                     {t("nav.meu_workspace") || "Meu Workspace"}
                   </button>
-                  <DropdownMenu>
+                  <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                       <button
                         className={`h-[36px] w-8 p-0 rounded-r-lg rounded-l-none border-l border-border/30 transition-all duration-200 flex items-center justify-center ${
@@ -370,7 +370,7 @@ export function Navbar() {
                         <ChevronDown className="h-3.5 w-3.5" />
                       </button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="center" className="w-56 bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-xl p-2">
+                    <DropdownMenuContent align="center" collisionPadding={8} className="w-56 bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-xl p-2">
                       {isLoadingWorkspaces ? (
                         <div className="px-4 py-3 text-sm text-muted-foreground text-center">
                           {t("workspace.loading")}
@@ -450,7 +450,7 @@ export function Navbar() {
           {/* Desktop Controls - Right */}
           <div className="hidden md:flex items-center gap-3">
             {/* Language Dropdown */}
-            <DropdownMenu>
+            <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <Button 
                   variant="ghost" 
@@ -462,7 +462,7 @@ export function Navbar() {
                   <ChevronDown className="h-3 w-3 cursor-pointer opacity-60" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl">
+              <DropdownMenuContent align="end" collisionPadding={8} className="w-48 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl">
                 <DropdownMenuItem 
                   onClick={() => setLanguage("pt")} 
                   className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-slate-800/50 dark:hover:bg-slate-700/50 transition-colors rounded-lg m-1"
@@ -493,7 +493,7 @@ export function Navbar() {
             </DropdownMenu>
 
             {/* Theme Toggle - Dropdown */}
-            <DropdownMenu>
+            <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <Button 
                   variant="ghost" 
@@ -505,7 +505,7 @@ export function Navbar() {
                   <ChevronDown className="h-3 w-3 cursor-pointer opacity-60" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl">
+              <DropdownMenuContent align="end" collisionPadding={8} className="w-48 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl">
                 <DropdownMenuItem 
                   onClick={() => setTheme("light")} 
                   className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-slate-800/50 dark:hover:bg-slate-700/50 transition-colors rounded-lg m-1"
@@ -556,7 +556,7 @@ export function Navbar() {
 
             {/* Auth Buttons or User Dropdown */}
             {isLoggedIn && userEmail ? (
-              <DropdownMenu>
+              <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
@@ -568,7 +568,7 @@ export function Navbar() {
                     <ChevronDown className="h-3 w-3 opacity-60" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl">
+                <DropdownMenuContent align="end" collisionPadding={8} className="w-56 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl">
                   <div className="px-3 py-2">
                     <p className="text-sm font-medium">{userEmail}</p>
                     <p className="text-xs text-muted-foreground">{t("nav.usuario_logado")}</p>

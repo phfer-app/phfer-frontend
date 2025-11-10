@@ -36,14 +36,14 @@ export default function RootLayout({
       <head>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
       </head>
-      <body className={`${inter.className} antialiased overflow-x-hidden`} suppressHydrationWarning>
+      <body className={`${inter.className} antialiased overflow-x-hidden w-full relative`} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <LanguageProvider>
             <AudioProvider>
             <NavigationProvider>
             {/* Page border lines - outside padding */}
-            <div className="fixed inset-0 pointer-events-none z-50">
-              <div className="container mx-auto h-full relative">
+            <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+              <div className="container mx-auto h-full relative max-w-full">
                 {/* Top border */}
                 <div className="absolute top-0 left-0 right-0 h-px bg-border/40"></div>
                 {/* Bottom border - hidden on mobile */}

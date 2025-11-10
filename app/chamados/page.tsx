@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { Ticket, Plus, Search, Filter, Clock, CheckCircle, XCircle, AlertCircle, RefreshCw, Eye, MessageSquare, History, Send, TrendingUp, Calendar, Tag, ArrowRight, Sparkles, Shield, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -40,6 +40,78 @@ export default function ChamadosPage() {
     
     loadTickets()
   }, [router])
+
+  // Ref para rastrear o número de comentários anterior
+  const previousCommentsCountRef = useRef(0)
+
+  // Polling para atualizar comentários e status quando o modal estiver aberto
+  useEffect(() => {
+    if (!isTicketDialogOpen || !selectedTicket) {
+      previousCommentsCountRef.current = 0
+      return
+    }
+
+    // Inicializar contador quando o modal abre
+    previousCommentsCountRef.current = ticketComments.length
+
+    const pollInterval = setInterval(async () => {
+      try {
+        // Atualizar comentários
+        const commentsResult = await getTicketComments(selectedTicket.id)
+        if (commentsResult.success && commentsResult.comments) {
+          const newCommentsCount = commentsResult.comments.length
+          const hasNewComments = newCommentsCount > previousCommentsCountRef.current
+          
+          setTicketComments(commentsResult.comments)
+          previousCommentsCountRef.current = newCommentsCount
+          
+          // Scroll automático apenas se houver novos comentários
+          if (hasNewComments) {
+            setTimeout(() => {
+              const chatContainer = document.getElementById('ticket-chat-container-user')
+              if (chatContainer) {
+                const wasScrolledToBottom = 
+                  chatContainer.scrollHeight - chatContainer.scrollTop <= chatContainer.clientHeight + 100
+                
+                if (wasScrolledToBottom) {
+                  chatContainer.scrollTo({
+                    top: chatContainer.scrollHeight,
+                    behavior: 'smooth'
+                  })
+                }
+              }
+            }, 100)
+          }
+        }
+
+        // Atualizar status do ticket
+        const ticketsResult = await getUserTickets()
+        if (ticketsResult.success && ticketsResult.tickets) {
+          const updatedTicket = ticketsResult.tickets.find(t => t.id === selectedTicket.id)
+          if (updatedTicket) {
+            // Atualizar tickets na lista
+            setChamados(prevChamados => 
+              prevChamados.map(t => t.id === updatedTicket.id ? updatedTicket : t)
+            )
+            
+            // Atualizar ticket selecionado se mudou
+            setSelectedTicket(prev => {
+              if (!prev) return prev
+              if (updatedTicket.status !== prev.status || 
+                  updatedTicket.updated_at !== prev.updated_at) {
+                return updatedTicket
+              }
+              return prev
+            })
+          }
+        }
+      } catch (error) {
+        console.error('Erro ao atualizar ticket:', error)
+      }
+    }, 3000) // Verificar a cada 3 segundos
+
+    return () => clearInterval(pollInterval)
+  }, [isTicketDialogOpen, selectedTicket?.id])
 
   const loadTickets = async () => {
     setIsLoading(true)
@@ -208,7 +280,7 @@ export default function ChamadosPage() {
           description: "Comentário adicionado com sucesso!",
         })
         
-        // Recarregar comentários
+        // Recarregar comentários imediatamente
         const commentsResult = await getTicketComments(selectedTicket.id)
         if (commentsResult.success) {
           setTicketComments(commentsResult.comments || [])

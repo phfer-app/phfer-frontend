@@ -160,7 +160,7 @@ export default function WorkspacePage() {
         <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-gradient-to-br from-secondary/15 to-transparent rounded-full blur-3xl opacity-60" />
       </div>
 
-      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-8 md:py-12 relative z-10">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-8 md:py-12 relative z-10">
         {/* Header */}
         <div className="mb-8 md:mb-12">
           <div className="flex items-center justify-between mb-4">
@@ -199,20 +199,20 @@ export default function WorkspacePage() {
             <p className="text-muted-foreground">{t("workspace.empty")}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-start">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {workspaceCards.map((card) => {
               const Icon = card.icon
               return (
                 <div
                   key={card.id}
                   onClick={() => router.push(card.href)}
-                  className="group relative bg-card/60 backdrop-blur-sm border-2 border-border/50 rounded-2xl p-6 md:p-8 hover:shadow-2xl hover:border-primary/30 transition-all duration-300 cursor-pointer overflow-hidden min-h-[200px] flex flex-col w-full"
+                  className="group relative bg-card/60 backdrop-blur-sm border-2 border-border/50 rounded-2xl p-6 md:p-8 hover:shadow-2xl hover:border-primary/30 transition-all duration-300 cursor-pointer overflow-hidden min-h-[200px] flex flex-col min-w-0"
                 >
                   {/* Gradient background on hover */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${card.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
                   
                   {/* Content */}
-                  <div className="relative z-10 flex-1 flex flex-col">
+                  <div className="relative z-10 flex-1 flex flex-col min-w-0">
                     <div className="flex items-start justify-between mb-4">
                       <div className={`p-3 rounded-xl bg-gradient-to-br ${card.color} border-2 ${card.borderColor} group-hover:scale-110 transition-transform duration-300 shrink-0`}>
                         <Icon className={`h-6 w-6 ${card.iconColor}`} />
@@ -220,10 +220,10 @@ export default function WorkspacePage() {
                       <ArrowRight className={`h-5 w-5 ${card.iconColor} opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 shrink-0`} />
                     </div>
                     
-                    <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors duration-200">
+                    <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors duration-200 break-words">
                       {card.title}
                     </h3>
-                    <p className="text-sm md:text-base text-muted-foreground leading-relaxed flex-1">
+                    <p className="text-sm md:text-base text-muted-foreground leading-relaxed flex-1 break-words">
                       {card.description}
                     </p>
                   </div>

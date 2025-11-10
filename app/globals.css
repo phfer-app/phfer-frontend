@@ -125,10 +125,16 @@
   html {
     scroll-behavior: smooth;
     overflow-x: hidden;
+    width: 100%;
+    position: relative;
+    max-width: 100vw;
   }
   body {
     @apply bg-background text-foreground;
     overflow-x: hidden;
+    width: 100%;
+    position: relative;
+    max-width: 100vw;
     background-image: 
       radial-gradient(circle, rgba(167, 107, 207, 0.12) 1px, transparent 1px),
       linear-gradient(rgba(167, 107, 207, 0.05) 1px, transparent 1px),
