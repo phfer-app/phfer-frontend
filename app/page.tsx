@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { HeroSection } from "@/components/hero-section"
 import { CTAParallaxSection } from "@/components/cta-parallax-section"
@@ -54,8 +54,7 @@ function BlogPage() {
   )
 }
 
-export default function Home() {
-  const { currentRoute } = useNavigation()
+function OAuthHandler() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -68,8 +67,17 @@ export default function Home() {
     }
   }, [searchParams, router])
 
+  return null
+}
+
+export default function Home() {
+  const { currentRoute } = useNavigation()
+
   return (
     <main>
+      <Suspense fallback={null}>
+        <OAuthHandler />
+      </Suspense>
       {currentRoute === "home" && <HomePage />}
       {currentRoute === "about" && <AboutPage />}
       {currentRoute === "career" && <CareerPage />}
