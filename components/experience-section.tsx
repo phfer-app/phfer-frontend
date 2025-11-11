@@ -53,7 +53,7 @@ export function ExperienceSection() {
       <div className="container mx-auto px-2 md:px-4 relative max-w-[95%]">
         {/* Header */}
         <div className="mb-12 max-w-3xl">
-          <Badge className="mb-2 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
+          <Badge className="mb-2 bg-primary/20 text-primary hover:border-primary/50 border border-transparent" variant="outline">
             {t("experience.badge")}
           </Badge>
           <h2 className="text-2xl font-bold mb-2 text-balance">
@@ -114,7 +114,7 @@ export function ExperienceSection() {
 
                 {/* Arrow */}
                 <div className="shrink-0 hidden lg:block">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-all duration-300">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:border-primary/50 border border-transparent transition-all duration-300">
                     <ArrowRight className="h-5 w-5 text-primary" />
                   </div>
                 </div>

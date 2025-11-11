@@ -72,7 +72,7 @@ export function SkillsSection() {
       <div className="container mx-auto px-2 md:px-4 relative max-w-[95%]">
         {/* Header */}
         <div className="mb-12">
-          <Badge className="mb-2 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
+          <Badge className="mb-2 bg-primary/20 text-primary hover:border-primary/50 border border-transparent" variant="outline">
             {t("skills.badge")}
           </Badge>
           <h2 className="text-2xl font-bold mb-2 text-balance">
@@ -95,7 +95,7 @@ export function SkillsSection() {
                   className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
                     filter === option.value
                       ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border border-transparent hover:border-border"
+                      : "text-muted-foreground hover:text-foreground hover:border-border border border-transparent"
                   }`}
                 >
                   {t(option.value === "all" ? "skills.all" : option.value === "front" ? "skills.frontend" : option.value === "back" ? "skills.backend" : "skills.tools")}

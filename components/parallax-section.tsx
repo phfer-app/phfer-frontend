@@ -53,7 +53,7 @@ export function ParallaxSection() {
             <div className="w-8 h-8 rounded-full bg-primary/30 flex items-center justify-center backdrop-blur-sm">
               <Sparkles className="h-4 w-4 text-primary animate-pulse" />
             </div>
-            <Badge className="bg-primary/20 text-primary hover:bg-primary/30 border-primary/50 backdrop-blur-sm" variant="outline">
+            <Badge className="bg-primary/20 text-primary hover:border-primary/50 border-primary/50 backdrop-blur-sm" variant="outline">
               {t("parallax.badge")}
             </Badge>
           </div>

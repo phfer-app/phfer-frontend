@@ -107,15 +107,15 @@ export function HeroSection() {
             <Button 
               size="lg" 
               onClick={scrollToContact} 
-              className="group rounded-full bg-primary hover:bg-primary/90 text-primary-foreground"
+              className="group rounded-full bg-primary hover:border-primary/80 border border-primary text-primary-foreground"
             >
               {language === "pt" ? "Conheça meu trabalho" : "Check my work"}
               <ChevronDown className="ml-2 h-4 w-4 group-hover:translate-y-1 transition-transform" />
             </Button>
             <Button 
               size="lg" 
-              variant="outline"
-              className="group rounded-full"
+              variant="default"
+              className="group rounded-full bg-primary text-primary-foreground hover:!bg-primary/70 hover:!border-primary/50 border border-primary transition-all duration-300"
               onClick={() => {
                 const element = document.querySelector("#contact")
                 if (element) element.scrollIntoView({ behavior: "smooth" })
@@ -293,18 +293,17 @@ export function HeroSection() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={scrollToContact}
-              className="group relative px-6 py-2.5 bg-primary text-primary-foreground font-semibold rounded-lg overflow-hidden transition-all duration-300 text-sm w-[200px] sm:w-[240px] cursor-pointer"
+              className="group relative px-6 py-2.5 bg-primary text-primary-foreground font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:bg-primary/70 hover:border-primary/50 border border-primary text-sm w-[200px] sm:w-[240px] cursor-pointer"
             >
               <span className="relative z-10 flex items-center justify-center gap-2 whitespace-nowrap">
                 {t("hero.button2")}
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </span>
-              <div className="absolute inset-0 bg-linear-to-r from-primary/90 to-primary opacity-0 group-hover:opacity-100 transition-opacity" />
             </button>
 
             <button
               onClick={scrollToAbout}
-              className="group relative px-6 py-2.5 bg-transparent border-2 border-primary/30 text-foreground font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:border-primary hover:bg-primary/5 text-sm w-[200px] sm:w-[240px] cursor-pointer"
+              className="group relative px-6 py-2.5 bg-transparent border-2 border-primary/30 text-foreground font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:border-primary text-sm w-[200px] sm:w-[240px] cursor-pointer"
             >
               <span className="relative z-10 flex items-center justify-center gap-2 whitespace-nowrap">
                 {t("hero.button1")}

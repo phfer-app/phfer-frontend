@@ -91,7 +91,7 @@ export function AboutSection() {
       <div className="container mx-auto px-2 md:px-4 relative z-10 max-w-[95%]">
         {/* Header */}
         <div className="mb-12 max-w-3xl">
-          <Badge className="mb-2 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
+          <Badge className="mb-2 bg-primary/20 text-primary hover:border-primary/50 border border-transparent" variant="outline">
             {t("about.badge")}
           </Badge>
           <h2 className="text-2xl font-bold mb-2 text-balance">

@@ -36,7 +36,7 @@ export function BlogSection() {
       <div className="container mx-auto px-2 md:px-4 relative z-10 max-w-[95%]">
         {/* Header */}
         <div className="mb-12 max-w-3xl">
-          <Badge className="mb-2 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
+          <Badge className="mb-2 bg-primary/20 text-primary hover:border-primary/50 border border-transparent" variant="outline">
             {t("blog.badge")}
           </Badge>
           <h2 className="text-2xl font-bold mb-2 text-balance">
@@ -68,7 +68,7 @@ export function BlogSection() {
               <Button
                 asChild
                 size="lg"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground w-full"
+                className="bg-primary hover:border-primary/80 border border-primary text-primary-foreground w-full"
               >
                 <a
                   href="https://www.linkedin.com/in/initpedro"
@@ -199,7 +199,7 @@ function RadioPlayer() {
         <Button
           onClick={togglePlay}
           size="lg"
-          className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full w-12 h-12 p-0 cursor-pointer"
+          className="bg-primary hover:border-primary/80 border border-primary text-primary-foreground rounded-full w-12 h-12 p-0 cursor-pointer"
         >
           {isPlaying ? (
             <Pause className="h-5 w-5 cursor-pointer" />
@@ -212,7 +212,7 @@ function RadioPlayer() {
         <div className="flex items-center gap-2 flex-1">
           <button
             onClick={toggleMute}
-            className="p-2 hover:bg-primary/10 rounded-lg transition-colors"
+            className="p-2 hover:border-primary/50 border border-transparent rounded-lg transition-colors"
             aria-label={isMuted ? "Unmute" : "Mute"}
           >
             {getVolumeIcon()}

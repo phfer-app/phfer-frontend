@@ -112,7 +112,7 @@ export function TestimonialsSection() {
         <div className={`mb-12 max-w-3xl transition-all duration-500 ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}>
-          <Badge className="mb-2 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
+          <Badge className="mb-2 bg-primary/20 text-primary hover:border-primary/50 border border-transparent" variant="outline">
             {t("testimonials.badge")}
           </Badge>
           <h2 className="text-2xl font-bold mb-2 text-balance">
@@ -129,7 +129,7 @@ export function TestimonialsSection() {
           <div className="flex items-center justify-center gap-4 mb-6">
             <button
               onClick={prevTestimonial}
-              className="p-2 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary transition-all duration-300 cursor-pointer"
+              className="p-2 rounded-lg bg-primary/10 hover:border-primary/50 border border-transparent text-primary transition-all duration-300 cursor-pointer"
               aria-label="Depoimento anterior"
             >
               <ChevronLeft className="h-5 w-5" />
@@ -143,7 +143,7 @@ export function TestimonialsSection() {
                   className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
                     index === currentIndex
                       ? "w-8 bg-primary"
-                      : "w-2 bg-muted hover:bg-primary/50"
+                      : "w-2 bg-muted hover:border-primary/50 border border-transparent"
                   }`}
                   aria-label={`Ir para depoimento ${index + 1}`}
                 />
@@ -152,7 +152,7 @@ export function TestimonialsSection() {
 
             <button
               onClick={nextTestimonial}
-              className="p-2 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary transition-all duration-300 cursor-pointer"
+              className="p-2 rounded-lg bg-primary/10 hover:border-primary/50 border border-transparent text-primary transition-all duration-300 cursor-pointer"
               aria-label="Próximo depoimento"
             >
               <ChevronRight className="h-5 w-5" />

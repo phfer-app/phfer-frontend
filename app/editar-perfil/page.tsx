@@ -240,7 +240,7 @@ export default function EditarPerfilPage() {
               variant="ghost"
               size="sm"
               onClick={() => router.back()}
-              className="cursor-pointer hover:bg-transparent! dark:hover:bg-transparent! hover:text-primary"
+              className="cursor-pointer hover:text-primary"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
               {t("profile.back")}
@@ -342,7 +342,7 @@ export default function EditarPerfilPage() {
                 <Button
                   onClick={handleLogout}
                   variant="outline"
-                  className="px-4 py-2 cursor-pointer text-destructive border-destructive/30 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/50"
+                  className="px-4 py-2 cursor-pointer text-destructive border-destructive/30 hover:border-destructive/50 hover:text-destructive"
                 >
                   <LogOut className="h-4 w-4 mr-2" />
                   {t("profile.disconnect")}

@@ -345,7 +345,7 @@ export default function ChamadosPage() {
                 onClick={loadTickets}
                 variant="outline"
                 disabled={isLoading}
-                className="px-4 py-2 border-2 hover:bg-accent/50 transition-all duration-200 cursor-pointer"
+                className="px-4 py-2 border-2 hover:border-primary/50 transition-all duration-200 cursor-pointer"
               >
                 <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
                 {t("tickets.update")}
@@ -421,7 +421,7 @@ export default function ChamadosPage() {
                     className={`px-4 py-2 border-2 transition-all duration-200 cursor-pointer ${
                       filterStatus === filter.value
                         ? "bg-primary text-primary-foreground"
-                        : "hover:bg-accent/50 hover:border-primary/30"
+                        : "hover:border-primary/30 border border-transparent"
                     }`}
                   >
                     <Icon className="h-3.5 w-3.5 mr-2" />
@@ -529,7 +529,7 @@ export default function ChamadosPage() {
                       <Button
                         variant="outline"
                         onClick={() => handleOpenTicket(chamado)}
-                        className="h-11 px-6 border-2 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-200 group/btn cursor-pointer whitespace-nowrap"
+                        className="h-11 px-6 border-2 hover:border-primary hover:text-primary transition-all duration-200 group/btn cursor-pointer whitespace-nowrap"
                       >
                         <span className="flex items-center gap-2">
                           <Eye className="h-4 w-4 group-hover/btn:scale-110 transition-transform" />

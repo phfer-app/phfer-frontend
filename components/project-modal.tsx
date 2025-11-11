@@ -51,7 +51,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 z-10 w-10 h-10 rounded-full bg-primary/20 hover:bg-primary/30 flex items-center justify-center transition-all duration-300 cursor-pointer"
+          className="absolute top-6 right-6 z-10 w-10 h-10 rounded-full bg-primary/20 hover:border-primary/50 border border-transparent flex items-center justify-center transition-all duration-300 cursor-pointer"
         >
           <X className="h-5 w-5 text-primary cursor-pointer" />
         </button>
@@ -110,7 +110,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               href={project.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full px-4 py-3 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-semibold transition-all duration-300 flex items-center justify-center gap-2 group"
+              className="w-full px-4 py-3 rounded-lg bg-primary hover:border-primary/80 border border-primary text-primary-foreground font-semibold transition-all duration-300 flex items-center justify-center gap-2 group"
             >
               <Github className="h-4 w-4" />
               <span>GitHub</span>
@@ -120,7 +120,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                 href={project.demo}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full px-4 py-3 rounded-lg border-2 border-primary/50 hover:border-primary bg-primary/5 hover:bg-primary/10 text-primary font-semibold transition-all duration-300 flex items-center justify-center gap-2 group"
+                className="w-full px-4 py-3 rounded-lg border-2 border-primary/50 hover:border-primary bg-primary/5 text-primary font-semibold transition-all duration-300 flex items-center justify-center gap-2 group"
               >
                 <ExternalLink className="h-4 w-4" />
                 <span>{t("project_modal.view_demo")}</span>
@@ -128,7 +128,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             )}
             <button
               onClick={onClose}
-              className="w-full px-4 py-2 rounded-lg text-muted-foreground hover:text-foreground bg-muted/30 hover:bg-muted/50 transition-all duration-300 text-sm cursor-pointer"
+              className="w-full px-4 py-2 rounded-lg text-muted-foreground hover:text-foreground bg-muted/30 hover:border-border/50 border border-transparent transition-all duration-300 text-sm cursor-pointer"
             >
               {t("project_modal.close")}
             </button>

@@ -57,7 +57,7 @@ export function ContactSection() {
         <div className={`mb-12 transition-all duration-500 ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}>
-          <Badge className="mb-2 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
+          <Badge className="mb-2 bg-primary/20 text-primary hover:border-primary/50 border border-transparent" variant="outline">
             {t("contact.badge")}
           </Badge>
           <h2 className="text-2xl font-bold mb-2 text-balance">

@@ -312,8 +312,6 @@ export function Navbar() {
                 {/* Rota atual com Dropdown quando logado */}
                 <div 
                   className="relative inline-flex items-center group"
-                  onMouseEnter={() => setIsPagesDropdownOpen(true)}
-                  onMouseLeave={() => setIsPagesDropdownOpen(false)}
                 >
                   <button
                     onClick={(e) => {
@@ -324,8 +322,8 @@ export function Navbar() {
                     }}
                     className={`px-3 py-1.5 text-sm font-medium rounded-l-lg transition-all duration-200 cursor-pointer h-8 ${
                       currentRoute === "home" || currentRoute === "about" || currentRoute === "career" || currentRoute === "blog"
-                        ? "text-primary bg-primary/10"
-                        : "text-muted-foreground hover:text-primary hover:bg-muted/80"
+                        ? "text-primary bg-primary/10 border border-primary/50"
+                        : "text-muted-foreground hover:text-primary hover:border-primary/30 border border-transparent"
                     }`}
                   >
                     {t(navLinks.find(l => l.route === currentRoute)?.labelKey || "nav.inicio")}
@@ -337,20 +335,23 @@ export function Navbar() {
                   >
                     <DropdownMenuTrigger asChild>
                       <button
-                        className={`h-8 w-6 p-0 rounded-r-lg rounded-l-none border-l border-border/30 transition-all duration-200 flex items-center justify-center ${
+                        className={`h-8 w-6 p-0 rounded-r-lg rounded-l-none border-l transition-all duration-200 flex items-center justify-center ${
                           currentRoute === "home" || currentRoute === "about" || currentRoute === "career" || currentRoute === "blog"
-                            ? "bg-primary/10 hover:bg-primary/15 text-primary"
-                            : "hover:bg-muted/80 text-muted-foreground hover:text-primary"
+                            ? "bg-primary/10 border-l border-primary/50 border-r border-primary/50 border-t border-primary/50 border-b border-primary/50 text-primary"
+                            : "border-l border-border/30 hover:border-primary/30 border border-transparent text-muted-foreground hover:text-primary"
                         }`}
                         onClick={(e) => e.stopPropagation()}
+                        onMouseEnter={() => setIsPagesDropdownOpen(true)}
+                        onMouseLeave={() => setIsPagesDropdownOpen(false)}
                       >
                         <ChevronDown className="h-3 w-3" />
                       </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent 
                       align="center" 
+                      sideOffset={0}
                       collisionPadding={8} 
-                      className="w-52 bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-xl p-1.5"
+                      className="w-52 bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-xl p-1.5 -mt-1"
                       onMouseEnter={() => setIsPagesDropdownOpen(true)}
                       onMouseLeave={() => setIsPagesDropdownOpen(false)}
                     >
@@ -360,7 +361,7 @@ export function Navbar() {
                           <DropdownMenuItem 
                             key={link.route}
                             onClick={(e) => handleNavClick(e, link.route)}
-                            className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors duration-200 rounded-lg m-0.5 text-sm"
+                            className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent hover:border-primary/30 border border-transparent focus:border-primary/30 text-muted-foreground hover:text-primary focus:text-primary transition-colors duration-200 rounded-lg m-0.5 text-sm"
                           >
                             <span className="font-medium">{t(link.labelKey)}</span>
                           </DropdownMenuItem>
@@ -371,15 +372,13 @@ export function Navbar() {
                 {/* Meu Workspace */}
                 <div 
                   className="relative inline-flex items-center group"
-                  onMouseEnter={() => setIsWorkspaceDropdownOpen(true)}
-                  onMouseLeave={() => setIsWorkspaceDropdownOpen(false)}
                 >
                   <button
                     onClick={() => router.push("/workspace")}
                     className={`px-3 py-1.5 text-sm font-medium rounded-l-lg transition-all duration-200 cursor-pointer flex items-center gap-2 h-8 ${
                       pathname === "/workspace" || pathname.startsWith("/workspace") || pathname === "/chamados"
-                        ? "text-primary bg-primary/10"
-                        : "text-muted-foreground hover:text-primary hover:bg-muted/80"
+                        ? "text-primary bg-primary/10 border border-primary/50"
+                        : "text-muted-foreground hover:text-primary hover:border-primary/30 border border-transparent"
                     }`}
                   >
                     <LayoutDashboard className="h-3.5 w-3.5" />
@@ -392,20 +391,23 @@ export function Navbar() {
                   >
                     <DropdownMenuTrigger asChild>
                       <button
-                        className={`h-8 w-6 p-0 rounded-r-lg rounded-l-none border-l border-border/30 transition-all duration-200 flex items-center justify-center ${
+                        className={`h-8 w-6 p-0 rounded-r-lg rounded-l-none border-l transition-all duration-200 flex items-center justify-center ${
                           pathname === "/workspace" || pathname.startsWith("/workspace") || pathname === "/chamados"
-                            ? "bg-primary/10 hover:bg-primary/15 text-primary"
-                            : "hover:bg-muted/80 text-muted-foreground hover:text-primary"
+                            ? "bg-primary/10 border-l border-primary/50 border-r border-primary/50 border-t border-primary/50 border-b border-primary/50 text-primary"
+                            : "border-l border-border/30 hover:border-primary/30 border border-transparent text-muted-foreground hover:text-primary"
                         }`}
                         onClick={(e) => e.stopPropagation()}
+                        onMouseEnter={() => setIsWorkspaceDropdownOpen(true)}
+                        onMouseLeave={() => setIsWorkspaceDropdownOpen(false)}
                       >
                         <ChevronDown className="h-3 w-3" />
                       </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent 
                       align="center" 
+                      sideOffset={0}
                       collisionPadding={8} 
-                      className="w-56 bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-xl p-1.5"
+                      className="w-56 bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-xl p-1.5 -mt-1"
                       onMouseEnter={() => setIsWorkspaceDropdownOpen(true)}
                       onMouseLeave={() => setIsWorkspaceDropdownOpen(false)}
                     >
@@ -447,7 +449,7 @@ export function Navbar() {
                             <DropdownMenuItem 
                               key={workspace.id}
                               onClick={() => router.push(route)}
-                              className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors duration-200 rounded-lg m-0.5 text-sm"
+                              className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent hover:border-primary/30 border border-transparent focus:border-primary/30 text-muted-foreground hover:text-primary focus:text-primary transition-colors duration-200 rounded-lg m-0.5 text-sm"
                             >
                               <Icon className="h-3.5 w-3.5" />
                               <span className="font-medium">{translatedName}</span>
@@ -461,7 +463,7 @@ export function Navbar() {
                 {/* Solicitar Serviços */}
                 <button
                   onClick={() => router.push("/solicitar-servicos")}
-                  className="px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer text-muted-foreground hover:text-primary hover:bg-muted/80 flex items-center gap-2 h-8"
+                  className="px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer text-muted-foreground hover:text-primary hover:border-primary/30 border border-transparent flex items-center gap-2 h-8"
                 >
                   <Briefcase className="h-3.5 w-3.5" />
                   {t("nav.solicitar_servicos")}
@@ -481,7 +483,7 @@ export function Navbar() {
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="h-8 px-2.5 rounded-lg hover:bg-transparent! dark:hover:bg-transparent! hover:text-primary transition-colors cursor-pointer flex items-center gap-1.5" 
+                        className="h-8 px-2.5 rounded-lg hover:text-primary transition-colors cursor-pointer flex items-center gap-1.5" 
                         title={language === "pt" ? "Português" : "English"}
                       >
                         <Languages className="h-4 w-4 cursor-pointer" />
@@ -490,14 +492,15 @@ export function Navbar() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent 
                       align="end" 
+                      sideOffset={0}
                       collisionPadding={8} 
-                      className="w-48 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl"
+                      className="w-48 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl -mt-1"
                       onMouseEnter={() => setIsLanguageDropdownOpen(true)}
                       onMouseLeave={() => setIsLanguageDropdownOpen(false)}
                     >
                       <DropdownMenuItem 
                         onClick={() => setLanguage("pt")} 
-                        className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                        className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
                       >
                         <span className="text-xl">🇧🇷</span>
                         <div className="flex flex-col">
@@ -510,7 +513,7 @@ export function Navbar() {
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => setLanguage("en")} 
-                        className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                        className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
                       >
                         <span className="text-xl">🇺🇸</span>
                         <div className="flex flex-col">
@@ -533,8 +536,8 @@ export function Navbar() {
                   onClick={(e) => handleNavClick(e, link.route)}
                   className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer h-8 ${
                     currentRoute === link.route
-                      ? "text-primary bg-primary/10"
-                      : "text-muted-foreground hover:text-primary hover:bg-muted/80"
+                      ? "text-primary bg-primary/10 border border-primary/50"
+                      : "text-muted-foreground hover:text-primary hover:border-primary/30 border border-transparent"
                   }`}
                 >
                   {t(link.labelKey)}
@@ -557,7 +560,7 @@ export function Navbar() {
                     <Button 
                       variant="ghost" 
                       size="sm" 
-                      className="h-8 px-2.5 rounded-lg hover:bg-transparent! dark:hover:bg-transparent! hover:text-primary transition-colors cursor-pointer flex items-center gap-1.5" 
+                      className="h-8 px-2.5 rounded-lg hover:text-primary transition-colors cursor-pointer flex items-center gap-1.5" 
                       title={language === "pt" ? "Português" : "English"}
                     >
                       <Languages className="h-4 w-4 cursor-pointer" />
@@ -573,7 +576,7 @@ export function Navbar() {
                   >
                     <DropdownMenuItem 
                       onClick={() => setLanguage("pt")} 
-                      className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                      className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
                     >
                       <span className="text-xl">🇧🇷</span>
                       <div className="flex flex-col">
@@ -586,7 +589,7 @@ export function Navbar() {
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={() => setLanguage("en")} 
-                      className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                      className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
                     >
                       <span className="text-xl">🇺🇸</span>
                       <div className="flex flex-col">
@@ -616,7 +619,7 @@ export function Navbar() {
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="h-8 px-2.5 rounded-lg hover:bg-transparent! dark:hover:bg-transparent! hover:text-primary transition-colors cursor-pointer flex items-center gap-1.5" 
+                    className="h-8 px-2.5 rounded-lg hover:text-primary transition-colors cursor-pointer flex items-center gap-1.5" 
                     title={theme === "dark" ? "Tema escuro" : theme === "light" ? "Tema claro" : "Tema do sistema"}
                   >
                     <Palette className="h-4 w-4 cursor-pointer" />
@@ -625,14 +628,15 @@ export function Navbar() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent 
                   align="end" 
+                  sideOffset={0}
                   collisionPadding={8} 
-                  className="w-48 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl"
+                  className="w-48 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl -mt-1"
                   onMouseEnter={() => setIsThemeDropdownOpen(true)}
                   onMouseLeave={() => setIsThemeDropdownOpen(false)}
                 >
                   <DropdownMenuItem 
                     onClick={() => setTheme("light")} 
-                    className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                    className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
                   >
                     <div className="w-5 h-5 rounded-full bg-yellow-400 border border-yellow-500/30 flex items-center justify-center">
                       <span className="text-xs">☀️</span>
@@ -647,7 +651,7 @@ export function Navbar() {
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     onClick={() => setTheme("dark")} 
-                    className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                    className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
                   >
                     <div className="w-5 h-5 rounded-full bg-slate-700 border border-slate-600/30 flex items-center justify-center">
                       <span className="text-xs">🌙</span>
@@ -662,7 +666,7 @@ export function Navbar() {
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     onClick={() => setTheme("system")} 
-                    className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                    className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
                   >
                     <div className="w-5 h-5 rounded-full bg-linear-to-br from-yellow-400 to-slate-700 border border-border/30 flex items-center justify-center">
                       <span className="text-xs">💻</span>
@@ -694,7 +698,7 @@ export function Navbar() {
                     <Button 
                       variant="ghost" 
                       size="sm" 
-                      className="h-8 px-3 rounded-lg hover:bg-transparent! dark:hover:bg-transparent! hover:text-primary transition-colors cursor-pointer flex items-center gap-2 border border-border/50" 
+                      className="h-8 px-3 rounded-lg hover:text-primary hover:border-primary/50 transition-colors cursor-pointer flex items-center gap-2 border border-border/50" 
                     >
                       <User className="h-3.5 w-3.5" />
                       <span className="text-sm font-medium max-w-[120px] truncate">{userEmail}</span>
@@ -703,8 +707,9 @@ export function Navbar() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent 
                     align="end" 
+                    sideOffset={0}
                     collisionPadding={8} 
-                    className="w-56 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl p-1.5"
+                    className="w-56 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl p-1.5 -mt-1"
                     onMouseEnter={() => setIsUserDropdownOpen(true)}
                     onMouseLeave={() => setIsUserDropdownOpen(false)}
                   >
@@ -727,7 +732,7 @@ export function Navbar() {
                       onClick={() => {
                         router.push("/editar-perfil")
                       }}
-                      className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                      className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
                     >
                       <Edit className="h-3.5 w-3.5" />
                       <span>{t("nav.editar_perfil") || "Editar perfil"}</span>
@@ -737,7 +742,7 @@ export function Navbar() {
                       onClick={() => {
                         router.push("/workspace")
                       }}
-                      className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                      className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
                     >
                       <LayoutDashboard className="h-3.5 w-3.5" />
                       <span>{t("nav.meu_workspace")}</span>
@@ -749,7 +754,7 @@ export function Navbar() {
                           onClick={() => {
                             router.push("/admin")
                           }}
-                          className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                          className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
                         >
                           <Shield className="h-3.5 w-3.5" />
                           <span>{t("nav.painel_administrativo")}</span>
@@ -759,7 +764,7 @@ export function Navbar() {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem 
                       onClick={handleLogout}
-                      className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-transparent focus:bg-transparent text-destructive hover:text-destructive focus:text-destructive transition-colors rounded-lg m-0.5 text-sm"
+                      className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent hover:border-destructive/30 border border-transparent focus:border-destructive/30 text-destructive hover:text-destructive focus:text-destructive transition-colors rounded-lg m-0.5 text-sm"
                     >
                       <LogOut className="h-3.5 w-3.5" />
                       <span>{t("nav.desconectar")}</span>
@@ -772,7 +777,7 @@ export function Navbar() {
                 {/* Login Button */}
                 <button
                   onClick={() => router.push("/login")}
-                  className="px-4 py-1.5 text-sm font-semibold rounded-lg transition-all duration-300 hover:bg-primary/10 border border-border/50 hover:border-primary/50 cursor-pointer h-8"
+                  className="px-4 py-1.5 text-sm font-semibold rounded-lg transition-all duration-300 border border-border/50 hover:border-primary/50 cursor-pointer h-8"
                 >
                   {t("nav.login")}
                 </button>
@@ -780,7 +785,7 @@ export function Navbar() {
                 {/* Cadastre-se Button - Highlighted */}
                 <button
                   onClick={() => router.push("/cadastro")}
-                  className="px-4 py-1.5 text-sm font-semibold bg-primary text-primary-foreground rounded-lg transition-all duration-300 hover:bg-primary/90 cursor-pointer h-8"
+                  className="px-4 py-1.5 text-sm font-semibold bg-primary text-primary-foreground rounded-lg transition-all duration-300 hover:bg-primary/70 hover:border-primary/50 border border-primary cursor-pointer h-8"
                 >
                   {t("nav.cadastre_se")}
                 </button>
@@ -793,7 +798,7 @@ export function Navbar() {
             <Button 
               variant="ghost" 
               size="sm" 
-              className="rounded-lg hover:bg-transparent! hover:text-foreground! active:bg-transparent! transition-all duration-300 group cursor-pointer" 
+              className="rounded-lg hover:text-foreground transition-all duration-300 group cursor-pointer" 
               onClick={() => {
                 setIsOpen(!isOpen)
                 if (isOpen) {
@@ -843,7 +848,7 @@ export function Navbar() {
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="rounded-lg h-9 w-9 hover:bg-transparent! hover:text-foreground! active:bg-transparent! cursor-pointer" 
+                    className="rounded-lg h-9 w-9 hover:text-foreground cursor-pointer" 
                     onClick={() => {
                       setIsOpen(false)
                       setIsMobileMenuExpanded(false)
@@ -867,7 +872,7 @@ export function Navbar() {
                             e.stopPropagation()
                             setIsMobileMenuExpanded(!isMobileMenuExpanded)
                           }}
-                          className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 text-primary border-primary/50 bg-transparent hover:bg-primary/5 cursor-pointer"
+                          className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 text-primary border-primary/50 bg-transparent cursor-pointer"
                         >
                           <span>{t(navLinks.find(l => l.route === currentRoute)?.labelKey || "nav.inicio")}</span>
                           <ChevronDown 
@@ -910,8 +915,8 @@ export function Navbar() {
                             }}
                             className={`flex-1 flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer ${
                               pathname === "/workspace" || pathname.startsWith("/workspace") || pathname === "/chamados"
-                                ? "text-primary border-primary/50 bg-transparent hover:bg-primary/5"
-                                : "text-foreground border-border/30 hover:border-primary/30 bg-transparent hover:bg-muted/30"
+                                ? "text-primary border-primary/50 bg-primary/10"
+                                : "text-foreground border-border/30 hover:border-primary/30 bg-transparent"
                             }`}
                           >
                             <LayoutDashboard className="h-4 w-4" />
@@ -924,8 +929,8 @@ export function Navbar() {
                             }}
                             className={`px-2 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer ${
                               pathname === "/workspace" || pathname.startsWith("/workspace") || pathname === "/chamados"
-                                ? "text-primary border-primary/50 bg-transparent hover:bg-primary/5"
-                                : "text-foreground border-border/30 hover:border-primary/30 bg-transparent hover:bg-muted/30"
+                                ? "text-primary border-primary/50 bg-primary/10"
+                                : "text-foreground border-border/30 hover:border-primary/30 bg-transparent"
                             }`}
                           >
                             <ChevronDown 
@@ -1000,7 +1005,7 @@ export function Navbar() {
                           setIsOpen(false)
                           router.push("/solicitar-servicos")
                         }}
-                        className="flex items-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-foreground border-border/30 hover:border-primary/30 bg-transparent hover:bg-muted/30"
+                        className="flex items-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-foreground border-border/30 hover:border-primary/30 bg-transparent"
                       >
                         <Briefcase className="h-4 w-4" />
                         {t("nav.solicitar_servicos")}
@@ -1015,7 +1020,7 @@ export function Navbar() {
                             e.stopPropagation()
                             setIsMobileMenuExpanded(!isMobileMenuExpanded)
                           }}
-                          className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 text-primary border-primary/50 bg-transparent hover:bg-primary/5 cursor-pointer"
+                          className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 text-primary border-primary/50 bg-transparent cursor-pointer"
                         >
                           <span>{t("nav.inicio")}</span>
                           <ChevronDown 
@@ -1032,7 +1037,7 @@ export function Navbar() {
                               e.stopPropagation()
                               setIsMobileMenuExpanded(!isMobileMenuExpanded)
                             }}
-                            className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 text-primary border-primary/50 bg-transparent hover:bg-primary/5 cursor-pointer"
+                            className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 text-primary border-primary/50 bg-transparent cursor-pointer"
                           >
                             <span>{t(navLinks.find(l => l.route === currentRoute)?.labelKey || "nav.inicio")}</span>
                             <ChevronDown 
@@ -1085,7 +1090,7 @@ export function Navbar() {
                               setIsOpen(false)
                               router.push("/editar-perfil")
                             }}
-                            className="flex items-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-foreground border-border/30 hover:border-primary/30 bg-transparent hover:bg-muted/30"
+                            className="flex items-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-foreground border-border/30 hover:border-primary/30 bg-transparent"
                           >
                             <Edit className="h-4 w-4" />
                             {t("nav.editar_perfil") || "Editar perfil"}
@@ -1098,7 +1103,7 @@ export function Navbar() {
                               setIsOpen(false)
                               router.push("/admin")
                             }}
-                            className="flex items-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-primary border-primary/30 hover:border-primary/50 bg-primary/10 hover:bg-primary/20"
+                            className="flex items-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-primary border-primary/50 bg-primary/10"
                           >
                             <Shield className="h-4 w-4" />
                             {t("nav.painel_administrativo")}
@@ -1108,7 +1113,7 @@ export function Navbar() {
                           onClick={() => {
                             handleLogout()
                           }}
-                          className="flex items-center justify-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-destructive border-destructive/30 hover:border-destructive/50 bg-transparent hover:bg-destructive/10"
+                          className="flex items-center justify-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-destructive border-destructive/30 hover:border-destructive/50 bg-transparent"
                         >
                           <LogOut className="h-4 w-4" />
                           {t("nav.desconectar")}
@@ -1121,7 +1126,7 @@ export function Navbar() {
                             setIsOpen(false)
                             router.push("/login")
                           }}
-                          className="flex items-center justify-center w-full px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-foreground border-border/30 hover:border-primary/30 bg-transparent hover:bg-muted/30 h-8"
+                          className="flex items-center justify-center w-full px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 border-2 cursor-pointer text-foreground border-border/30 hover:border-primary/30 bg-transparent h-8"
                         >
                           {t("nav.login")}
                         </button>
@@ -1130,7 +1135,7 @@ export function Navbar() {
                             setIsOpen(false)
                             router.push("/cadastro")
                           }}
-                          className="flex items-center justify-center w-full px-3 py-1.5 text-sm font-semibold bg-linear-to-r from-primary to-primary/90 text-primary-foreground hover:from-primary/90 hover:to-primary rounded-lg transition-all duration-200 cursor-pointer shadow-md shadow-primary/20 h-8"
+                          className="flex items-center justify-center w-full px-3 py-1.5 text-sm font-semibold bg-primary text-primary-foreground rounded-lg transition-all duration-300 hover:bg-primary/70 hover:border-primary/50 border border-primary cursor-pointer h-8"
                         >
                           {t("nav.cadastre_se")}
                         </button>
@@ -1148,7 +1153,7 @@ export function Navbar() {
                         e.stopPropagation()
                         setIsLanguageExpanded(!isLanguageExpanded)
                       }}
-                      className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 border-border/30 hover:border-primary/40 bg-transparent hover:bg-muted/30 cursor-pointer"
+                      className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 border-border/30 hover:border-primary/40 bg-transparent cursor-pointer"
                     >
                       <div className="flex items-center gap-2.5">
                         <Languages className="h-4 w-4 text-muted-foreground" />
@@ -1214,7 +1219,7 @@ export function Navbar() {
                         e.stopPropagation()
                         setIsThemeExpanded(!isThemeExpanded)
                       }}
-                      className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 border-border/30 hover:border-primary/40 bg-transparent hover:bg-muted/30 cursor-pointer"
+                      className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-2 border-border/30 hover:border-primary/40 bg-transparent cursor-pointer"
                     >
                       <div className="flex items-center gap-2.5">
                         <Palette className="h-4 w-4 text-muted-foreground" />

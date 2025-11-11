@@ -41,7 +41,7 @@ export function CookieConsent() {
               <a href="/cookies" className="text-primary hover:underline font-medium">{isPt ? "Cookies" : "Cookies"}</a>.
             </p>
             <div className="flex items-center gap-2">
-              <a href="/cookies" className="px-3 py-2 text-sm font-medium rounded-md border border-border/60 hover:border-primary/50 hover:bg-primary/5 transition-colors">
+              <a href="/cookies" className="px-3 py-2 text-sm font-medium rounded-md border border-border/60 hover:border-primary/50 transition-colors">
                 {isPt ? "Saber mais" : "Learn more"}
               </a>
               <Button size="sm" className="rounded-md cursor-pointer" onClick={acceptCookies}>

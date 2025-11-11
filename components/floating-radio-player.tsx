@@ -207,7 +207,7 @@ export function FloatingRadioPlayer() {
             <button
               onClick={() => setIsMinimized(true)}
               onTouchStart={(e) => e.stopPropagation()}
-              className="p-1 hover:bg-primary/10 rounded transition-colors cursor-pointer"
+              className="p-1 hover:border-primary/50 border border-transparent rounded transition-colors cursor-pointer"
               aria-label="Minimize"
             >
               <Minimize2 className="h-4 w-4 cursor-pointer" />
@@ -222,7 +222,7 @@ export function FloatingRadioPlayer() {
             <button
               onClick={togglePlay}
               onTouchStart={(e) => e.stopPropagation()}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full w-12 h-12 flex items-center justify-center transition-all shadow-lg cursor-pointer"
+              className="bg-primary hover:border-primary/80 border border-primary text-primary-foreground rounded-full w-12 h-12 flex items-center justify-center transition-all shadow-lg cursor-pointer"
             >
               {isPlaying ? (
                 <Pause className="h-5 w-5 cursor-pointer" />
@@ -237,7 +237,7 @@ export function FloatingRadioPlayer() {
             <button
               onClick={toggleMute}
               onTouchStart={(e) => e.stopPropagation()}
-              className="p-1.5 hover:bg-primary/10 rounded transition-colors"
+              className="p-1.5 hover:border-primary/50 border border-transparent rounded transition-colors"
               aria-label={isMuted ? "Unmute" : "Mute"}
             >
               {getVolumeIcon()}

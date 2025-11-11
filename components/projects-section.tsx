@@ -115,10 +115,10 @@ export function ProjectsSection() {
       <div className="absolute bottom-1/5 right-1/3 w-32 h-32 border border-secondary/20 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
       <div className="absolute top-1/2 left-1/5 w-20 h-20 border border-primary/15 rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-2 md:px-4 relative z-10 max-w-[95%]">
         {/* Header */}
         <div className="mb-12 max-w-3xl">
-          <Badge className="mb-2 bg-primary/20 text-primary hover:bg-primary/30" variant="outline">
+          <Badge className="mb-2 bg-primary/20 text-primary hover:border-primary/50 border border-transparent" variant="outline">
             {t("projects.badge")}
           </Badge>
           <h2 className="text-2xl font-bold mb-2 text-balance">
@@ -130,7 +130,7 @@ export function ProjectsSection() {
         </div>
 
         {/* Staggered Grid */}
-        <div className="max-w-[95%] mx-auto">
+        <div className="mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-max">
             {projects.map((project, index) => (
               <div
@@ -194,7 +194,7 @@ export function ProjectsSection() {
                     {/* Button */}
                     <button
                       onClick={() => setSelectedProject(project)}
-                      className="w-full px-4 py-3 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary font-semibold transition-all duration-300 flex items-center justify-center gap-2 group/btn cursor-pointer"
+                      className="w-full px-4 py-3 rounded-lg bg-primary/10 hover:border-primary/50 border border-transparent text-primary font-semibold transition-all duration-300 flex items-center justify-center gap-2 group/btn cursor-pointer"
                     >
                       {t("projects.details")}
                       <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />

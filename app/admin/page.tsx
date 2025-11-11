@@ -968,7 +968,7 @@ export default function AdminPage() {
                       </tr>
                     ) : (
                       filteredUsers.map((user) => (
-                        <tr key={user.id} className="border-t border-border/50 hover:bg-muted/30 transition-colors">
+                        <tr key={user.id} className="border-t border-border/50 hover:border-primary/30 border border-transparent transition-colors">
                           <td className="px-6 py-4 text-sm font-medium text-foreground">{user.name}</td>
                           <td className="px-6 py-4 text-sm text-muted-foreground">{user.email}</td>
                           <td className="px-6 py-4">
@@ -1237,7 +1237,7 @@ export default function AdminPage() {
                         <div className="shrink-0 w-full md:w-auto">
                           <Button
                             onClick={() => handleOpenTicket(ticket)}
-                            className="w-full md:w-auto flex items-center justify-center gap-2 cursor-pointer hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
+                            className="w-full md:w-auto flex items-center justify-center gap-2 cursor-pointer hover:border-primary hover:text-primary transition-all"
                             variant="outline"
                           >
                             <Eye className="h-4 w-4" />
@@ -1299,7 +1299,7 @@ export default function AdminPage() {
                   workspaces.map((workspace) => (
                     <div
                       key={workspace.id}
-                      className="flex items-center justify-between p-3 rounded-lg border border-border/50 hover:bg-muted/30 transition-colors"
+                      className="flex items-center justify-between p-3 rounded-lg border border-border/50 hover:border-primary/30 border border-transparent transition-colors"
                     >
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
@@ -1324,7 +1324,7 @@ export default function AdminPage() {
                               onClick={() => handleOpenEditWorkspaceDialog(workspace)}
                               variant="ghost"
                               size="sm"
-                              className="h-8 w-8 p-0 hover:bg-[#141414]! cursor-pointer"
+                              className="h-8 w-8 p-0 hover:text-primary cursor-pointer"
                             >
                               <Edit className="h-4 w-4" />
                             </Button>
@@ -1333,7 +1333,7 @@ export default function AdminPage() {
                               variant="ghost"
                               size="sm"
                               disabled={isDeletingWorkspace}
-                              className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-[#141414]! cursor-pointer"
+                              className="h-8 w-8 p-0 text-destructive hover:text-destructive cursor-pointer"
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
@@ -1367,7 +1367,7 @@ export default function AdminPage() {
                           className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
                             selectedUserForPermissions === user.id
                               ? 'border-primary bg-primary/10'
-                              : 'border-border/50 hover:border-primary/30 hover:bg-muted/30'
+                              : 'border-border/50 hover:border-primary/30'
                           }`}
                         >
                           <div className="flex items-center justify-between">
@@ -1514,7 +1514,7 @@ export default function AdminPage() {
                         admins.map((admin) => {
                           const adminUser = users.find(u => u.id === admin.user_id)
                           return (
-                            <tr key={admin.id} className="border-t border-border/50 hover:bg-muted/30 transition-colors">
+                            <tr key={admin.id} className="border-t border-border/50 hover:border-primary/30 border border-transparent transition-colors">
                               <td className="px-6 py-4 text-sm font-medium text-foreground">
                                 {adminUser?.email || 'N/A'}
                               </td>
@@ -1533,7 +1533,7 @@ export default function AdminPage() {
                                     variant="ghost"
                                     size="sm"
                                     disabled={isRemovingAdmin}
-                                    className="text-destructive hover:text-destructive hover:bg-destructive/10 cursor-pointer"
+                                    className="text-destructive hover:text-destructive hover:border-destructive/30 border border-transparent cursor-pointer"
                                   >
                                     <X className="h-4 w-4" />
                                   </Button>
@@ -1645,7 +1645,7 @@ export default function AdminPage() {
                       variant="ghost"
                       size="sm"
                       onClick={() => setShowTicketControls(!showTicketControls)}
-                      className="h-8 w-8 p-0 cursor-pointer hover:bg-transparent! dark:hover:bg-transparent! hover:text-primary"
+                      className="h-8 w-8 p-0 cursor-pointer hover:text-primary"
                     >
                       {showTicketControls ? (
                         <ChevronUp className="h-4 w-4" />
@@ -2004,7 +2004,7 @@ export default function AdminPage() {
                   handleConfirmDeleteWorkspace()
                 }}
                 disabled={isDeletingWorkspace}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                className="bg-destructive text-destructive-foreground hover:border-destructive/80 border border-destructive"
               >
                 {isDeletingWorkspace ? (
                   <span className="flex items-center gap-2">
@@ -2066,7 +2066,7 @@ export default function AdminPage() {
                   handleConfirmRemoveAdmin()
                 }}
                 disabled={isRemovingAdmin}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                className="bg-destructive text-destructive-foreground hover:border-destructive/80 border border-destructive"
               >
                 {isRemovingAdmin ? (
                   <span className="flex items-center gap-2">

@@ -58,7 +58,7 @@ export function Footer() {
                   href="https://linkedin.com/in/initpedro"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg bg-muted/50 hover:bg-primary/20 text-muted-foreground hover:text-primary transition-all duration-300"
+                  className="p-2 rounded-lg bg-muted/50 hover:border-primary/50 border border-transparent text-muted-foreground hover:text-primary transition-all duration-300"
                   title="LinkedIn"
                 >
                   <Linkedin className="h-5 w-5" />
@@ -67,7 +67,7 @@ export function Footer() {
                   href="https://github.com/initpedro"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg bg-muted/50 hover:bg-primary/20 text-muted-foreground hover:text-primary transition-all duration-300"
+                  className="p-2 rounded-lg bg-muted/50 hover:border-primary/50 border border-transparent text-muted-foreground hover:text-primary transition-all duration-300"
                   title="GitHub"
                 >
                   <Github className="h-5 w-5" />
@@ -77,7 +77,7 @@ export function Footer() {
                   href="https://instagram.com/initpedro"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg bg-muted/50 hover:bg-primary/20 text-muted-foreground hover:text-primary transition-all duration-300"
+                  className="p-2 rounded-lg bg-muted/50 hover:border-primary/50 border border-transparent text-muted-foreground hover:text-primary transition-all duration-300"
                   title="Instagram"
                 >
                   <Instagram className="h-5 w-5" />
@@ -86,7 +86,7 @@ export function Footer() {
                   href="https://wa.me/5534998731732?text=Olá, Pedro! Vim pelo seu Website e gostaria de ter seu contato!"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg bg-muted/50 hover:bg-primary/20 text-muted-foreground hover:text-primary transition-all duration-300"
+                  className="p-2 rounded-lg bg-muted/50 hover:border-primary/50 border border-transparent text-muted-foreground hover:text-primary transition-all duration-300"
                   title="WhatsApp"
                 >
                   <Send className="h-5 w-5" />

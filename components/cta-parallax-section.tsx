@@ -1,9 +1,8 @@
 "use client"
 
 import { useRef } from "react"
-import { ArrowRight, Sparkles } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
-import { SectionCorners } from "@/components/section-corners"
 import { useScrollAnimation } from "@/hooks/use-scroll-animation"
 
 export function CTAParallaxSection() {
@@ -14,115 +13,80 @@ export function CTAParallaxSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-16 md:py-24 overflow-hidden"
+      className="relative bg-card overflow-hidden"
     >
-      <SectionCorners />
-      {/* Animated gradient background */}
-      <div
-        className="absolute inset-0 -z-10"
-        style={{
-          background: "linear-gradient(135deg, hsl(260, 75%, 63%) 0%, hsl(67, 100%, 36%) 100%)",
-        }}
-      />
-
-      {/* Geometric pattern overlay */}
-      <div className="absolute inset-0 -z-10 opacity-10">
-        <svg className="w-full h-full" viewBox="0 0 1000 1000">
-          <defs>
-            <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
-              <path d="M 50 0 L 0 0 0 50" fill="none" stroke="white" strokeWidth="1" />
-            </pattern>
-          </defs>
-          <rect width="1000" height="1000" fill="url(#grid)" />
-        </svg>
-      </div>
-
-      {/* Floating blobs */}
-      <div
-        className="absolute top-10 left-10 w-64 h-64 bg-white/10 rounded-full blur-3xl opacity-50"
-      />
-      <div
-        className="absolute bottom-10 right-10 w-96 h-96 bg-white/5 rounded-full blur-3xl opacity-30"
-      />
-
-      <div className="container mx-auto px-4 relative z-10">
-        <div className={`max-w-4xl mx-auto transition-all duration-500 ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        }`}>
-          {/* Header with animated icon */}
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 mb-6">
-              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
-                <Sparkles className="h-5 w-5 text-white animate-spin" style={{ animationDuration: "3s" }} />
-              </div>
-              <span className="text-white font-semibold text-sm">{t("cta.next_level")}</span>
-            </div>
-
-            <h2 className="text-2xl md:text-4xl font-bold mb-6 text-balance">
-              <span className="bg-linear-to-r from-white via-white to-white/90 bg-clip-text text-transparent">
-                {t("cta.ready_to_level_up")}
-              </span>{" "}
-              <br className="hidden md:block" />
-              <span className="bg-linear-to-r from-white via-white to-white/90 bg-clip-text text-transparent">
-                {t("cta.ready_to_level_up_question")}
-              </span>{" "}
-              <span className="relative inline-block bg-linear-to-r from-cyan-300 via-blue-300 to-cyan-200 bg-clip-text text-transparent">
-                {t("cta.ready_to_level_up_answer")}
-                <span className="absolute -bottom-2 left-0 right-0 h-1 bg-linear-to-r from-cyan-300 to-blue-300 rounded-full"></span>
-              </span>
-            </h2>
-
-          </div>
-
-          {/* Stats Container */}
-          <div className="mb-12">
-            <div className="flex flex-col md:flex-row justify-center items-center gap-0">
-              {[
-                { number: "+10", label: t("cta.projects") },
-                { number: "100%", label: t("cta.satisfaction") },
-                { number: "+2", label: t("cta.experience") },
-              ].map((stat, index) => (
-                <div key={index} className="flex items-center">
-                  {/* Stat content */}
-                  <div className="px-8 md:px-12 py-6 text-center">
-                    <div className="text-2xl md:text-3xl font-bold bg-linear-to-br from-white via-cyan-100 to-blue-100 bg-clip-text text-transparent mb-2 drop-shadow-sm">
-                      {stat.number}
-                    </div>
-                    <div className="text-base md:text-lg text-white font-medium drop-shadow-sm">
-                      {stat.label}
-                    </div>
-                  </div>
-                  
-                  {/* Vertical separator - hidden on last item */}
-                  {index < 2 && (
-                    <div className="hidden md:block h-16 w-px bg-white/20"></div>
-                  )}
-                </div>
-              ))}
-            </div>
-            
-            {/* Horizontal separator below stats */}
-            <div className="h-px bg-white/20 w-full"></div>
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="https://wa.me/5534998731732?text=Olá, Pedro! Vim pelo seu Website e gostaria de ter seu contato!"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative px-8 py-3 rounded-lg font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 overflow-hidden shadow-2xl cursor-pointer"
-              style={{
-                background: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)",
-              }}
+      <div className={`flex flex-col md:flex-row gap-16 md:gap-8 justify-between items-center py-[100px] px-6 md:px-8 lg:px-16 xl:px-[104px] relative transition-all duration-500 ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+      }`}>
+        {/* Left Side - Title */}
+        <div className="relative">
+          <h2 className="text-[32px] font-semibold md:text-5xl flex flex-col leading-[120%] tracking-[-1.92px] text-foreground">
+            Processando e atendendo{" "}
+            <span>pedidos de clientes.</span>
+          </h2>
+          
+          {/* Decorative SVG underline - hidden on mobile */}
+          <div className="hidden md:block absolute -bottom-[32px] -left-[12px] text-primary">
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              width="207" 
+              height="32" 
+              viewBox="0 0 207 32" 
+              fill="none"
             >
-              <span className="relative z-10 text-white flex items-center gap-2">
-                {t("cta.open_whatsapp")}
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </span>
-              <div className="absolute inset-0 bg-linear-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-            </a>
+              <path 
+                d="M6.78386 10.0373L202.192 10.7761L29.2835 20.3483L179 20.3483" 
+                stroke="currentColor"
+                strokeWidth="5" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              />
+            </svg>
           </div>
+        </div>
+
+        {/* Right Side - Stats */}
+        <div className="flex flex-wrap gap-4">
+          <div className="w-[190px] space-y-5 md:text-right">
+            <p className="text-[36px] md:text-[64px] font-semibold leading-[45px] tracking-[-2.56px] text-foreground">
+              <span className="hidden md:inline text-primary leading-[45px]">+</span> 10
+            </p>
+            <p className="font-semibold leading-[11px] text-foreground">Projetos realizados</p>
+          </div>
+          
+          <div className="w-[190px] space-y-5 md:text-right">
+            <p className="text-[36px] md:text-[64px] font-semibold leading-[45px] tracking-[-2.56px] text-foreground">
+              100<span className="text-primary">%</span>
+            </p>
+            <p className="font-semibold leading-[11px] text-foreground">De satisfação</p>
+          </div>
+        </div>
+
+        {/* Decorative SVG - Top Right */}
+        <div className="absolute -right-[206px] -top-[117px] hidden lg:block opacity-30">
+          <svg 
+            width="1180" 
+            height="819" 
+            viewBox="0 0 1180 819" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g filter="url(#filter0_f_2980_381)" style={{ mixBlendMode: "multiply" }}>
+              <path 
+                d="M772.069 858.527H712.076L682.397 391.707L369.773 -118.82L1127.74 -118.82L808.175 391.707L772.069 858.527Z" 
+                fill="currentColor"
+                className="text-foreground/20"
+                fillOpacity="0.5"
+              />
+            </g>
+            <defs>
+              <filter id="filter0_f_2980_381" x="150.627" y="-337.966" width="1196.26" height="1415.64" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                <feGaussianBlur stdDeviation="109.573" result="effect1_foregroundBlur_2980_381" />
+              </filter>
+            </defs>
+          </svg>
         </div>
       </div>
     </section>

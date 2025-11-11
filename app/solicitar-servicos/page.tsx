@@ -110,7 +110,7 @@ export default function SolicitarServicosPage() {
           <Button
             variant="ghost"
             onClick={() => router.back()}
-            className="mb-6 text-muted-foreground hover:bg-transparent! dark:hover:bg-transparent! hover:text-primary transition-colors cursor-pointer"
+            className="mb-6 text-muted-foreground hover:text-primary transition-colors cursor-pointer"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             {t("services.back")}
@@ -214,7 +214,7 @@ export default function SolicitarServicosPage() {
                   className={`relative flex flex-col p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
                     prioridade === "baixa"
                       ? "border-green-500/50 bg-green-500/10 shadow-lg shadow-green-500/10"
-                      : "border-border/50 bg-muted/30 hover:border-border hover:bg-muted/50"
+                      : "border-border/50 bg-muted/30 hover:border-border"
                   }`}
                 >
                   <div className="flex items-center gap-3 mb-2">
@@ -232,7 +232,7 @@ export default function SolicitarServicosPage() {
                   className={`relative flex flex-col p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
                     prioridade === "media"
                       ? "border-yellow-500/50 bg-yellow-500/10 shadow-lg shadow-yellow-500/10"
-                      : "border-border/50 bg-muted/30 hover:border-border hover:bg-muted/50"
+                      : "border-border/50 bg-muted/30 hover:border-border"
                   }`}
                 >
                   <div className="flex items-center gap-3 mb-2">
@@ -250,7 +250,7 @@ export default function SolicitarServicosPage() {
                   className={`relative flex flex-col p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
                     prioridade === "alta"
                       ? "border-red-500/50 bg-red-500/10 shadow-lg shadow-red-500/10"
-                      : "border-border/50 bg-muted/30 hover:border-border hover:bg-muted/50"
+                      : "border-border/50 bg-muted/30 hover:border-border"
                   }`}
                 >
                   <div className="flex items-center gap-3 mb-2">
