@@ -252,11 +252,25 @@ const translations = {
     "faq6.question": "Posso ter acesso ao código-fonte?",
     "faq6.answer": "Sim, você receberá acesso completo ao código-fonte e documentação técnica. O código é comentado e bem estruturado para facilitar futuras manutenções.",
     
+    // CTA Parallax Section (Statistics)
+    "cta_parallax.title": "Processando e atendendo",
+    "cta_parallax.title2": "pedidos de clientes.",
+    "cta_parallax.stat1_value": "10",
+    "cta_parallax.stat1_label": "Projetos realizados",
+    "cta_parallax.stat2_value": "100",
+    "cta_parallax.stat2_symbol": "%",
+    "cta_parallax.stat2_label": "De satisfação",
+    
     // Final CTA Section
     "final.title": "Vamos criar algo",
     "final.title2": "incrível juntos?",
     "final.description": "Tenho certeza de que podemos transformar suas ideias em soluções digitais extraordinárias.",
     "final.cta": "Começar Agora",
+    "final.stat1_value": "10",
+    "final.stat1_label": "Projetos realizados",
+    "final.stat2_value": "100",
+    "final.stat2_symbol": "%",
+    "final.stat2_label": "De satisfação",
     
     // Contact Section
     "contact.badge": "Vamos conversar!",
@@ -283,6 +297,10 @@ const translations = {
     "contact.chart_label_6m": "6 meses",
     "contact.chart_label_1y": "1 ano",
     "contact.chart_label_future": "Futuro",
+    // Contact CTA
+    "contact.cta_title": "Você chegou no fim da página.",
+    "contact.cta_description": "Se chegou até aqui, é porque tá interessado. Vamos conversar e transformar suas ideias em realidade!",
+    "contact.cta_button": "Fale comigo no WhatsApp",
     
     // Footer
     "footer.description": "Transformando ideias em soluções digitais inovadoras. Especialista em desenvolvimento web moderno com foco em experiência do usuário.",
@@ -857,11 +875,25 @@ const translations = {
     "faq6.question": "Can I have access to the source code?",
     "faq6.answer": "Yes, you will receive full access to the source code and technical documentation. The code is commented and well-structured for easy future maintenance.",
     
+    // CTA Parallax Section (Statistics)
+    "cta_parallax.title": "Processing and serving",
+    "cta_parallax.title2": "client requests.",
+    "cta_parallax.stat1_value": "10",
+    "cta_parallax.stat1_label": "Projects completed",
+    "cta_parallax.stat2_value": "100",
+    "cta_parallax.stat2_symbol": "%",
+    "cta_parallax.stat2_label": "Client satisfaction",
+    
     // Final CTA Section
     "final.title": "Let's take your business to the",
     "final.title2": "next level?",
     "final.description": "I'm sure we can turn your ideas into extraordinary digital solutions.",
     "final.cta": "Get Started Now",
+    "final.stat1_value": "10",
+    "final.stat1_label": "Projects completed",
+    "final.stat2_value": "100",
+    "final.stat2_symbol": "%",
+    "final.stat2_label": "Client satisfaction",
     
     // Contact Section
     "contact.badge": "Let's talk!",
@@ -888,6 +920,10 @@ const translations = {
     "contact.chart_label_6m": "6 months",
     "contact.chart_label_1y": "1 year",
     "contact.chart_label_future": "Future",
+    // Contact CTA
+    "contact.cta_title": "You reached the end of the page.",
+    "contact.cta_description": "If you got here, you're interested. Let's talk and turn your ideas into reality!",
+    "contact.cta_button": "Talk to me on WhatsApp",
     
     // Footer
     "footer.description": "Transforming ideas into innovative digital solutions. Expert in modern web development with a focus on user experience.",

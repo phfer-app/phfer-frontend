@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge"
 import { ProjectModal } from "@/components/project-modal"
 import { ArrowRight, Code2, Zap } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
-import { SectionCorners } from "@/components/section-corners"
 
 const projects = [
   {
@@ -83,37 +82,30 @@ export function ProjectsSection() {
     <section
       ref={sectionRef}
       id="projects"
-      className="relative py-24 overflow-hidden"
+      className="relative py-24 overflow-visible"
     >
-      <SectionCorners />
-      {/* Gradient background */}
-      <div className="absolute inset-0 -z-10 bg-linear-to-br from-background via-background to-secondary/5" />
 
       {/* Animated blobs - Padrão em grid */}
       <div
-        className="absolute -top-40 -right-40 w-96 h-96 bg-primary/20 rounded-full blur-3xl opacity-60"
+        className="absolute -top-40 -right-40 w-96 h-96 bg-primary/30 dark:bg-primary/20 rounded-full blur-3xl opacity-80 dark:opacity-60"
         style={{ transform: `translateY(${offset * 0.3}px)` }}
       />
       <div
-        className="absolute -bottom-40 -left-40 w-96 h-96 bg-secondary/20 rounded-full blur-3xl opacity-60"
+        className="absolute -bottom-40 -left-40 w-96 h-96 bg-secondary/30 dark:bg-secondary/20 rounded-full blur-3xl opacity-80 dark:opacity-60"
         style={{ transform: `translateY(${offset * -0.3}px)` }}
       />
       <div
-        className="absolute top-1/3 left-1/2 w-[600px] h-[600px] bg-primary/12 rounded-full blur-3xl opacity-50"
+        className="absolute top-1/3 left-1/2 w-[600px] h-[600px] bg-primary/22 dark:bg-primary/12 rounded-full blur-3xl opacity-70 dark:opacity-50"
         style={{ transform: `translate(${offset * 0.15}px, ${offset * 0.1}px)` }}
       />
       <div
-        className="absolute bottom-1/4 right-1/4 w-[450px] h-[450px] bg-secondary/15 rounded-full blur-3xl opacity-50"
+        className="absolute bottom-1/4 right-1/4 w-[450px] h-[450px] bg-secondary/25 dark:bg-secondary/15 rounded-full blur-3xl opacity-70 dark:opacity-50"
         style={{ transform: `translate(${offset * -0.15}px, ${offset * -0.1}px)` }}
       />
       <div
-        className="absolute top-2/3 right-1/3 w-[350px] h-[350px] bg-primary/10 rounded-full blur-3xl opacity-40"
+        className="absolute top-2/3 right-1/3 w-[350px] h-[350px] bg-primary/20 dark:bg-primary/10 rounded-full blur-3xl opacity-60 dark:opacity-40"
       />
       
-      {/* Círculos animados em grid */}
-      <div className="absolute top-1/5 left-1/3 w-28 h-28 border border-primary/20 rounded-full animate-pulse" />
-      <div className="absolute bottom-1/5 right-1/3 w-32 h-32 border border-secondary/20 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
-      <div className="absolute top-1/2 left-1/5 w-20 h-20 border border-primary/15 rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
 
       <div className="container mx-auto px-2 md:px-4 relative z-10 max-w-[95%]">
         {/* Header */}

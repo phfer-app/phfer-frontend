@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Zap, Code2, Users, Rocket } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
-import { SectionCorners } from "@/components/section-corners"
 
 export function AboutSection() {
   const [offset, setOffset] = useState(0)
@@ -60,33 +59,27 @@ export function AboutSection() {
     <section
       ref={sectionRef}
       id="about"
-      className="relative py-24 overflow-hidden"
+      className="relative py-24 overflow-visible"
     >
-      <SectionCorners />
-      {/* Gradient background */}
-      <div className="absolute inset-0 -z-10 bg-linear-to-br from-background via-background to-primary/5" />
 
       {/* Animated blobs - Padrão diagonal */}
       <div
-        className="absolute -top-40 -left-40 w-96 h-96 bg-primary/20 rounded-full blur-3xl opacity-60"
+        className="absolute -top-40 -left-40 w-96 h-96 bg-primary/30 dark:bg-primary/20 rounded-full blur-3xl opacity-80 dark:opacity-60"
         style={{ transform: `translateY(${offset * 0.3}px)` }}
       />
       <div
-        className="absolute -bottom-40 -right-40 w-96 h-96 bg-secondary/20 rounded-full blur-3xl opacity-60"
+        className="absolute -bottom-40 -right-40 w-96 h-96 bg-secondary/30 dark:bg-secondary/20 rounded-full blur-3xl opacity-80 dark:opacity-60"
         style={{ transform: `translateY(${offset * -0.3}px)` }}
       />
       <div
-        className="absolute top-1/2 left-1/4 w-[500px] h-[500px] bg-primary/15 rounded-full blur-3xl opacity-50"
+        className="absolute top-1/2 left-1/4 w-[500px] h-[500px] bg-primary/25 dark:bg-primary/15 rounded-full blur-3xl opacity-70 dark:opacity-50"
         style={{ transform: `translateX(${offset * 0.2}px)` }}
       />
       <div
-        className="absolute bottom-1/3 right-1/3 w-[400px] h-[400px] bg-secondary/15 rounded-full blur-3xl opacity-50"
+        className="absolute bottom-1/3 right-1/3 w-[400px] h-[400px] bg-secondary/25 dark:bg-secondary/15 rounded-full blur-3xl opacity-70 dark:opacity-50"
         style={{ transform: `translateX(${offset * -0.2}px)` }}
       />
       
-      {/* Círculos animados */}
-      <div className="absolute top-1/4 right-1/5 w-24 h-24 border border-primary/20 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
-      <div className="absolute bottom-1/4 left-1/5 w-20 h-20 border border-secondary/20 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
 
       <div className="container mx-auto px-2 md:px-4 relative z-10 max-w-[95%]">
         {/* Header */}
@@ -211,7 +204,7 @@ export function AboutSection() {
                 <p className="text-sm md:text-base leading-relaxed text-foreground">
                   {t("about.final_message")}
                 </p>
-          </div>
+              </div>
 
               {/* Image */}
               <div className="flex justify-center">
@@ -244,7 +237,7 @@ export function AboutSection() {
                     <div className="relative w-full h-full rounded-2xl overflow-hidden bg-card">
                       <img
                         src="https://i.ibb.co/27J5QKcq/IMG-0419.jpg"
-                alt="Pedro - Desenvolvedor"
+                        alt="Pedro - Desenvolvedor"
                         className="w-full h-full object-cover"
                       />
                       

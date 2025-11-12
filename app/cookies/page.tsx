@@ -18,14 +18,6 @@ export default function CookiesPage() {
         <div className="absolute bottom-1/3 right-1/3 w-[400px] h-[400px] bg-primary/10 rounded-full blur-3xl opacity-30" />
       </div>
 
-      {/* Animated circles */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-28 h-28 border border-primary/20 rounded-full animate-pulse" />
-        <div className="absolute top-1/2 right-1/4 w-24 h-24 border border-secondary/20 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute bottom-1/4 right-1/4 w-20 h-20 border border-primary/15 rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
-        <div className="absolute bottom-1/3 left-1/3 w-16 h-16 border border-secondary/15 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
-        <div className="absolute top-2/3 left-1/2 w-18 h-18 border border-primary/15 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }} />
-      </div>
 
       <div className="container mx-auto px-4 pt-48 pb-16 relative z-10">
         <div className="max-w-3xl mx-auto space-y-6">

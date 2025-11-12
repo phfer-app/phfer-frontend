@@ -1,58 +1,33 @@
 "use client"
 
 import { Badge } from "@/components/ui/badge"
-import { Sparkles, ArrowRight } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
-import { SectionCorners } from "@/components/section-corners"
 
 export function ParallaxSection() {
   const { t } = useLanguage()
 
   return (
     <section
-      className="relative py-32 overflow-hidden"
+      className="relative py-32"
     >
-      <SectionCorners />
-      {/* Animated gradient background - Dark with accent colors */}
-      <div
-        className="absolute inset-0 -z-10"
-        style={{
-          background: "linear-gradient(135deg, hsl(0, 0%, 12%) 0%, hsl(260, 75%, 35%) 50%, hsl(0, 0%, 15%) 100%)",
-        }}
-      />
 
-      {/* Animated grid pattern */}
-      <div className="absolute inset-0 -z-10 opacity-5">
-        <svg className="w-full h-full" viewBox="0 0 1000 1000">
-          <defs>
-            <pattern id="animated-grid" width="100" height="100" patternUnits="userSpaceOnUse">
-              <circle cx="50" cy="50" r="2" fill="white" />
-              <path d="M 50 0 L 100 0 M 50 100 L 100 100" stroke="white" strokeWidth="0.5" />
-              <path d="M 0 50 L 0 100 M 100 50 L 100 100" stroke="white" strokeWidth="0.5" />
-            </pattern>
-          </defs>
-          <rect width="1000" height="1000" fill="url(#animated-grid)" />
-        </svg>
-      </div>
 
       {/* Floating gradient blobs */}
       <div
-        className="absolute -top-20 left-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl opacity-40"
+        className="absolute -top-20 left-1/4 w-96 h-96 bg-cyan-500/30 dark:bg-cyan-500/20 rounded-full blur-3xl opacity-60 dark:opacity-40"
       />
       <div
-        className="absolute top-40 -right-20 w-80 h-80 bg-purple-500/15 rounded-full blur-3xl opacity-40"
+        className="absolute top-40 -right-20 w-80 h-80 bg-purple-500/25 dark:bg-purple-500/15 rounded-full blur-3xl opacity-60 dark:opacity-40"
       />
       <div
-        className="absolute bottom-0 left-1/3 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl opacity-30"
+        className="absolute bottom-0 left-1/3 w-96 h-96 bg-blue-500/20 dark:bg-blue-500/10 rounded-full blur-3xl opacity-50 dark:opacity-30"
       />
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center max-w-3xl mx-auto">
           {/* Animated badge */}
           <div className="inline-flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 rounded-full bg-primary/30 flex items-center justify-center backdrop-blur-sm">
-              <Sparkles className="h-4 w-4 text-primary animate-pulse" />
-            </div>
             <Badge className="bg-primary/20 text-primary hover:border-primary/50 border-primary/50 backdrop-blur-sm" variant="outline">
               {t("parallax.badge")}
             </Badge>

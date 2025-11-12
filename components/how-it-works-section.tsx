@@ -39,7 +39,7 @@ export function HowItWorksSection() {
   return (
     <section 
       ref={sectionRef}
-      className="relative w-full py-20 md:py-32 overflow-hidden"
+      className="relative w-full py-20 md:py-32"
       id="how-it-works"
     >
       <div className="container mx-auto px-2 md:px-4 relative z-10 max-w-[95%]">

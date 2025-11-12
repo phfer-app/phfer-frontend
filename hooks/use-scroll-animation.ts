@@ -2,7 +2,7 @@
 
 import { useState, useEffect, RefObject } from "react"
 
-export function useScrollAnimation(ref: RefObject<HTMLElement>): boolean {
+export function useScrollAnimation(ref: RefObject<HTMLElement | null>): boolean {
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {

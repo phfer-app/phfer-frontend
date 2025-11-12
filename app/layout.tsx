@@ -41,26 +41,6 @@ export default function RootLayout({
           <LanguageProvider>
             <AudioProvider>
             <NavigationProvider>
-            {/* Page border lines - outside padding */}
-            <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
-              <div className="container mx-auto h-full relative max-w-full">
-                {/* Top border */}
-                <div className="absolute top-0 left-0 right-0 h-px bg-border/40"></div>
-                {/* Bottom border - hidden on mobile */}
-                <div className="absolute bottom-0 left-0 right-0 h-px bg-border/40 hidden md:block"></div>
-                {/* Left border */}
-                <div className="absolute top-0 bottom-0 left-0 w-px bg-border/40"></div>
-                {/* Right border */}
-                <div className="absolute top-0 bottom-0 right-0 w-px bg-border/40"></div>
-                
-                {/* Additional decorative lines */}
-                <div className="absolute top-0 left-1 right-1 h-px bg-border/20 opacity-60"></div>
-                {/* Bottom decorative line - hidden on mobile */}
-                <div className="absolute bottom-0 left-1 right-1 h-px bg-border/20 opacity-60 hidden md:block"></div>
-                <div className="absolute top-1 bottom-1 left-0 w-px bg-border/20 opacity-60"></div>
-                <div className="absolute top-1 bottom-1 right-0 w-px bg-border/20 opacity-60"></div>
-              </div>
-            </div>
             <Navbar />
             {children}
             <FloatingActions />

@@ -7,31 +7,21 @@ import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { useLanguage } from "@/components/language-provider"
 import { useAudio } from "@/components/audio-context"
-import { SectionCorners } from "@/components/section-corners"
 
 export function BlogSection() {
   const { t } = useLanguage()
 
   return (
-    <section className="relative py-24 overflow-hidden">
-      <SectionCorners />
-      {/* Background gradient */}
-      <div className="absolute inset-0 -z-10 bg-linear-to-br from-background via-background to-primary/5" />
+    <section className="relative py-24">
 
       {/* Animated blobs - Padrão em espiral */}
-      <div className="absolute -top-40 -left-40 w-96 h-96 bg-primary/20 rounded-full blur-3xl opacity-60" />
-      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-secondary/20 rounded-full blur-3xl opacity-60" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[750px] h-[750px] bg-primary/15 rounded-full blur-3xl opacity-30" />
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-secondary/15 rounded-full blur-3xl opacity-30" />
-      <div className="absolute bottom-1/4 right-1/4 w-[450px] h-[450px] bg-primary/12 rounded-full blur-3xl opacity-25" />
-      <div className="absolute top-2/3 right-1/3 w-[400px] h-[400px] bg-secondary/12 rounded-full blur-3xl opacity-25" />
+      <div className="absolute -top-40 -left-40 w-96 h-96 bg-primary/30 dark:bg-primary/20 rounded-full blur-3xl opacity-80 dark:opacity-60" />
+      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-secondary/30 dark:bg-secondary/20 rounded-full blur-3xl opacity-80 dark:opacity-60" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[750px] h-[750px] bg-primary/25 dark:bg-primary/15 rounded-full blur-3xl opacity-50 dark:opacity-30" />
+      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-secondary/25 dark:bg-secondary/15 rounded-full blur-3xl opacity-50 dark:opacity-30" />
+      <div className="absolute bottom-1/4 right-1/4 w-[450px] h-[450px] bg-primary/22 dark:bg-primary/12 rounded-full blur-3xl opacity-45 dark:opacity-25" />
+      <div className="absolute top-2/3 right-1/3 w-[400px] h-[400px] bg-secondary/22 dark:bg-secondary/12 rounded-full blur-3xl opacity-45 dark:opacity-25" />
       
-      {/* Círculos animados em espiral */}
-      <div className="absolute top-1/4 right-1/5 w-28 h-28 border border-primary/20 rounded-full animate-pulse" />
-      <div className="absolute bottom-1/4 left-1/5 w-24 h-24 border border-secondary/20 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
-      <div className="absolute top-1/2 left-1/3 w-20 h-20 border border-primary/15 rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
-      <div className="absolute bottom-1/2 right-1/3 w-16 h-16 border border-secondary/15 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
-      <div className="absolute top-2/3 left-1/5 w-18 h-18 border border-primary/15 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }} />
 
       <div className="container mx-auto px-2 md:px-4 relative z-10 max-w-[95%]">
         {/* Header */}

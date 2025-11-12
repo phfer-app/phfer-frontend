@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Briefcase, Download, ArrowRight } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
-import { SectionCorners } from "@/components/section-corners"
 
 export function ExperienceSection() {
   const { t } = useLanguage()
@@ -35,20 +34,14 @@ export function ExperienceSection() {
   ]
   
   return (
-    <section id="experience" className="py-24 relative overflow-hidden">
-      <SectionCorners />
+    <section id="experience" className="py-24 relative overflow-visible">
       {/* Background blur elements - Padrão assimétrico */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl opacity-40 -z-10"></div>
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-secondary/20 rounded-full blur-3xl opacity-40 -z-10"></div>
-      <div className="absolute top-1/3 right-1/5 w-[550px] h-[550px] bg-primary/15 rounded-full blur-3xl opacity-30 -z-10"></div>
-      <div className="absolute bottom-1/3 left-1/5 w-[500px] h-[500px] bg-secondary/15 rounded-full blur-3xl opacity-30 -z-10"></div>
-      <div className="absolute top-2/3 left-1/2 w-[400px] h-[400px] bg-primary/12 rounded-full blur-3xl opacity-25 -z-10"></div>
+      <div className="absolute top-20 left-10 w-72 h-72 bg-primary/30 dark:bg-primary/20 rounded-full blur-3xl opacity-60 dark:opacity-40 -z-10"></div>
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-secondary/30 dark:bg-secondary/20 rounded-full blur-3xl opacity-60 dark:opacity-40 -z-10"></div>
+      <div className="absolute top-1/3 right-1/5 w-[550px] h-[550px] bg-primary/25 dark:bg-primary/15 rounded-full blur-3xl opacity-50 dark:opacity-30 -z-10"></div>
+      <div className="absolute bottom-1/3 left-1/5 w-[500px] h-[500px] bg-secondary/25 dark:bg-secondary/15 rounded-full blur-3xl opacity-50 dark:opacity-30 -z-10"></div>
+      <div className="absolute top-2/3 left-1/2 w-[400px] h-[400px] bg-primary/22 dark:bg-primary/12 rounded-full blur-3xl opacity-45 dark:opacity-25 -z-10"></div>
       
-      {/* Círculos animados assimétricos */}
-      <div className="absolute top-1/5 right-1/4 w-28 h-28 border border-primary/20 rounded-full animate-pulse -z-10" />
-      <div className="absolute bottom-1/5 left-1/4 w-24 h-24 border border-secondary/20 rounded-full animate-pulse -z-10" style={{ animationDelay: '1s' }} />
-      <div className="absolute top-1/2 left-1/3 w-20 h-20 border border-primary/15 rounded-full animate-pulse -z-10" style={{ animationDelay: '2s' }} />
-      <div className="absolute bottom-1/2 right-1/3 w-16 h-16 border border-secondary/15 rounded-full animate-pulse -z-10" style={{ animationDelay: '0.5s' }} />
 
       <div className="container mx-auto px-2 md:px-4 relative max-w-[95%]">
         {/* Header */}

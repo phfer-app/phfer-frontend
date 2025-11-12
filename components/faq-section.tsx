@@ -2,9 +2,8 @@
 
 import { useState, useRef } from "react"
 import { Badge } from "@/components/ui/badge"
-import { ChevronDown } from "lucide-react"
+import { Plus } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
-import { SectionCorners } from "@/components/section-corners"
 import { useScrollAnimation } from "@/hooks/use-scroll-animation"
 
 export function FAQSection() {
@@ -51,77 +50,82 @@ export function FAQSection() {
   }
 
   return (
-    <section ref={sectionRef} id="faq" className="py-24 relative overflow-hidden">
-      <SectionCorners />
+    <section ref={sectionRef} id="faq" className="py-16 md:py-24 lg:py-[120px] relative overflow-visible">
       {/* Background blur elements - Padrão vertical */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl opacity-40 -z-10"></div>
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-secondary/20 rounded-full blur-3xl opacity-40 -z-10"></div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-primary/15 rounded-full blur-3xl opacity-30 -z-10"></div>
-      <div className="absolute top-1/4 right-1/3 w-[450px] h-[450px] bg-secondary/15 rounded-full blur-3xl opacity-30 -z-10"></div>
-      <div className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] bg-primary/12 rounded-full blur-3xl opacity-25 -z-10"></div>
+      <div className="absolute top-20 left-10 w-72 h-72 bg-primary/30 dark:bg-primary/20 rounded-full blur-3xl opacity-60 dark:opacity-40 -z-10"></div>
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-secondary/30 dark:bg-secondary/20 rounded-full blur-3xl opacity-60 dark:opacity-40 -z-10"></div>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-primary/25 dark:bg-primary/15 rounded-full blur-3xl opacity-50 dark:opacity-30 -z-10"></div>
+      <div className="absolute top-1/4 right-1/3 w-[450px] h-[450px] bg-secondary/25 dark:bg-secondary/15 rounded-full blur-3xl opacity-50 dark:opacity-30 -z-10"></div>
+      <div className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] bg-primary/22 dark:bg-primary/12 rounded-full blur-3xl opacity-45 dark:opacity-25 -z-10"></div>
       
-      {/* Círculos animados verticais */}
-      <div className="absolute top-1/3 left-1/4 w-24 h-24 border border-primary/20 rounded-full animate-pulse -z-10" />
-      <div className="absolute bottom-1/3 right-1/4 w-20 h-20 border border-secondary/20 rounded-full animate-pulse -z-10" style={{ animationDelay: '1.5s' }} />
-      <div className="absolute top-2/3 left-1/5 w-16 h-16 border border-primary/15 rounded-full animate-pulse -z-10" style={{ animationDelay: '0.5s' }} />
 
-      <div className="container mx-auto px-2 md:px-4 relative max-w-[95%]">
-        {/* Header */}
-        <div className={`mb-12 transition-all duration-500 ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        }`}>
-          <Badge className="mb-2 bg-primary/20 text-primary hover:border-primary/50 border border-transparent" variant="outline">
-            {t("faq.badge")}
-          </Badge>
-          <h2 className="text-2xl font-bold mb-2 text-balance">
-            {t("faq.title")} <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">{t("faq.title2")}</span> {t("faq.title3")}
-          </h2>
-          <p className="text-muted-foreground text-sm">
-            {t("faq.description")}
-          </p>
-        </div>
+<div className="container mx-auto px-0 relative max-w-[95%]">
 
-        {/* FAQ Items */}
-        <div className={`max-w-3xl mx-auto space-y-4 transition-all duration-500 ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        }`} style={{ transitionDelay: "200ms" }}>
-          {faqs.map((faq) => (
-            <div
-              key={faq.id}
-              className="group relative p-6 rounded-xl border border-border/50 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 cursor-pointer"
-              onClick={() => toggleFAQ(faq.id)}
-            >
-              {/* Top accent line */}
-              <div className="absolute top-0 left-2 right-2 h-0.5 rounded-t-xl bg-linear-to-r from-primary to-secondary transition-all duration-300 opacity-0 group-hover:opacity-100"></div>
 
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1">
-                  <h3 className="text-lg font-bold text-left mb-0 group-hover:text-primary transition-colors duration-300">
-                    {faq.question}
-                  </h3>
+        {/* Grid Layout - 2 Columns */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-9">
+          {/* Left Column - Title and Description */}
+          <div className={`px-4 md:px-8 lg:px-0 space-y-6 transition-all duration-500 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          }`}>
+            <Badge className="mb-2 bg-primary/20 text-primary hover:border-primary/50 border border-transparent" variant="outline">
+              {t("faq.badge")}
+            </Badge>
+            <h2 className="text-2xl font-bold mb-2 text-balance">
+              {t("faq.title")} <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">{t("faq.title2")}</span> {t("faq.title3")}
+            </h2>
+            <p className="text-muted-foreground text-sm">
+              {t("faq.description")}
+            </p>
+          </div>
+
+          {/* Right Column - FAQ Items */}
+          <div className={`md:px-8 lg:px-0 transition-all duration-500 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          }`} style={{ transitionDelay: "200ms" }}>
+            <div className="space-y-0">
+              {faqs.map((faq, index) => (
+                <div
+                  key={faq.id}
+                  className={`border-t last:border-b md:border-x border-border/50 hover:bg-muted/30 dark:hover:bg-muted/10 overflow-hidden transition-colors ${
+                    index === 0 ? 'md:rounded-t-lg' : ''
+                  } ${index === faqs.length - 1 ? 'md:rounded-b-lg' : ''}`}
+                >
+                  {/* Question */}
+                  <div 
+                    className="p-6 flex items-center gap-4 cursor-pointer transition-colors"
+                    onClick={() => toggleFAQ(faq.id)}
+                  >
+                    <div className={`shrink-0 transition-transform duration-300 ${
+                      openId === faq.id ? 'rotate-45' : 'rotate-0'
+                    }`}>
+                      <Plus className="h-6 w-6 text-primary" />
+                    </div>
+                    <h3 className="text-base leading-[140%] tracking-tight font-semibold text-foreground flex-1">
+                      {faq.question}
+                    </h3>
+                  </div>
+
+                  {/* Answer */}
+                  <div 
+                    className={`grid transition-all duration-300 ease-in-out ${
+                      openId === faq.id 
+                        ? 'grid-rows-[1fr] opacity-100' 
+                        : 'grid-rows-[0fr] opacity-0'
+                    }`}
+                  >
+                    <div className="overflow-hidden">
+                      <div className="pl-16 pr-4 pt-3 pb-6">
+                        <p className="text-sm font-medium leading-[180%] tracking-wide text-muted-foreground">
+                          {faq.answer}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-
-                <div className={`shrink-0 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center transition-all duration-300 ${
-                  openId === faq.id ? "rotate-180 bg-primary/20" : ""
-                }`}>
-                  <ChevronDown className={`h-4 w-4 text-primary transition-transform duration-300 ${
-                    openId === faq.id ? "text-primary" : "text-muted-foreground"
-                  }`} />
-                </div>
-              </div>
-
-              {/* Answer */}
-              <div
-                className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                  openId === faq.id ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"
-                }`}
-              >
-                <p className="text-muted-foreground leading-relaxed pt-4 border-t border-border/30">
-                  {faq.answer}
-                </p>
-              </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </section>

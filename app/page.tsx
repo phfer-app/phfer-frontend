@@ -74,7 +74,7 @@ export default function Home() {
   const { currentRoute } = useNavigation()
 
   return (
-    <main>
+    <main className="overflow-visible">
       <Suspense fallback={null}>
         <OAuthHandler />
       </Suspense>

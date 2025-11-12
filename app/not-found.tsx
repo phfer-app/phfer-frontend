@@ -27,15 +27,7 @@ export default function NotFound() {
         <div className="absolute bottom-1/4 left-1/4 w-[650px] h-[650px] bg-primary/10 rounded-full blur-3xl opacity-40" />
       </div>
 
-      {/* Grid pattern overlay - mais sutil */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-size-[32px_32px] opacity-30" />
 
-      {/* Animated elements - mais discretos */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/3 w-24 h-24 border border-primary/20 rounded-full animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/3 w-20 h-20 border border-secondary/20 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }} />
-        <div className="absolute top-1/2 right-1/4 w-16 h-16 border border-primary/15 rounded-full animate-pulse" style={{ animationDelay: '3s' }} />
-      </div>
 
       {/* Content - layout mais profissional com ícone à esquerda */}
       <div className="relative z-10 w-full max-w-5xl px-4 md:px-8 py-12">

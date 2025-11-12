@@ -5,7 +5,6 @@ import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useLanguage } from "@/components/language-provider"
 import { useNavigation } from "@/components/navigation-provider"
-import { SectionCorners } from "@/components/section-corners"
 import { IntegratedChatbot } from "@/components/integrated-chatbot"
 import { HowItWorksSection } from "@/components/how-it-works-section"
 
@@ -62,19 +61,9 @@ export function HeroSection() {
       id="home" 
       className="min-h-screen flex items-center justify-start relative pt-16 overflow-hidden"
     >
-      <div className="absolute top-20 left-10 w-96 h-96 bg-primary/10 rounded-full blur-3xl opacity-30 -z-10"></div>
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/10 rounded-full blur-3xl opacity-30 -z-10"></div>
+      <div className="absolute top-20 left-10 w-96 h-96 bg-primary/20 dark:bg-primary/10 rounded-full blur-3xl opacity-50 dark:opacity-30 -z-10"></div>
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/20 dark:bg-secondary/10 rounded-full blur-3xl opacity-50 dark:opacity-30 -z-10"></div>
       
-      <div className="absolute inset-0 -z-10 opacity-[0.02]">
-        <svg className="w-full h-full" viewBox="0 0 1000 1000">
-          <defs>
-            <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
-              <path d="M 100 0 L 0 0 0 100" fill="none" stroke="white" strokeWidth="1" />
-            </pattern>
-          </defs>
-          <rect width="1000" height="1000" fill="url(#grid)" />
-        </svg>
-      </div>
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="space-y-8">
@@ -222,29 +211,20 @@ export function HeroSection() {
       id="home" 
       className="relative pt-56 pb-24 flex flex-col items-center justify-center overflow-hidden"
     >
-      <SectionCorners />
       {/* Background with radial gradient - Mais intenso e espalhado */}
       <div className="absolute inset-0 bg-background">
         {/* Gradientes principais - mais intensos */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-radial-gradient from-primary/25 via-primary/10 to-transparent rounded-full blur-3xl" />
-        <div className="absolute top-1/3 right-1/4 w-[600px] h-[600px] bg-secondary/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] bg-primary/15 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-radial-gradient from-primary/35 dark:from-primary/25 via-primary/15 dark:via-primary/10 to-transparent rounded-full blur-3xl" />
+        <div className="absolute top-1/3 right-1/4 w-[600px] h-[600px] bg-secondary/30 dark:bg-secondary/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] bg-primary/25 dark:bg-primary/15 rounded-full blur-3xl" />
         
         {/* Gradientes adicionais - mais espalhados */}
-        <div className="absolute top-1/4 left-1/3 w-[700px] h-[700px] bg-primary/12 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/3 right-1/3 w-[550px] h-[550px] bg-secondary/15 rounded-full blur-3xl" />
-        <div className="absolute top-2/3 left-1/5 w-[400px] h-[400px] bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/5 right-1/5 w-[450px] h-[450px] bg-secondary/12 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-1/3 w-[700px] h-[700px] bg-primary/22 dark:bg-primary/12 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/3 right-1/3 w-[550px] h-[550px] bg-secondary/25 dark:bg-secondary/15 rounded-full blur-3xl" />
+        <div className="absolute top-2/3 left-1/5 w-[400px] h-[400px] bg-primary/20 dark:bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/5 right-1/5 w-[450px] h-[450px] bg-secondary/22 dark:bg-secondary/12 rounded-full blur-3xl" />
       </div>
 
-      {/* Animated circles - mais intensos */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-20 w-32 h-32 border border-primary/20 rounded-full animate-pulse" />
-        <div className="absolute bottom-32 right-32 w-24 h-24 border border-secondary/20 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 right-20 w-16 h-16 border border-primary/20 rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-1/3 left-1/4 w-20 h-20 border border-primary/15 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
-        <div className="absolute bottom-1/4 right-1/4 w-28 h-28 border border-secondary/15 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }} />
-      </div>
 
       {/* Main Content - Centered */}
       <div className="container mx-auto px-2 md:px-4 relative z-10 max-w-[95%]">
