@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
-import { Shield, Users, Ticket as TicketIcon, Plus, X, RefreshCw, Search, Calendar, User as UserIcon, Mail, Clock, AlertCircle, Eye, CheckCircle, MessageSquare, History, CheckCircle2, XCircle, Lock, Save, Edit, Trash2, FolderPlus, Send, Filter, Settings, ChevronDown, ChevronUp } from "lucide-react"
+import { Shield, Users, Ticket as TicketIcon, Plus, X, RefreshCw, Search, Calendar, User as UserIcon, Mail, Clock, AlertCircle, Eye, CheckCircle, MessageSquare, History, CheckCircle2, XCircle, Lock, Save, Edit, Trash2, FolderPlus, Send, Filter, Settings, ChevronDown, ChevronUp, Inbox } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -16,6 +16,7 @@ import { useToast } from "@/hooks/use-toast"
 import { checkAdmin, getAdmins, addAdmin, removeAdmin, getUsers, getTickets, updateTicket, type Admin, type User, type Ticket } from "@/lib/admin"
 import { getTicketComments, getTicketStatusHistory, addTicketComment, type TicketComment, type TicketStatusHistory } from "@/lib/tickets"
 import { getWorkspaces, getUserWorkspacePermissions, updateUserWorkspacePermissions, createWorkspace, updateWorkspace, deleteWorkspace, initializeWorkspaces, type Workspace } from "@/lib/workspace-permissions"
+import { sendBulkEmail, getEmailHistory, type EmailLog } from "@/lib/emails"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
@@ -66,6 +67,22 @@ export default function AdminPage() {
   const [filterPriority, setFilterPriority] = useState<string>("all")
   const [filterDateFrom, setFilterDateFrom] = useState<string>("")
   const [filterDateTo, setFilterDateTo] = useState<string>("")
+  
+  // Estados para emails
+  const [emailLogs, setEmailLogs] = useState<EmailLog[]>([])
+  const [isLoadingEmailLogs, setIsLoadingEmailLogs] = useState(false)
+  const [isSendingEmail, setIsSendingEmail] = useState(false)
+  const [isSendEmailDialogOpen, setIsSendEmailDialogOpen] = useState(false)
+  const [emailForm, setEmailForm] = useState({
+    subject: "",
+    body: "",
+    recipients: [] as string[]
+  })
+  const [emailRecipientsSearch, setEmailRecipientsSearch] = useState("")
+  const [emailRecipientCheckboxes, setEmailRecipientCheckboxes] = useState<Record<string, boolean>>({})
+  const [selectedEmailLog, setSelectedEmailLog] = useState<EmailLog | null>(null)
+  const [isEmailDetailDialogOpen, setIsEmailDetailDialogOpen] = useState(false)
+  
   const router = useRouter()
   const { t } = useLanguage()
   const { toast } = useToast()
@@ -176,7 +193,8 @@ export default function AdminPage() {
       loadUsers(),
       loadTickets(),
       loadAdmins(),
-      loadWorkspaces()
+      loadWorkspaces(),
+      loadEmailLogs()
     ])
   }
 
@@ -222,6 +240,25 @@ export default function AdminPage() {
     const result = await getAdmins()
     if (result.success && result.admins) {
       setAdmins(result.admins)
+    }
+  }
+
+  const loadEmailLogs = async () => {
+    setIsLoadingEmailLogs(true)
+    try {
+      const result = await getEmailHistory()
+      if (result.success && result.logs) {
+        setEmailLogs(result.logs)
+      }
+    } catch (error: any) {
+      console.error('Erro ao carregar histórico de emails:', error)
+      toast({
+        title: "Erro",
+        description: "Erro ao carregar histórico de emails",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoadingEmailLogs(false)
     }
   }
 
@@ -900,7 +937,7 @@ export default function AdminPage() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-4 md:mb-6 h-auto">
+          <TabsList className="grid w-full grid-cols-5 mb-4 md:mb-6 h-auto">
             <TabsTrigger value="users" className="flex items-center justify-center gap-1.5 md:gap-2 cursor-pointer text-xs md:text-sm px-2 md:px-4 py-2 md:py-3">
               <Users className="h-3.5 w-3.5 md:h-4 md:w-4" />
               <span className="hidden sm:inline">{t("admin.tabs.usuarios")}</span>
@@ -910,6 +947,11 @@ export default function AdminPage() {
               <TicketIcon className="h-3.5 w-3.5 md:h-4 md:w-4" />
               <span className="hidden sm:inline">{t("admin.tabs.tickets")}</span>
               <span className="sm:hidden">{t("admin.tabs.tickets_short")}</span>
+            </TabsTrigger>
+            <TabsTrigger value="emails" className="flex items-center justify-center gap-1.5 md:gap-2 cursor-pointer text-xs md:text-sm px-2 md:px-4 py-2 md:py-3">
+              <Inbox className="h-3.5 w-3.5 md:h-4 md:w-4" />
+              <span className="hidden sm:inline">Emails</span>
+              <span className="sm:hidden">Email</span>
             </TabsTrigger>
             <TabsTrigger value="permissions" className="flex items-center justify-center gap-1.5 md:gap-2 cursor-pointer text-xs md:text-sm px-2 md:px-4 py-2 md:py-3">
               <Lock className="h-3.5 w-3.5 md:h-4 md:w-4" />
@@ -1596,8 +1638,465 @@ export default function AdminPage() {
               </div>
             </TabsContent>
           )}
+
+          {/* Emails Tab */}
+          <TabsContent value="emails" className="space-y-4">
+            {/* Header com botão de enviar email e atualizar */}
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input
+                  placeholder="Procurar por assunto..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              <Button
+                onClick={loadEmailLogs}
+                variant="outline"
+                disabled={isLoadingEmailLogs}
+                className="flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
+              >
+                <RefreshCw className={`h-4 w-4 ${isLoadingEmailLogs ? 'animate-spin' : ''}`} />
+                Atualizar
+              </Button>
+              <Button
+                onClick={() => setIsSendEmailDialogOpen(true)}
+                className="flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
+              >
+                <Send className="h-4 w-4" />
+                Enviar E-mail
+              </Button>
+            </div>
+
+            {/* Lista de emails enviados */}
+            <div className="space-y-4">
+              {isLoadingEmailLogs ? (
+                <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-12 text-center">
+                  <div className="flex justify-center mb-4">
+                    <div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+                  </div>
+                  <p className="text-muted-foreground">Carregando histórico de emails...</p>
+                </div>
+              ) : emailLogs.length === 0 ? (
+                <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-8 md:p-12 text-center">
+                  <Mail className="h-10 w-10 md:h-12 md:w-12 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-sm text-muted-foreground">Nenhum email enviado ainda</p>
+                </div>
+              ) : (
+                emailLogs
+                  .filter(log => 
+                    searchTerm === "" || 
+                    log.subject.toLowerCase().includes(searchTerm.toLowerCase())
+                  )
+                  .map((log) => (
+                    <div
+                      key={log.id}
+                      onClick={() => {
+                        setSelectedEmailLog(log)
+                        setIsEmailDetailDialogOpen(true)
+                      }}
+                      className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-4 md:p-6 hover:border-primary/30 transition-all cursor-pointer hover:shadow-md"
+                    >
+                      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                        {/* Conteúdo principal */}
+                        <div className="flex-1">
+                          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-3">
+                            <h3 className="text-lg font-semibold text-foreground">
+                              {log.subject}
+                            </h3>
+                            <div className="flex gap-2 shrink-0">
+                              <Badge className={`
+                                text-xs font-medium px-2.5 py-1 ${
+                                  log.status === 'success' 
+                                    ? 'bg-green-500/10 text-green-500 border-green-500/20'
+                                    : log.status === 'partial'
+                                    ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20'
+                                    : 'bg-red-500/10 text-red-500 border-red-500/20'
+                                }`}
+                              >
+                                {log.status === 'success' ? 'Enviado com Sucesso' : 
+                                 log.status === 'partial' ? 'Parcial' : 'Falhou'}
+                              </Badge>
+                            </div>
+                          </div>
+
+                          {/* Stats de envio */}
+                          <div className="flex flex-wrap gap-4 mb-4">
+                            <div className="flex items-center gap-2">
+                              <CheckCircle2 className="h-4 w-4 text-green-500" />
+                              <span className="text-sm font-medium text-foreground">
+                                {log.sent_count} de {log.total_count} enviados
+                              </span>
+                            </div>
+                            {log.error_message && (
+                              <div className="flex items-center gap-2">
+                                <AlertCircle className="h-4 w-4 text-red-500" />
+                                <span className="text-sm text-red-500">Erros ao enviar</span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Informações de data */}
+                          <div className="pt-4 border-t border-border/50">
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                              <Calendar className="h-4 w-4 shrink-0" />
+                              <span>Enviado em {new Date(log.sent_at).toLocaleDateString('pt-BR', { 
+                                day: '2-digit', 
+                                month: '2-digit', 
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Resumo de destinatários */}
+                        <div className="shrink-0 w-full md:w-auto text-sm">
+                          <p className="text-muted-foreground mb-2">
+                            {log.recipients.length} destinatário(s)
+                          </p>
+                          <div className="max-h-[120px] overflow-y-auto bg-muted/30 rounded-lg p-2 text-xs space-y-1">
+                            {log.recipients.slice(0, 3).map((email, idx) => (
+                              <div key={idx} className="text-muted-foreground truncate">
+                                • {email}
+                              </div>
+                            ))}
+                            {log.recipients.length > 3 && (
+                              <div className="text-muted-foreground">
+                                + {log.recipients.length - 3} mais...
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+              )}
+            </div>
+          </TabsContent>
         </Tabs>
       </div>
+
+      {/* Dialog para enviar email */}
+      <Dialog open={isSendEmailDialogOpen} onOpenChange={setIsSendEmailDialogOpen}>
+        <DialogContent className="!max-w-none w-[95vw] max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Enviar E-mail em Massa</DialogTitle>
+            <DialogDescription>
+              Escreva o assunto e corpo do email, selecione os destinatários e envie
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            {/* Assunto */}
+            <div>
+              <Label htmlFor="email-subject">Assunto *</Label>
+              <Input
+                id="email-subject"
+                placeholder="Ex: Novo comunicado importante"
+                value={emailForm.subject}
+                onChange={(e) => setEmailForm(prev => ({ ...prev, subject: e.target.value }))}
+                className="mt-2"
+              />
+            </div>
+
+            {/* Corpo do email */}
+            <div>
+              <Label htmlFor="email-body">Mensagem *</Label>
+              <Textarea
+                id="email-body"
+                placeholder="Digite o corpo do seu email aqui..."
+                value={emailForm.body}
+                onChange={(e) => setEmailForm(prev => ({ ...prev, body: e.target.value }))}
+                className="mt-2 min-h-[250px] resize-none"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Suporta HTML. Use tags como &lt;b&gt;, &lt;i&gt;, &lt;a href=""&gt;, etc.
+              </p>
+            </div>
+
+            {/* Seleção de destinatários */}
+            <div>
+              <Label htmlFor="email-recipients-search">Selecione os Destinatários *</Label>
+              <div className="mt-2">
+                <Input
+                  id="email-recipients-search"
+                  placeholder="Procurar usuários por email..."
+                  value={emailRecipientsSearch}
+                  onChange={(e) => setEmailRecipientsSearch(e.target.value)}
+                  className="mb-3"
+                />
+
+                <div className="border border-border/50 rounded-lg max-h-[300px] overflow-y-auto p-3 space-y-2 bg-muted/30">
+                  {users.length === 0 ? (
+                    <p className="text-sm text-muted-foreground py-8 text-center">
+                      Nenhum usuário disponível
+                    </p>
+                  ) : (
+                    users
+                      .filter(user => 
+                        user.email.toLowerCase().includes(emailRecipientsSearch.toLowerCase()) ||
+                        user.name.toLowerCase().includes(emailRecipientsSearch.toLowerCase())
+                      )
+                      .map((user) => (
+                        <div 
+                          key={user.id}
+                          className="flex items-center gap-3 p-2 rounded hover:bg-muted/50 cursor-pointer transition-colors"
+                          onClick={() => {
+                            setEmailRecipientCheckboxes(prev => ({
+                              ...prev,
+                              [user.id]: !prev[user.id]
+                            }))
+                          }}
+                        >
+                          <Checkbox
+                            checked={emailRecipientCheckboxes[user.id] || false}
+                            onCheckedChange={() => {
+                              setEmailRecipientCheckboxes(prev => ({
+                                ...prev,
+                                [user.id]: !prev[user.id]
+                              }))
+                            }}
+                          />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-foreground truncate">{user.name}</p>
+                            <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                          </div>
+                        </div>
+                      ))
+                  )}
+                </div>
+
+                {/* Resumo de selecionados */}
+                <div className="mt-3">
+                  <p className="text-sm text-muted-foreground mb-2">
+                    {Object.values(emailRecipientCheckboxes).filter(Boolean).length} selecionado(s)
+                  </p>
+                  {Object.values(emailRecipientCheckboxes).filter(Boolean).length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {users
+                        .filter(user => emailRecipientCheckboxes[user.id])
+                        .map(user => (
+                          <Badge key={user.id} variant="outline" className="gap-1">
+                            {user.name}
+                            <X 
+                              className="h-3 w-3 cursor-pointer"
+                              onClick={() => {
+                                setEmailRecipientCheckboxes(prev => ({
+                                  ...prev,
+                                  [user.id]: false
+                                }))
+                              }}
+                            />
+                          </Badge>
+                        ))
+                      }
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsSendEmailDialogOpen(false)
+                setEmailForm({ subject: "", body: "", recipients: [] })
+                setEmailRecipientCheckboxes({})
+                setEmailRecipientsSearch("")
+              }}
+              disabled={isSendingEmail}
+              className="cursor-pointer"
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={async () => {
+                const recipients = users
+                  .filter(user => emailRecipientCheckboxes[user.id])
+                  .map(user => user.email)
+
+                if (!emailForm.subject.trim()) {
+                  toast({
+                    title: "Aviso",
+                    description: "Digite um assunto",
+                    variant: "default",
+                  })
+                  return
+                }
+
+                if (!emailForm.body.trim()) {
+                  toast({
+                    title: "Aviso",
+                    description: "Digite o corpo do email",
+                    variant: "default",
+                  })
+                  return
+                }
+
+                if (recipients.length === 0) {
+                  toast({
+                    title: "Aviso",
+                    description: "Selecione pelo menos um destinatário",
+                    variant: "default",
+                  })
+                  return
+                }
+
+                setIsSendingEmail(true)
+                try {
+                  const result = await sendBulkEmail(
+                    emailForm.subject,
+                    emailForm.body,
+                    recipients
+                  )
+
+                  if (result.success) {
+                    toast({
+                      title: "Sucesso",
+                      description: result.message,
+                    })
+                    setIsSendEmailDialogOpen(false)
+                    setEmailForm({ subject: "", body: "", recipients: [] })
+                    setEmailRecipientCheckboxes({})
+                    setEmailRecipientsSearch("")
+                    loadEmailLogs()
+                  } else {
+                    toast({
+                      title: "Erro",
+                      description: result.error || result.message,
+                      variant: "destructive",
+                    })
+                  }
+                } catch (error: any) {
+                  toast({
+                    title: "Erro",
+                    description: error.message || "Erro ao enviar email",
+                    variant: "destructive",
+                  })
+                } finally {
+                  setIsSendingEmail(false)
+                }
+              }}
+              disabled={isSendingEmail || !emailForm.subject.trim() || !emailForm.body.trim() || Object.values(emailRecipientCheckboxes).filter(Boolean).length === 0}
+              className="cursor-pointer"
+            >
+              {isSendingEmail ? (
+                <>
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  Enviando...
+                </>
+              ) : (
+                <>
+                  <Send className="h-4 w-4 mr-2" />
+                  Enviar para {Object.values(emailRecipientCheckboxes).filter(Boolean).length} {Object.values(emailRecipientCheckboxes).filter(Boolean).length === 1 ? 'pessoa' : 'pessoas'}
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog para visualizar detalhes do email */}
+      <Dialog open={isEmailDetailDialogOpen} onOpenChange={setIsEmailDetailDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Detalhes do E-mail</DialogTitle>
+          </DialogHeader>
+
+          {selectedEmailLog && (
+            <div className="space-y-6 py-4">
+              {/* Status Badge */}
+              <div className="flex items-center gap-3">
+                <Badge className={`
+                  text-xs font-medium px-3 py-1 ${
+                    selectedEmailLog.status === 'success' 
+                      ? 'bg-green-500/10 text-green-500 border-green-500/20'
+                      : selectedEmailLog.status === 'partial'
+                      ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20'
+                      : 'bg-red-500/10 text-red-500 border-red-500/20'
+                  }`}
+                >
+                  {selectedEmailLog.status === 'success' ? 'Enviado com Sucesso' : 
+                   selectedEmailLog.status === 'partial' ? 'Parcial' : 'Falhou'}
+                </Badge>
+                <span className="text-sm text-muted-foreground">
+                  {selectedEmailLog.sent_count} de {selectedEmailLog.total_count} enviados
+                </span>
+              </div>
+
+              {/* Assunto */}
+              <div>
+                <Label className="text-sm font-medium text-muted-foreground mb-2">Assunto</Label>
+                <div className="bg-muted/50 rounded-lg p-4 border border-border/30">
+                  <p className="text-foreground font-medium">{selectedEmailLog.subject}</p>
+                </div>
+              </div>
+
+              {/* Data de envio */}
+              <div>
+                <Label className="text-sm font-medium text-muted-foreground mb-2">Data de Envio</Label>
+                <div className="flex items-center gap-2 text-sm">
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-foreground">
+                    {new Date(selectedEmailLog.sent_at).toLocaleDateString('pt-BR', { 
+                      day: '2-digit', 
+                      month: '2-digit', 
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </span>
+                </div>
+              </div>
+
+              {/* Conteúdo do Email */}
+              <div>
+                <Label className="text-sm font-medium text-muted-foreground mb-2">Conteúdo</Label>
+                <div className="bg-muted/30 rounded-lg p-4 border border-border/30 max-h-[300px] overflow-y-auto text-sm text-foreground">
+                  <div dangerouslySetInnerHTML={{ __html: selectedEmailLog.body }} />
+                </div>
+              </div>
+
+              {/* Lista de Destinatários */}
+              <div>
+                <Label className="text-sm font-medium text-muted-foreground mb-2">
+                  Destinatários ({selectedEmailLog.recipients.length})
+                </Label>
+                <div className="bg-muted/30 rounded-lg p-4 border border-border/30 max-h-[300px] overflow-y-auto space-y-2">
+                  {selectedEmailLog.recipients.map((email, idx) => (
+                    <div key={idx} className="flex items-center gap-2 text-sm">
+                      <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
+                      <span className="text-foreground break-all">{email}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Mensagem de Erro (se houver) */}
+              {selectedEmailLog.error_message && (
+                <div>
+                  <Label className="text-sm font-medium text-red-500 mb-2">Erro ao Enviar</Label>
+                  <div className="bg-red-500/5 rounded-lg p-4 border border-red-500/20">
+                    <p className="text-sm text-red-600 dark:text-red-400">{selectedEmailLog.error_message}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEmailDetailDialogOpen(false)}>
+              Fechar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Dialog para visualizar e gerenciar ticket - Layout de Chat Moderno */}
       <Dialog open={isTicketDialogOpen} onOpenChange={(open) => {
