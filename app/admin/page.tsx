@@ -164,6 +164,23 @@ export default function AdminPage() {
     return () => clearInterval(pollInterval)
   }, [isTicketDialogOpen, selectedTicket?.id])
 
+  // Auto-refresh da lista de emails quando a aba de emails estiver aberta
+  useEffect(() => {
+    if (activeTab !== "emails") {
+      return
+    }
+
+    // Carregar emails imediatamente
+    loadEmailLogs()
+
+    // Depois atualizar a cada 5 segundos
+    const emailRefreshInterval = setInterval(() => {
+      loadEmailLogs()
+    }, 5000)
+
+    return () => clearInterval(emailRefreshInterval)
+  }, [activeTab])
+
   const checkAdminAccess = async () => {
     if (!isAuthenticated()) {
       router.push("/not-found")
