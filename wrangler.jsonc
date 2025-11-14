@@ -1,0 +1,15 @@
+{
+  "name": "phfer-app",
+  "compatibility_date": "2025-11-14",
+  "build": {
+    "command": "pnpm run build",
+    "watch_paths": ["app/**/*.{js,ts,jsx,tsx}", "components/**/*.{js,ts,jsx,tsx}"],
+    "cwd": "."
+  },
+  "env": {
+    "production": {
+      "route": "phfer.netlify.app/*",
+      "zone_name": "netlify.app"
+    }
+  }
+}
