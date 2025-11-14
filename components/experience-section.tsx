@@ -34,7 +34,8 @@ export function ExperienceSection() {
   ]
   
   return (
-    <section id="experience" className="py-24 relative overflow-visible">
+    <>
+      <section id="experience" className="py-24 relative overflow-visible">
       {/* Background blur elements - Padrão assimétrico */}
       <div className="absolute top-20 left-10 w-72 h-72 bg-primary/30 dark:bg-primary/20 rounded-full blur-3xl opacity-60 dark:opacity-40 -z-10"></div>
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-secondary/30 dark:bg-secondary/20 rounded-full blur-3xl opacity-60 dark:opacity-40 -z-10"></div>
@@ -57,58 +58,74 @@ export function ExperienceSection() {
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="space-y-6 md:space-y-8">
           {experiences.map((exp, index) => (
             <div
               key={index}
-              className="group relative p-6 rounded-xl border border-border/50 backdrop-blur-sm transition-all duration-300 hover:border-primary/50"
+              className="group relative flex gap-6 md:gap-8 items-start"
             >
-              {/* Top accent line */}
-              <div className="absolute top-0 left-2 right-2 h-0.5 rounded-t-xl bg-linear-to-r from-primary to-secondary transition-all duration-300"></div>
+              {/* Left side - Icon */}
+              <div className="flex flex-col items-center shrink-0">
+                {/* Connector line - hidden on last item */}
+                {index < experiences.length - 1 && (
+                  <div className="absolute left-6 md:left-8 top-20 h-8 md:h-12 w-0.5 bg-linear-to-b from-primary/60 to-primary/30 group-hover:from-primary group-hover:to-primary/50 transition-all duration-300" />
+                )}
 
-              <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center">
-                {/* Icon Container */}
-                <div className="shrink-0">
-                  <div className="relative w-14 h-14 rounded-lg bg-linear-to-br from-primary/20 to-secondary/20 flex items-center justify-center group-hover:from-primary/30 group-hover:to-secondary/30 transition-all duration-300">
-                    <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 bg-linear-to-br from-primary/20 to-secondary/20 blur-lg"></div>
-                    <Briefcase className="h-6 w-6 text-primary relative z-10 transition-transform duration-300" />
+                {/* Icon circle */}
+                <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-linear-to-br from-primary/40 to-secondary/40 p-0.5 shrink-0 flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-110">
+                  <div className="w-full h-full rounded-full bg-card flex items-center justify-center">
+                    <Briefcase className="h-5 w-5 md:h-6 md:w-6 text-primary group-hover:scale-110 transition-transform duration-300" />
                   </div>
                 </div>
+              </div>
 
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
-                    <div>
-                      <h3 className="text-base font-bold mb-1">{exp.title}</h3>
-                      <p className="text-primary font-medium">{exp.company}</p>
-                    </div>
-                    <Badge
-                      className={`whitespace-nowrap ${
-                        exp.status === t("exp1.status")
-                          ? "bg-green-500/20 text-green-700 dark:text-green-400 border-green-500/30"
-                          : "bg-slate-500/20 text-slate-700 dark:text-slate-400 border-slate-500/30"
-                      }`}
-                      variant="outline"
-                    >
-                      {exp.status === t("exp1.status") ? "🔵 " + t("exp1.status") : "📋 " + exp.status}
-                    </Badge>
+              {/* Right side - Content */}
+              <div className="flex-1 pt-1 md:pt-2">
+                {/* Header with title, company and status */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
+                  <div>
+                    <h3 className="text-base md:text-lg font-bold text-foreground group-hover:text-primary transition-colors">
+                      {exp.title}
+                    </h3>
+                    <p className="text-primary font-semibold text-xs md:text-sm">
+                      {exp.company}
+                    </p>
                   </div>
+                  <Badge
+                    className={`shrink-0 text-xs font-medium transition-all duration-300 ${
+                      exp.status === t("exp1.status")
+                        ? "bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 group-hover:bg-emerald-500/30 group-hover:border-emerald-500/50"
+                        : "bg-slate-500/20 text-slate-700 dark:text-slate-400 border-slate-500/30 group-hover:bg-slate-500/30 group-hover:border-slate-500/50"
+                    }`}
+                    variant="outline"
+                  >
+                    {exp.status === t("exp1.status") ? "🔵 " + t("exp1.status") : "📋 " + exp.status}
+                  </Badge>
+                </div>
 
-                  {/* Period */}
-                  <p className="text-sm text-muted-foreground mb-3 font-medium">
-                    <span className="inline-flex items-center gap-1">
-                      📅 {exp.period}
-                    </span>
-                  </p>
+                {/* Period */}
+                <div className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground font-medium mb-3 group-hover:text-foreground/70 transition-colors">
+                  <span className="text-base">📅</span>
+                  <span>{exp.period}</span>
+                </div>
+
+                {/* Card */}
+                <div className="rounded-lg border border-border/50 bg-card/40 backdrop-blur-sm p-4 md:p-5 group-hover:border-primary/40 group-hover:bg-card/60 transition-all duration-300">
+                  {/* Top accent line */}
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-primary via-secondary to-transparent rounded-t-lg scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
 
                   {/* Description */}
-                  <p className="text-sm text-muted-foreground leading-relaxed">{exp.description}</p>
-                </div>
+                  <p className="text-sm md:text-base text-muted-foreground leading-relaxed group-hover:text-foreground/80 transition-colors">
+                    {exp.description}
+                  </p>
 
-                {/* Arrow */}
-                <div className="shrink-0 hidden lg:block">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:border-primary/50 border border-transparent transition-all duration-300">
-                    <ArrowRight className="h-5 w-5 text-primary" />
+                  {/* Bottom accent on hover */}
+                  <div className="flex items-center gap-2 mt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-primary text-xs font-medium">
+                    <div className="w-1 h-1 rounded-full bg-primary" />
+                    <span className="flex items-center gap-1">
+                      <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
+                      Carreira
+                    </span>
                   </div>
                 </div>
               </div>
@@ -133,5 +150,60 @@ export function ExperienceSection() {
         </div>
       </div>
     </section>
+
+    {/* Stats Section - Full Width */}
+    <section className="relative overflow-visible bg-linear-to-br from-gray-100 via-gray-50 to-gray-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
+      {/* Background decoration - Right side */}
+      <div className="absolute right-0 top-0 hidden lg:block opacity-30 pointer-events-none" style={{ transform: "translate(50%, -50%)" }}>
+        <svg width="1180" height="819" viewBox="0 0 1180 819" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g filter="url(#filter0_f_2980_381)" style={{ mixBlendMode: "multiply" }}>
+            <path d="M772.069 858.527H712.076L682.397 391.707L369.773 -118.82L1127.74 -118.82L808.175 391.707L772.069 858.527Z" fill="currentColor" className="text-foreground/20" fillOpacity="0.5"></path>
+          </g>
+          <defs>
+            <filter id="filter0_f_2980_381" x="150.627" y="-337.966" width="1196.26" height="1415.64" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+              <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
+              <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+              <feGaussianBlur stdDeviation="109.573" result="effect1_foregroundBlur_2980_381"></feGaussianBlur>
+            </filter>
+          </defs>
+        </svg>
+      </div>
+
+      {/* Content */}
+      <div className="flex flex-col md:flex-row gap-16 md:gap-8 justify-between items-center py-[100px] px-6 md:px-8 lg:px-16 xl:px-[104px] relative transition-all duration-500 opacity-100 translate-y-0">
+        {/* Title Section */}
+        <div className="relative">
+          <h2 className="text-[32px] font-semibold md:text-5xl flex flex-col leading-[120%] tracking-[-1.92px] text-foreground">
+            Trajetória profissional
+            <span className="text-primary">em evolução.</span>
+          </h2>
+          <div className="hidden md:block absolute -bottom-8 -left-3 text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="207" height="32" viewBox="0 0 207 32" fill="none">
+              <path d="M6.78386 10.0373L202.192 10.7761L29.2835 20.3483L179 20.3483" stroke="currentColor" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round"></path>
+            </svg>
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div className="flex flex-wrap gap-4">
+          {/* Stat 1 */}
+          <div className="w-[190px] space-y-5 md:text-right">
+            <p className="text-[36px] md:text-[64px] font-semibold leading-[45px] tracking-[-2.56px] text-foreground">
+              <span className="hidden md:inline text-primary leading-[45px]">+</span> 4
+            </p>
+            <p className="font-semibold leading-[11px] text-foreground">Anos de carreira</p>
+          </div>
+
+          {/* Stat 2 */}
+          <div className="w-[190px] space-y-5 md:text-right">
+            <p className="text-[36px] md:text-[64px] font-semibold leading-[45px] tracking-[-2.56px] text-foreground">
+              5<span className="text-primary">+</span>
+            </p>
+            <p className="font-semibold leading-[11px] text-foreground">Empresas/Projetos</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    </>
   )
 }

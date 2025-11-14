@@ -95,154 +95,98 @@ export function AboutSection() {
           </p>
         </div>
 
-        {/* Timeline */}
-        <div className="max-w-4xl mx-auto">
-          {/* Timeline line */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-linear-to-b from-transparent via-primary/50 to-transparent opacity-20 hidden md:block" />
-
-          <div className="space-y-12 md:space-y-16">
+        {/* Timeline - Modern clean design */}
+        <div className="w-full max-w-6xl mx-auto">
+          <div className="space-y-6 md:space-y-8">
             {timeline.map((item, index) => {
               const Icon = item.icon
-              const isEven = index % 2 === 0
 
               return (
                 <div
                   key={index}
-                  className="relative"
+                  className="group relative flex gap-6 md:gap-8 items-start"
                   style={{
-                    transform: `translateY(${offset * (0.1 + index * 0.05)}px)`,
+                    transform: `translateY(${offset * (0.05 + index * 0.02)}px)`,
                   }}
                 >
-                  {/* Desktop: Alternating layout */}
-                  <div className="hidden md:grid md:grid-cols-2 gap-8 items-center">
-                    {isEven ? (
-                      <>
-                        {/* Left content */}
-                        <div className="text-right pr-8">
-                          <div className="space-y-4">
-                            <div>
-                              <span className="inline-block px-4 py-1 rounded-full bg-primary/20 text-primary text-sm font-bold mb-2">
-                                {item.year}
-                              </span>
-                              <h3 className="text-lg font-bold mb-3">{item.title}</h3>
-                              <p className="text-muted-foreground leading-relaxed">{item.description}</p>
-                            </div>
-                          </div>
-                        </div>
+                  {/* Left side - Icon */}
+                  <div className="flex flex-col items-center shrink-0">
+                    {/* Connector line - hidden on last item */}
+                    {index < timeline.length - 1 && (
+                      <div className="absolute left-6 md:left-8 top-20 h-8 md:h-12 w-0.5 bg-linear-to-b from-primary/60 to-primary/30 group-hover:from-primary group-hover:to-primary/50 transition-all duration-300" />
+                    )}
 
-                        {/* Center dot */}
-                        <div className="flex justify-center">
-                          <div className={`relative w-16 h-16 rounded-full bg-linear-to-br ${item.color} p-0.5 shadow-lg`}>
-                            <div className="absolute inset-0.5 rounded-full bg-card flex items-center justify-center">
-                              <Icon className="h-8 w-8 text-primary" />
-                            </div>
-                          </div>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        {/* Center dot */}
-                        <div className="flex justify-center">
-                          <div className={`relative w-16 h-16 rounded-full bg-linear-to-br ${item.color} p-0.5 shadow-lg`}>
-                            <div className="absolute inset-0.5 rounded-full bg-card flex items-center justify-center">
-                              <Icon className="h-8 w-8 text-primary" />
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Right content */}
-                        <div className="text-left pl-8">
-                          <div className="space-y-4">
-                            <div>
-                              <span className="inline-block px-4 py-1 rounded-full bg-primary/20 text-primary text-sm font-bold mb-2">
-                                {item.year}
-                              </span>
-                              <h3 className="text-lg font-bold mb-3">{item.title}</h3>
-                              <p className="text-muted-foreground leading-relaxed">{item.description}</p>
-                            </div>
-                          </div>
-                        </div>
-                </>
-              )}
+                    {/* Icon circle */}
+                    <div className={`relative w-12 h-12 md:w-16 md:h-16 rounded-full bg-linear-to-br ${item.color} p-0.5 shrink-0 flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300`}>
+                      <div className="w-full h-full rounded-full bg-card flex items-center justify-center">
+                        <Icon className="h-5 w-5 md:h-6 md:w-6 text-primary group-hover:scale-110 transition-transform duration-300" />
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Mobile: Stacked layout */}
-                  <div className="md:hidden">
-                    <div className="flex gap-6">
-                      {/* Dot */}
-                      <div className="flex flex-col items-center">
-                        <div className={`relative w-14 h-14 rounded-full bg-linear-to-br ${item.color} p-0.5 shadow-lg shrink-0`}>
-                          <div className="absolute inset-0.5 rounded-full bg-card flex items-center justify-center">
-                            <Icon className="h-6 w-6 text-primary" />
-                          </div>
-                        </div>
-                        {index !== timeline.length - 1 && (
-                          <div className="w-1 h-12 bg-primary/20 mt-4" />
-                        )}
-                      </div>
+                  {/* Right side - Content */}
+                  <div className="flex-1 pt-1 md:pt-2">
+                    {/* Year */}
+                    <div className="mb-2">
+                      <span className="inline-block px-2.5 py-1 rounded-md bg-primary/10 text-primary text-xs md:text-sm font-semibold border border-primary/20 group-hover:border-primary/50 group-hover:bg-primary/15 transition-all duration-300">
+                        {item.year}
+                      </span>
+                    </div>
 
-                      {/* Content */}
-                      <div className="pb-6">
-                        <span className="inline-block px-3 py-1 rounded-full bg-primary/20 text-primary text-xs font-bold mb-2">
-                          {item.year}
-                        </span>
-                        <h3 className="text-base font-bold mb-2">{item.title}</h3>
-                        <p className="text-muted-foreground text-sm leading-relaxed">{item.description}</p>
-                      </div>
+                    {/* Card */}
+                    <div className="rounded-lg border border-border/50 bg-card/40 backdrop-blur-sm p-4 md:p-5 group-hover:border-primary/40 group-hover:bg-card/60 transition-all duration-300">
+                      {/* Top accent line */}
+                      <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-primary via-secondary to-transparent rounded-t-lg scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+
+                      {/* Title */}
+                      <h3 className="text-base md:text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+                        {item.title}
+                      </h3>
+
+                      {/* Description */}
+                      <p className="text-sm text-muted-foreground leading-relaxed group-hover:text-foreground/80 transition-colors">
+                        {item.description}
+                      </p>
                     </div>
                   </div>
                 </div>
               )
             })}
-            </div>
+          </div>
 
-          {/* Final message with image */}
-          <div className="mt-16 p-8 rounded-2xl border border-primary/30 bg-primary/5 backdrop-blur-sm">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              {/* Text */}
-              <div>
-                <p className="text-sm md:text-base leading-relaxed text-foreground">
-                  {t("about.final_message")}
-                </p>
-              </div>
+          {/* Final message - Minimal elegant design */}
+          <div className="mt-20">
+            <div className="relative">
+              {/* Background gradient card */}
+              <div className="rounded-xl border border-border/30 bg-card/50 backdrop-blur-sm overflow-hidden">
+                <div className="grid grid-cols-1 md:grid-cols-[400px_1fr] gap-0">
+                  
+                  {/* Left - Image section */}
+                  <div className="relative h-96 md:h-full min-h-96 overflow-hidden bg-black/5">
+                    {/* Image */}
+                    <img
+                      src="https://i.ibb.co/27J5QKcq/IMG-0419.jpg"
+                      alt="Pedro - Desenvolvedor"
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                    />
+                    
+                    {/* Overlay gradient */}
+                    <div className="absolute inset-0 bg-linear-to-r from-black/40 via-transparent to-transparent" />
+                  </div>
 
-              {/* Image */}
-              <div className="flex justify-center">
-                <style>{`
-                  @keyframes borderGlow {
-                    0% {
-                      background-position: 0% 50%;
-                      filter: brightness(1) drop-shadow(0 0 8px rgba(260, 75%, 63%, 0.8));
-                    }
-                    50% {
-                      background-position: 100% 50%;
-                      filter: brightness(1.3) drop-shadow(0 0 20px rgba(260, 75%, 63%, 1));
-                    }
-                    100% {
-                      background-position: 0% 50%;
-                      filter: brightness(1) drop-shadow(0 0 8px rgba(260, 75%, 63%, 0.8));
-                    }
-                  }
-                  .border-glow {
-                    background: linear-gradient(90deg, hsl(260, 75%, 63%), hsl(67, 100%, 36%), hsl(260, 75%, 63%));
-                    background-size: 200% 200%;
-                    animation: borderGlow 3s ease-in-out infinite;
-                    box-shadow: 0 0 25px hsl(260, 75%, 63%), inset 0 0 20px hsl(260, 75%, 63%, 0.3);
-                  }
-                `}</style>
-                <div className="relative w-48 h-48 md:w-56 md:h-56">
-                  {/* Gradient border with flowing animation */}
-                  <div className="border-glow absolute inset-0 rounded-2xl p-0.5">
-                    {/* Image container */}
-                    <div className="relative w-full h-full rounded-2xl overflow-hidden bg-card">
-                      <img
-                        src="https://i.ibb.co/27J5QKcq/IMG-0419.jpg"
-                        alt="Pedro - Desenvolvedor"
-                        className="w-full h-full object-cover"
-                      />
-                      
-                      {/* Overlay gradient */}
-                      <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
+                  {/* Right - Text section */}
+                  <div className="flex flex-col justify-center px-6 md:px-8 py-8 md:py-10 space-y-6">
+                    {/* Top accent */}
+                    <div className="w-12 h-1 bg-linear-to-r from-primary to-secondary rounded-full" />
+
+                    {/* Message text */}
+                    <p className="text-lg md:text-xl leading-relaxed text-foreground font-light">
+                      {t("about.final_message")}
+                    </p>
+
+                    {/* Bottom accent */}
+                    <div className="pt-2">
+                      <div className="w-8 h-0.5 bg-primary/40 rounded-full" />
                     </div>
                   </div>
                 </div>
