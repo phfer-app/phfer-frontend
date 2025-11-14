@@ -30,10 +30,13 @@ export default function ResetPasswordPage() {
   // Verificar se o usuário já está logado
   useEffect(() => {
     setMounted(true)
-    if (isAuthenticated()) {
+  }, [])
+
+  useEffect(() => {
+    if (mounted && isAuthenticated()) {
       router.push("/not-found")
     }
-  }, [router])
+  }, [mounted, router])
 
   // Verificar se há token no hash da URL (Supabase envia o token no hash)
   useEffect(() => {
@@ -192,8 +195,13 @@ export default function ResetPasswordPage() {
     }
   }
 
-  // Não renderizar se ainda não montou ou se está logado
-  if (!mounted || isAuthenticated()) {
+  // Não renderizar se ainda não montou
+  if (!mounted) {
+    return null
+  }
+
+  // Verificar se está logado apenas APÓS montar no cliente
+  if (isAuthenticated()) {
     return null
   }
 
