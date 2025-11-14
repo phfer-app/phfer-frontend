@@ -317,6 +317,26 @@ export async function refreshAdminStatus(): Promise<void> {
  */
 export async function loginWithGoogle(): Promise<{ success: boolean; error?: string }> {
   try {
+    // Garantir que estamos no cliente
+    if (typeof window === 'undefined') {
+      return {
+        success: false,
+        error: 'Esta função só pode ser executada no cliente'
+      }
+    }
+
+    // Validar variáveis de ambiente
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error('Variáveis de ambiente do Supabase não configuradas')
+      return {
+        success: false,
+        error: 'Supabase não está configurado corretamente'
+      }
+    }
+
     const { supabase } = await import('@/lib/supabase')
     
     // Obter a URL atual para redirecionar após o login
@@ -363,6 +383,26 @@ export async function loginWithGoogle(): Promise<{ success: boolean; error?: str
  */
 export async function handleOAuthCallback(): Promise<AuthResponse> {
   try {
+    // Garantir que estamos no cliente
+    if (typeof window === 'undefined') {
+      return {
+        success: false,
+        error: 'Esta função só pode ser executada no cliente'
+      }
+    }
+
+    // Validar variáveis de ambiente
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error('Variáveis de ambiente do Supabase não configuradas')
+      return {
+        success: false,
+        error: 'Supabase não está configurado corretamente'
+      }
+    }
+
     const { supabase } = await import('@/lib/supabase')
     
     // Processar o código OAuth da URL
