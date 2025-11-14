@@ -1680,7 +1680,9 @@ export default function AdminPage() {
               </Button>
               <Button
                 onClick={() => setIsSendEmailDialogOpen(true)}
-                className="flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
+                disabled={true}
+                className="flex items-center justify-center gap-2 cursor-not-allowed w-full sm:w-auto opacity-50"
+                title="Funcionalidade desabilitada até configuração de domínio"
               >
                 <Send className="h-4 w-4" />
                 Enviar E-mail
@@ -1699,7 +1701,11 @@ export default function AdminPage() {
               ) : emailLogs.length === 0 ? (
                 <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-8 md:p-12 text-center">
                   <Mail className="h-10 w-10 md:h-12 md:w-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-sm text-muted-foreground">Nenhum email enviado ainda</p>
+                  <p className="text-sm text-muted-foreground mb-3">Nenhum email enviado ainda</p>
+                  <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 text-left">
+                    <p className="text-xs text-amber-600 dark:text-amber-400 font-medium mb-1">⚠️ Funcionalidade em Desenvolvimento</p>
+                    <p className="text-xs text-amber-600/80 dark:text-amber-400/80">A funcionalidade de envio de emails estará disponível quando um domínio personalizado for configurado no Resend. Por enquanto, o sistema está usando o domínio padrão (onboarding@resend.dev), que possui limitações.</p>
+                  </div>
                 </div>
               ) : (
                 emailLogs
