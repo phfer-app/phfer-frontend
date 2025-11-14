@@ -1,7 +1,4 @@
 {
-  "name": "phfer-app",
-  "pages_build_configuration": {
-    "build_command": "pnpm run build",
-    "build_caching_enabled": true
-  }
+  "name": "phfer",
+  "compatibility_date": "2025-11-14"
 }
