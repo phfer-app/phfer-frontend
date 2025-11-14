@@ -14,8 +14,8 @@ import { CookieConsent } from "@/components/cookie-consent"
 import { Toaster } from "@/components/ui/toaster"
 import "./globals.css"
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
-const raleway = Raleway({ subsets: ["latin"], variable: "--font-raleway" })
+const inter = Inter({ variable: "--font-inter" })
+const raleway = Raleway({ variable: "--font-raleway" })
 
 export const metadata: Metadata = {
   title: "@initpedro | Dev",
