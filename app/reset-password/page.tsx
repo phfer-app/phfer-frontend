@@ -1,7 +1,5 @@
 "use client"
 
-export const dynamic = "force-dynamic"
-
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
@@ -12,6 +10,8 @@ import { Label } from "@/components/ui/label"
 import { useLanguage } from "@/components/language-provider"
 import { useToast } from "@/hooks/use-toast"
 import { isAuthenticated } from "@/lib/auth"
+
+export const dynamic = "force-dynamic"
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState("")
