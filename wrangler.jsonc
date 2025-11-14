@@ -1,5 +1,14 @@
 {
   "name": "phfer",
   "compatibility_date": "2025-11-14",
-  "pages_build_output_dir": "out"
+  "pages_build_output_dir": "out",
+  "env": {
+    "production": {
+      "vars": {
+        "NEXT_PUBLIC_SUPABASE_URL": "https://zkccdswkwbroybvhhciw.supabase.co",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InprY2Nkc3drd2Jyb3lidmhoY2l3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0ODQ5MzgsImV4cCI6MjA3ODA2MDkzOH0.TaRKREYKljutjaL4BWmhJJ2IJJ0-y5oKBt6WBPP1HjI",
+        "NEXT_PUBLIC_API_URL": "https://phfer-backend.onrender.com/api"
+      }
+    }
+  }
 }
