@@ -12,7 +12,6 @@ import { Label } from "@/components/ui/label"
 import { useLanguage } from "@/components/language-provider"
 import { useToast } from "@/hooks/use-toast"
 import { isAuthenticated } from "@/lib/auth"
-import { supabase } from "@/lib/supabase"
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState("")
@@ -39,31 +38,34 @@ export default function ResetPasswordPage() {
   // Verificar se há token no hash da URL (Supabase envia o token no hash)
   useEffect(() => {
     if (mounted) {
-      // O Supabase envia o token no hash: #access_token=...&type=recovery
-      const hash = window.location.hash
-      const hasAccessToken = hash.includes('access_token=')
-      const isRecoveryType = hash.includes('type=recovery')
-      
-      if (hasAccessToken && isRecoveryType) {
-        setHasToken(true)
+      // Lazy import do Supabase para evitar problemas de pré-renderização
+      import("@/lib/supabase").then(({ supabase }) => {
+        // O Supabase envia o token no hash: #access_token=...&type=recovery
+        const hash = window.location.hash
+        const hasAccessToken = hash.includes('access_token=')
+        const isRecoveryType = hash.includes('type=recovery')
         
-        // Processar o hash manualmente para criar a sessão
-        // Isso evita problemas de sincronização de tempo
-        supabase.auth.getSession().then(({ data, error }) => {
-          if (error) {
-            console.warn('Aviso ao processar sessão:', error.message)
-            // Mesmo com erro, tentamos continuar se houver hash
-            if (hash) {
+        if (hasAccessToken && isRecoveryType) {
+          setHasToken(true)
+          
+          // Processar o hash manualmente para criar a sessão
+          // Isso evita problemas de sincronização de tempo
+          supabase.auth.getSession().then(({ data, error }) => {
+            if (error) {
+              console.warn('Aviso ao processar sessão:', error.message)
+              // Mesmo com erro, tentamos continuar se houver hash
+              if (hash) {
+                setHasToken(true)
+              }
+            } else if (data.session) {
               setHasToken(true)
             }
-          } else if (data.session) {
-            setHasToken(true)
-          }
-        })
-      } else {
-        setError("Token de recuperação não encontrado. Por favor, solicite um novo link de recuperação.")
-        setHasToken(false)
-      }
+          })
+        } else {
+          setError("Token de recuperação não encontrado. Por favor, solicite um novo link de recuperação.")
+          setHasToken(false)
+        }
+      })
     }
   }, [mounted])
 
@@ -95,6 +97,9 @@ export default function ResetPasswordPage() {
     setIsLoading(true)
 
     try {
+      // Lazy import do Supabase
+      const { supabase } = await import("@/lib/supabase")
+      
       // O Supabase gerencia o reset de senha através do token no hash
       // Processar o hash manualmente para criar a sessão
       const hash = window.location.hash
