@@ -28,10 +28,13 @@ export default function LoginPage() {
   // Verificar se o usuário já está logado
   useEffect(() => {
     setMounted(true)
-    if (isAuthenticated()) {
+  }, [])
+
+  useEffect(() => {
+    if (mounted && isAuthenticated()) {
       router.push("/not-found")
     }
-  }, [router])
+  }, [mounted, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -100,7 +103,11 @@ export default function LoginPage() {
   }
 
   // Não renderizar se ainda não montou ou se está logado
-  if (!mounted || isAuthenticated()) {
+  if (!mounted) {
+    return null
+  }
+
+  if (isAuthenticated()) {
     return null
   }
 
