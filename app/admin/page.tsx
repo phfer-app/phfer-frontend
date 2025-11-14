@@ -173,10 +173,10 @@ export default function AdminPage() {
     // Carregar emails imediatamente
     loadEmailLogs()
 
-    // Depois atualizar a cada 5 segundos
+    // Depois atualizar a cada 30 segundos
     const emailRefreshInterval = setInterval(() => {
       loadEmailLogs()
-    }, 5000)
+    }, 30000)
 
     return () => clearInterval(emailRefreshInterval)
   }, [activeTab])
@@ -2021,7 +2021,7 @@ export default function AdminPage() {
 
       {/* Dialog para visualizar detalhes do email */}
       <Dialog open={isEmailDetailDialogOpen} onOpenChange={setIsEmailDetailDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="!max-w-none w-[95vw] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Detalhes do E-mail</DialogTitle>
           </DialogHeader>
