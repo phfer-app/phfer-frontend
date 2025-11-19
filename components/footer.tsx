@@ -175,12 +175,12 @@ export function Footer() {
             <h4 className="text-sm font-bold mb-4 text-foreground">{language === "pt" ? "Acesso" : "Access"}</h4>
             <ul className="space-y-2">
               <li>
-                <a href="/soon" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <a href="/cadastro" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   {language === "pt" ? "Criar conta" : "Create account"}
                 </a>
               </li>
               <li>
-                <a href="/soon" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <a href="/login" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   {language === "pt" ? "Login" : "Login"}
                 </a>
               </li>

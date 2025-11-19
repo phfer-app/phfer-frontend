@@ -189,17 +189,17 @@ export function ExperienceSection() {
           {/* Stat 1 */}
           <div className="w-[190px] space-y-5 md:text-right">
             <p className="text-[36px] md:text-[64px] font-semibold leading-[45px] tracking-[-2.56px] text-foreground">
-              <span className="hidden md:inline text-primary leading-[45px]">+</span> 4
+              <span className="hidden md:inline text-primary leading-[45px]">+</span> 2
             </p>
-            <p className="font-semibold leading-[11px] text-foreground">Anos de carreira</p>
+            <p className="font-semibold leading-[11px] text-foreground">Anos de Experiência</p>
           </div>
 
           {/* Stat 2 */}
           <div className="w-[190px] space-y-5 md:text-right">
             <p className="text-[36px] md:text-[64px] font-semibold leading-[45px] tracking-[-2.56px] text-foreground">
-              5<span className="text-primary">+</span>
+              <span className="text-primary">+</span>10
             </p>
-            <p className="font-semibold leading-[11px] text-foreground">Empresas/Projetos</p>
+            <p className="font-semibold leading-[11px] text-foreground">Projetos</p>
           </div>
         </div>
       </div>

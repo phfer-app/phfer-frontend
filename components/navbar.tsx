@@ -357,21 +357,23 @@ export function Navbar() {
                       align="center" 
                       sideOffset={0}
                       collisionPadding={8} 
-                      className="w-52 bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-xl p-1.5 -mt-1"
+                      className="w-52 bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl p-0 -mt-1"
                       onMouseEnter={() => setIsPagesDropdownOpen(true)}
                       onMouseLeave={() => setIsPagesDropdownOpen(false)}
                     >
-                      {navLinks
-                        .filter(link => link.route !== currentRoute)
-                        .map((link) => (
-                          <DropdownMenuItem 
-                            key={link.route}
-                            onClick={(e) => handleNavClick(e, link.route)}
-                            className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent hover:border-primary/30 border border-transparent focus:border-primary/30 text-muted-foreground hover:text-primary focus:text-primary transition-colors duration-200 rounded-lg m-0.5 text-sm"
-                          >
-                            <span className="font-medium">{t(link.labelKey)}</span>
-                          </DropdownMenuItem>
-                        ))}
+                      <div className="py-2">
+                        {navLinks
+                          .filter(link => link.route !== currentRoute)
+                          .map((link) => (
+                            <DropdownMenuItem 
+                              key={link.route}
+                              onClick={(e) => handleNavClick(e, link.route)}
+                              className="flex items-center gap-2 px-4 py-1 cursor-pointer focus:bg-primary/15 hover:bg-primary/15 focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-none m-0 text-sm font-medium"
+                            >
+                              {t(link.labelKey)}
+                            </DropdownMenuItem>
+                          ))}
+                      </div>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
@@ -413,55 +415,57 @@ export function Navbar() {
                       align="center" 
                       sideOffset={0}
                       collisionPadding={8} 
-                      className="w-56 bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-xl p-1.5 -mt-1"
+                      className="w-56 bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl p-0 -mt-1"
                       onMouseEnter={() => setIsWorkspaceDropdownOpen(true)}
                       onMouseLeave={() => setIsWorkspaceDropdownOpen(false)}
                     >
                       {isLoadingWorkspaces ? (
-                        <div className="px-2.5 py-1.5 text-sm text-muted-foreground text-center">
+                        <div className="px-4 py-2 text-sm text-muted-foreground text-center">
                           {t("workspace.loading")}
                         </div>
                       ) : userWorkspaces.length === 0 ? (
-                        <div className="px-2.5 py-1.5 text-sm text-muted-foreground text-center">
+                        <div className="px-4 py-2 text-sm text-muted-foreground text-center">
                           {t("workspace.empty")}
                         </div>
                       ) : (
-                        userWorkspaces.map((workspace) => {
-                          // Determinar ícone e rota baseado no slug
-                          const getWorkspaceIcon = (slug: string) => {
-                            if (slug === 'chamados') return Ticket
-                            if (slug === 'pasta-pessoal') return Folder
-                            return Folder
-                          }
-                          
-                          const getWorkspaceRoute = (slug: string) => {
-                            if (slug === 'chamados') return '/chamados'
-                            return `/workspace/${slug}`
-                          }
-                          
-                          // Traduzir nome do workspace baseado no slug
-                          const getWorkspaceName = (slug: string, name: string) => {
-                            if (slug === 'chamados') return t("workspace.meus_chamados")
-                            if (slug === 'pasta-pessoal') return t("workspace.pasta_pessoal")
-                            // Para workspaces customizados, usar o nome do banco
-                            return name
-                          }
-                          
-                          const Icon = getWorkspaceIcon(workspace.slug)
-                          const route = getWorkspaceRoute(workspace.slug)
-                          const translatedName = getWorkspaceName(workspace.slug, workspace.name)
-                          
-                          return (
-                            <DropdownMenuItem 
-                              key={workspace.id}
-                              onClick={() => router.push(route)}
-                              className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent hover:border-primary/30 border border-transparent focus:border-primary/30 text-muted-foreground hover:text-primary focus:text-primary transition-colors duration-200 rounded-lg m-0.5 text-sm"
-                            >
-                              <Icon className="h-3.5 w-3.5" />
-                              <span className="font-medium">{translatedName}</span>
-                            </DropdownMenuItem>
-                          )
-                        })
+                        <div className="py-2">
+                          {userWorkspaces.map((workspace) => {
+                            // Determinar ícone e rota baseado no slug
+                            const getWorkspaceIcon = (slug: string) => {
+                              if (slug === 'chamados') return Ticket
+                              if (slug === 'pasta-pessoal') return Folder
+                              return Folder
+                            }
+                            
+                            const getWorkspaceRoute = (slug: string) => {
+                              if (slug === 'chamados') return '/chamados'
+                              return `/workspace/${slug}`
+                            }
+                            
+                            // Traduzir nome do workspace baseado no slug
+                            const getWorkspaceName = (slug: string, name: string) => {
+                              if (slug === 'chamados') return t("workspace.meus_chamados")
+                              if (slug === 'pasta-pessoal') return t("workspace.pasta_pessoal")
+                              // Para workspaces customizados, usar o nome do banco
+                              return name
+                            }
+                            
+                            const Icon = getWorkspaceIcon(workspace.slug)
+                            const route = getWorkspaceRoute(workspace.slug)
+                            const translatedName = getWorkspaceName(workspace.slug, workspace.name)
+                            
+                            return (
+                              <DropdownMenuItem 
+                                key={workspace.id}
+                                onClick={() => router.push(route)}
+                                className="flex items-center gap-3 px-4 py-1 cursor-pointer focus:bg-primary/15 hover:bg-primary/15 focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-none m-0 text-sm font-medium"
+                              >
+                                <Icon className="h-3.5 w-3.5" />
+                                {translatedName}
+                              </DropdownMenuItem>
+                            )
+                          })}
+                        </div>
                       )}
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -496,11 +500,12 @@ export function Navbar() {
                     align="end" 
                     sideOffset={0}
                     collisionPadding={8} 
-                    className="w-48 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl -mt-1"
+                    className="w-48 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl p-0 -mt-1"
                   >
-                      <DropdownMenuItem 
-                        onClick={() => setLanguage("pt")} 
-                        className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                      <div className="py-2">
+                        <DropdownMenuItem 
+                          onClick={() => setLanguage("pt")} 
+                        className="flex items-center gap-3 px-4 py-1 cursor-pointer focus:bg-primary/15 hover:bg-primary/15 focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-none m-0 text-sm"
                       >
                         <span className="text-xl">🇧🇷</span>
                         <div className="flex flex-col">
@@ -513,7 +518,7 @@ export function Navbar() {
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => setLanguage("en")} 
-                        className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                        className="flex items-center gap-3 px-4 py-1 cursor-pointer focus:bg-primary/15 hover:bg-primary/15 focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-none m-0 text-sm"
                       >
                         <span className="text-xl">🇺🇸</span>
                         <div className="flex flex-col">
@@ -524,6 +529,7 @@ export function Navbar() {
                           <div className="ml-auto w-2 h-2 rounded-full bg-primary" />
                         )}
                       </DropdownMenuItem>
+                      </div>
                     </DropdownMenuContent>
                 </DropdownMenu>
               </>
@@ -618,11 +624,12 @@ export function Navbar() {
                   align="end" 
                   sideOffset={0}
                   collisionPadding={8} 
-                  className="w-48 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl -mt-1"
+                  className="w-48 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl p-0 -mt-1"
                 >
-                  <DropdownMenuItem 
-                    onClick={() => setTheme("light")} 
-                    className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                  <div className="py-2">
+                    <DropdownMenuItem 
+                      onClick={() => setTheme("light")} 
+                    className="flex items-center gap-3 px-4 py-1 cursor-pointer focus:bg-primary/15 hover:bg-primary/15 focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-none m-0 text-sm"
                   >
                     <div className="w-5 h-5 rounded-full bg-yellow-400 border border-yellow-500/30 flex items-center justify-center">
                       <span className="text-xs">☀️</span>
@@ -637,7 +644,7 @@ export function Navbar() {
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     onClick={() => setTheme("dark")} 
-                    className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                    className="flex items-center gap-3 px-4 py-1 cursor-pointer focus:bg-primary/15 hover:bg-primary/15 focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-none m-0 text-sm"
                   >
                     <div className="w-5 h-5 rounded-full bg-slate-700 border border-slate-600/30 flex items-center justify-center">
                       <span className="text-xs">🌙</span>
@@ -652,7 +659,7 @@ export function Navbar() {
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     onClick={() => setTheme("system")} 
-                    className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                    className="flex items-center gap-3 px-4 py-1 cursor-pointer focus:bg-primary/15 hover:bg-primary/15 focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-none m-0 text-sm"
                   >
                     <div className="w-5 h-5 rounded-full bg-linear-to-br from-yellow-400 to-slate-700 border border-border/30 flex items-center justify-center">
                       <span className="text-xs">💻</span>
@@ -665,6 +672,7 @@ export function Navbar() {
                       <div className="ml-auto w-2 h-2 rounded-full bg-primary" />
                     )}
                   </DropdownMenuItem>
+                  </div>
                 </DropdownMenuContent>
               </DropdownMenu>
 

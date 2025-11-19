@@ -26,6 +26,7 @@ export default function AdminPage() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [isOwner, setIsOwner] = useState(false)
   const [activeTab, setActiveTab] = useState("users")
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [users, setUsers] = useState<User[]>([])
   const [tickets, setTickets] = useState<Ticket[]>([])
   const [admins, setAdmins] = useState<Admin[]>([])
@@ -933,85 +934,124 @@ export default function AdminPage() {
         <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-secondary/15 rounded-full blur-3xl opacity-60" />
       </div>
 
+      {/* Mobile Menu Toggle Button */}
+      <div className="md:hidden fixed top-16 left-4 z-40">
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="p-2 rounded-sm bg-primary text-primary-foreground hover:bg-primary/80 transition-colors cursor-pointer"
+          title="Menu"
+        >
+          {mobileMenuOpen ? (
+            <X className="h-6 w-6" />
+          ) : (
+            <>
+              <div className="w-6 h-0.5 bg-current mb-1.5"></div>
+              <div className="w-6 h-0.5 bg-current mb-1.5"></div>
+              <div className="w-6 h-0.5 bg-current"></div>
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black/50 z-30 top-16"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Sidebar Navigation */}
-      <aside className="w-full md:w-64 h-auto md:h-screen bg-card/60 backdrop-blur-sm border-b md:border-b-0 md:border-r border-border/50 overflow-y-auto pt-16 md:pt-16 md:fixed md:left-0 md:top-0">
-        <nav className="flex md:flex-col gap-0 p-0 overflow-x-auto md:overflow-x-visible">
+      <aside className={`fixed md:static w-64 h-screen bg-card/95 backdrop-blur-sm border-r border-border/50 overflow-y-auto pt-16 md:pt-16 transition-transform duration-300 z-30 ${
+        mobileMenuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+      }`}>
+        <nav className="flex flex-col gap-0 p-0 overflow-x-auto md:overflow-x-visible min-h-screen md:min-h-auto">
           {/* Users Button */}
           <button
-            onClick={() => setActiveTab("users")}
-            className={`flex items-center gap-3 px-4 py-3 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal shrink-0 md:shrink font-medium text-sm w-full ${
+            onClick={() => {
+              setActiveTab("users")
+              setMobileMenuOpen(false)
+            }}
+            className={`flex items-center gap-3 px-4 py-4 md:py-3 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal font-medium text-base md:text-sm w-full ${
               activeTab === "users"
-                ? "bg-primary/10 text-primary"
-                : "bg-transparent text-muted-foreground hover:bg-primary/5 hover:text-primary"
+                ? "bg-primary text-primary-foreground"
+                : "bg-transparent text-foreground hover:bg-primary/10 hover:text-primary"
             }`}
           >
             <Users className="h-5 w-5 shrink-0" />
-            <span className="hidden md:inline">{t("admin.tabs.usuarios")}</span>
-            <span className="md:hidden">{t("admin.tabs.usuarios_short")}</span>
+            <span>{t("admin.tabs.usuarios")}</span>
           </button>
 
           {/* Tickets Button */}
           <button
-            onClick={() => setActiveTab("tickets")}
-            className={`flex items-center gap-3 px-4 py-3 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal shrink-0 md:shrink font-medium text-sm w-full ${
+            onClick={() => {
+              setActiveTab("tickets")
+              setMobileMenuOpen(false)
+            }}
+            className={`flex items-center gap-3 px-4 py-4 md:py-3 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal font-medium text-base md:text-sm w-full ${
               activeTab === "tickets"
-                ? "bg-primary/10 text-primary"
-                : "bg-transparent text-muted-foreground hover:bg-primary/5 hover:text-primary"
+                ? "bg-primary text-primary-foreground"
+                : "bg-transparent text-foreground hover:bg-primary/10 hover:text-primary"
             }`}
           >
             <TicketIcon className="h-5 w-5 shrink-0" />
-            <span className="hidden md:inline">{t("admin.tabs.tickets")}</span>
-            <span className="md:hidden">{t("admin.tabs.tickets_short")}</span>
+            <span>{t("admin.tabs.tickets")}</span>
           </button>
 
           {/* Emails Button */}
           <button
-            onClick={() => setActiveTab("emails")}
-            className={`flex items-center gap-3 px-4 py-3 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal shrink-0 md:shrink font-medium text-sm w-full ${
+            onClick={() => {
+              setActiveTab("emails")
+              setMobileMenuOpen(false)
+            }}
+            className={`flex items-center gap-3 px-4 py-4 md:py-3 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal font-medium text-base md:text-sm w-full ${
               activeTab === "emails"
-                ? "bg-primary/10 text-primary"
-                : "bg-transparent text-muted-foreground hover:bg-primary/5 hover:text-primary"
+                ? "bg-primary text-primary-foreground"
+                : "bg-transparent text-foreground hover:bg-primary/10 hover:text-primary"
             }`}
           >
             <Inbox className="h-5 w-5 shrink-0" />
-            <span className="hidden md:inline">Emails</span>
-            <span className="md:hidden">Email</span>
+            <span>Emails</span>
           </button>
 
           {/* Permissions Button */}
           <button
-            onClick={() => setActiveTab("permissions")}
-            className={`flex items-center gap-3 px-4 py-3 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal shrink-0 md:shrink font-medium text-sm w-full ${
+            onClick={() => {
+              setActiveTab("permissions")
+              setMobileMenuOpen(false)
+            }}
+            className={`flex items-center gap-3 px-4 py-4 md:py-3 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal font-medium text-base md:text-sm w-full ${
               activeTab === "permissions"
-                ? "bg-primary/10 text-primary"
-                : "bg-transparent text-muted-foreground hover:bg-primary/5 hover:text-primary"
+                ? "bg-primary text-primary-foreground"
+                : "bg-transparent text-foreground hover:bg-primary/10 hover:text-primary"
             }`}
           >
             <Lock className="h-5 w-5 shrink-0" />
-            <span className="hidden md:inline">{t("admin.tabs.permissions")}</span>
-            <span className="md:hidden">{t("admin.tabs.permissions_short")}</span>
+            <span>{t("admin.tabs.permissions")}</span>
           </button>
 
           {/* Admins Button (only for owner) */}
           {isOwner && (
             <button
-              onClick={() => setActiveTab("admins")}
-              className={`flex items-center gap-3 px-4 py-3 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal shrink-0 md:shrink font-medium text-sm w-full ${
+              onClick={() => {
+                setActiveTab("admins")
+                setMobileMenuOpen(false)
+              }}
+              className={`flex items-center gap-3 px-4 py-4 md:py-3 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal font-medium text-base md:text-sm w-full ${
                 activeTab === "admins"
-                  ? "bg-primary/10 text-primary"
-                  : "bg-transparent text-muted-foreground hover:bg-primary/5 hover:text-primary"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-transparent text-foreground hover:bg-primary/10 hover:text-primary"
               }`}
             >
               <Shield className="h-5 w-5 shrink-0" />
-              <span className="hidden md:inline">{t("admin.tabs.administradores")}</span>
-              <span className="md:hidden">{t("admin.tabs.administradores_short")}</span>
+              <span>{t("admin.tabs.administradores")}</span>
             </button>
           )}
         </nav>
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto md:ml-64 pt-16">
+      <div className="flex-1 overflow-y-auto pt-24 md:pt-20">
         <div className="w-full h-full px-4 sm:px-6 md:px-8 pb-6 md:pb-8 relative z-10">
 
           {/* Users Tab */}

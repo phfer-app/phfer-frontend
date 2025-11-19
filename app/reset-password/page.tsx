@@ -1,12 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useLanguage } from "@/components/language-provider"
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { t } = useLanguage()
@@ -69,7 +70,7 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-background/80 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-b from-background to-background/80 px-4">
       <div className="w-full max-w-md">
         <div className="bg-card rounded-lg border border-border p-8 shadow-lg">
           <h1 className="text-2xl font-bold mb-2">{t("auth.reset_password")}</h1>
@@ -138,5 +139,13 @@ export default function ResetPasswordPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Carregando...</div>}>
+      <ResetPasswordForm />
+    </Suspense>
   )
 }
