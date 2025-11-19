@@ -2,7 +2,5 @@
   command = "pnpm run build"
   publish = ".next"
 
-[[redirects]]
-  from = "/*"
-  to = "/404.html"
-  status = 404
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
