@@ -1012,7 +1012,7 @@ export default function AdminPage() {
 
       {/* Main Content Area */}
       <div className="flex-1 overflow-y-auto md:ml-64 pt-16">
-        <div className="w-full h-full px-4 sm:px-6 md:px-8 py-6 md:py-8 relative z-10">
+        <div className="w-full h-full px-4 sm:px-6 md:px-8 pb-6 md:pb-8 relative z-10">
 
           {/* Users Tab */}
           {activeTab === "users" && (
@@ -1024,29 +1024,29 @@ export default function AdminPage() {
                   placeholder={t("admin.users.search")}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 rounded-sm"
                 />
               </div>
               <Button
                 onClick={loadUsers}
                 variant="outline"
-                className="flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
+                className="flex items-center justify-center cursor-pointer rounded-sm hover:bg-primary/10 transition-colors p-2 h-10 w-10"
+                title={t("admin.users.update")}
               >
                 <RefreshCw className="h-4 w-4" />
-                {t("admin.users.update")}
               </Button>
             </div>
 
-            <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl overflow-hidden">
+            <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-sm overflow-hidden">
               {/* Desktop: Tabela */}
               <div className="hidden md:block overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-muted/50">
                     <tr>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">{t("admin.users.table.name")}</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">{t("admin.users.table.email")}</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">{t("admin.users.table.email_verified")}</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">{t("admin.users.table.created_at")}</th>
+                      <th className="px-6 py-2 text-left text-sm font-semibold text-foreground">{t("admin.users.table.name")}</th>
+                      <th className="px-6 py-2 text-left text-sm font-semibold text-foreground">{t("admin.users.table.email")}</th>
+                      <th className="px-6 py-2 text-left text-sm font-semibold text-foreground">{t("admin.users.table.email_verified")}</th>
+                      <th className="px-6 py-2 text-left text-sm font-semibold text-foreground">{t("admin.users.table.created_at")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1058,10 +1058,10 @@ export default function AdminPage() {
                       </tr>
                     ) : (
                       filteredUsers.map((user) => (
-                        <tr key={user.id} className="border-t border-border/50 hover:border-primary/30 border border-transparent transition-colors">
-                          <td className="px-6 py-4 text-sm font-medium text-foreground">{user.name}</td>
-                          <td className="px-6 py-4 text-sm text-muted-foreground">{user.email}</td>
-                          <td className="px-6 py-4">
+                        <tr key={user.id} className="border-t border-border/50 hover:bg-primary/10 transition-colors">
+                          <td className="px-6 py-2 text-sm font-medium text-foreground">{user.name}</td>
+                          <td className="px-6 py-2 text-sm text-muted-foreground">{user.email}</td>
+                          <td className="px-6 py-2">
                             <div className="flex items-center gap-2">
                               {user.email_verified ? (
                                 <>
@@ -1076,7 +1076,7 @@ export default function AdminPage() {
                               )}
                             </div>
                           </td>
-                          <td className="px-6 py-4 text-sm text-muted-foreground">
+                          <td className="px-6 py-2 text-sm text-muted-foreground">
                             {new Date(user.created_at).toLocaleDateString('pt-BR')}
                           </td>
                         </tr>
@@ -1087,14 +1087,14 @@ export default function AdminPage() {
               </div>
 
               {/* Mobile: Cards */}
-              <div className="md:hidden p-4 space-y-4">
+              <div className="md:hidden p-4 space-y-3">
                 {filteredUsers.length === 0 ? (
                   <div className="text-center py-12 text-muted-foreground">
                     Nenhum usuário encontrado
                   </div>
                 ) : (
                   filteredUsers.map((user) => (
-                    <div key={user.id} className="bg-muted/30 border border-border/50 rounded-xl p-4 space-y-3">
+                    <div key={user.id} className="bg-muted/30 hover:bg-primary/10 border border-border/50 rounded-sm p-4 space-y-3 transition-colors">
                       <div>
                         <p className="text-xs text-muted-foreground mb-1">Nome</p>
                         <p className="text-sm font-medium text-foreground">{user.name}</p>
@@ -1144,32 +1144,32 @@ export default function AdminPage() {
                   placeholder={t("admin.tickets.search")}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 rounded-sm"
                 />
               </div>
               <Button
                 onClick={loadTickets}
                 variant="outline"
-                className="flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
+                className="flex items-center justify-center cursor-pointer rounded-sm hover:bg-primary/10 transition-colors p-2 h-10 w-10"
+                title={t("admin.tickets.update")}
               >
                 <RefreshCw className="h-4 w-4" />
-                {t("admin.tickets.update")}
               </Button>
             </div>
 
             {/* Filtros */}
-            <div className="bg-card/60 backdrop-blur-sm border border-border/50 rounded-xl p-4 mb-4">
-              <div className="flex flex-col gap-4">
+            <div className="bg-card/60 backdrop-blur-sm border border-border/50 rounded-sm p-3 mb-4">
+              <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-2">
                   <Filter className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm font-semibold text-foreground">Filtros</span>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
                   {/* Filtro de Status */}
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     <Label htmlFor="filter-status" className="text-xs font-medium">Status</Label>
                     <Select value={filterStatus} onValueChange={setFilterStatus}>
-                      <SelectTrigger id="filter-status" className="h-9 text-xs cursor-pointer">
+                      <SelectTrigger id="filter-status" className="h-8 text-xs cursor-pointer rounded-sm">
                         <SelectValue placeholder="Todos os status" />
                       </SelectTrigger>
                       <SelectContent>
@@ -1184,10 +1184,10 @@ export default function AdminPage() {
                   </div>
 
                   {/* Filtro de Prioridade */}
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     <Label htmlFor="filter-priority" className="text-xs font-medium">Prioridade</Label>
                     <Select value={filterPriority} onValueChange={setFilterPriority}>
-                      <SelectTrigger id="filter-priority" className="h-9 text-xs cursor-pointer">
+                      <SelectTrigger id="filter-priority" className="h-8 text-xs cursor-pointer rounded-sm">
                         <SelectValue placeholder="Todas as prioridades" />
                       </SelectTrigger>
                       <SelectContent>
@@ -1200,26 +1200,26 @@ export default function AdminPage() {
                   </div>
 
                   {/* Filtro de Data Inicial */}
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     <Label htmlFor="filter-date-from" className="text-xs font-medium">Data de Abertura (De)</Label>
                     <Input
                       id="filter-date-from"
                       type="date"
                       value={filterDateFrom}
                       onChange={(e) => setFilterDateFrom(e.target.value)}
-                      className="h-9 text-xs"
+                      className="h-8 text-xs rounded-sm"
                     />
                   </div>
 
                   {/* Filtro de Data Final */}
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     <Label htmlFor="filter-date-to" className="text-xs font-medium">Data de Abertura (Até)</Label>
                     <Input
                       id="filter-date-to"
                       type="date"
                       value={filterDateTo}
                       onChange={(e) => setFilterDateTo(e.target.value)}
-                      className="h-9 text-xs"
+                      className="h-8 text-xs rounded-sm"
                     />
                   </div>
                 </div>
@@ -1246,18 +1246,18 @@ export default function AdminPage() {
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               {filteredTickets.length === 0 ? (
-                <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-8 md:p-12 text-center">
+                <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-sm p-8 md:p-12 text-center">
                   <TicketIcon className="h-10 w-10 md:h-12 md:w-12 text-muted-foreground mx-auto mb-4" />
                   <p className="text-sm text-muted-foreground">Nenhum ticket encontrado</p>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {filteredTickets.map((ticket) => (
                     <div
                       key={ticket.id}
-                      className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-4 md:p-6 hover:border-primary/30 transition-all group cursor-default"
+                      className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-sm p-4 md:p-5 hover:border-primary/30 transition-all group cursor-default"
                     >
                       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                         {/* Conteúdo principal */}
@@ -1355,21 +1355,21 @@ export default function AdminPage() {
                   placeholder={t("admin.permissions.search_user")}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 rounded-sm"
                 />
               </div>
               <Button
                 onClick={loadWorkspaces}
                 variant="outline"
                 disabled={isLoadingWorkspaces}
-                className="flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
+                className="flex items-center justify-center cursor-pointer rounded-sm hover:bg-primary/10 transition-colors p-2 h-10 w-10"
+                title={t("admin.permissions.update")}
               >
                 <RefreshCw className={`h-4 w-4 ${isLoadingWorkspaces ? 'animate-spin' : ''}`} />
-                {t("admin.permissions.update")}
               </Button>
               <Button
                 onClick={handleOpenCreateWorkspaceDialog}
-                className="flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
+                className="flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto rounded-sm"
               >
                 <FolderPlus className="h-4 w-4" />
                 {t("admin.permissions.new_workspace")}
@@ -1377,14 +1377,14 @@ export default function AdminPage() {
             </div>
 
             {/* Gerenciamento de Workspaces */}
-            <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-4 md:p-6 mb-4">
-              <div className="flex items-center justify-between mb-4">
+            <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-sm p-4 md:p-5 mb-4">
+              <div className="flex items-center justify-between mb-3">
                 <div>
                   <h3 className="text-lg font-semibold text-foreground">{t("admin.permissions.workspaces_available")}</h3>
                   <p className="text-sm text-muted-foreground">{t("admin.permissions.workspaces_description")}</p>
                 </div>
               </div>
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {workspaces.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
                     {t("admin.permissions.no_workspaces")}
@@ -1393,7 +1393,7 @@ export default function AdminPage() {
                   workspaces.map((workspace) => (
                     <div
                       key={workspace.id}
-                      className="flex items-center justify-between p-3 rounded-lg border border-border/50 hover:border-primary/30 border border-transparent transition-colors"
+                      className="flex items-center justify-between p-3 rounded-sm border border-border/50 hover:bg-primary/10 transition-colors"
                     >
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
@@ -1440,9 +1440,9 @@ export default function AdminPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
               {/* Lista de usuários */}
-              <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl overflow-hidden">
+              <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-sm overflow-hidden">
                 <div className="p-4 border-b border-border/50">
                   <h3 className="text-lg font-semibold text-foreground">{t("admin.permissions.users")}</h3>
                   <p className="text-sm text-muted-foreground">{t("admin.permissions.select_user")}</p>
@@ -1566,19 +1566,19 @@ export default function AdminPage() {
           {/* Admins Tab */}
           {activeTab === "admins" && isOwner && (
             <div className="space-y-4">
-              <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-4 md:p-6 mb-4">
-                <h3 className="text-lg font-semibold text-foreground mb-4">{t("admin.admins.add_title")}</h3>
+              <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-sm p-4 md:p-5 mb-4">
+                <h3 className="text-lg font-semibold text-foreground mb-3">{t("admin.admins.add_title")}</h3>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Input
                     placeholder="E-mail do usuário"
                     value={newAdminEmail}
                     onChange={(e) => setNewAdminEmail(e.target.value)}
-                    className="flex-1"
+                    className="flex-1 rounded-sm"
                   />
                   <Button
                     onClick={handleAddAdmin}
                     disabled={isAddingAdmin}
-                    className="flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
+                    className="flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto rounded-sm"
                   >
                     <Plus className="h-4 w-4" />
                     {t("admin.admins.add_button")}
@@ -1586,16 +1586,16 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl overflow-hidden">
+              <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-sm overflow-hidden">
                 {/* Desktop: Tabela */}
                 <div className="hidden md:block overflow-x-auto">
                   <table className="w-full">
                     <thead className="bg-muted/50">
                       <tr>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">{t("admin.admins.table.email")}</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">{t("admin.admins.table.type")}</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">{t("admin.admins.table.date")}</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">{t("admin.admins.table.actions")}</th>
+                        <th className="px-6 py-2 text-left text-sm font-semibold text-foreground">{t("admin.admins.table.email")}</th>
+                        <th className="px-6 py-2 text-left text-sm font-semibold text-foreground">{t("admin.admins.table.type")}</th>
+                        <th className="px-6 py-2 text-left text-sm font-semibold text-foreground">{t("admin.admins.table.date")}</th>
+                        <th className="px-6 py-2 text-left text-sm font-semibold text-foreground">{t("admin.admins.table.actions")}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1609,26 +1609,26 @@ export default function AdminPage() {
                         admins.map((admin) => {
                           const adminUser = users.find(u => u.id === admin.user_id)
                           return (
-                            <tr key={admin.id} className="border-t border-border/50 hover:border-primary/30 border border-transparent transition-colors">
-                              <td className="px-6 py-4 text-sm font-medium text-foreground">
+                            <tr key={admin.id} className="border-t border-border/50 hover:bg-primary/10 transition-colors">
+                              <td className="px-6 py-2 text-sm font-medium text-foreground">
                                 {adminUser?.email || 'N/A'}
                               </td>
-                              <td className="px-6 py-4 text-sm text-muted-foreground">
+                              <td className="px-6 py-2 text-sm text-muted-foreground">
                                 <Badge className={admin.is_owner ? 'bg-primary/10 text-primary border-primary/20' : ''}>
                                   {admin.is_owner ? 'Dono' : 'Administrador'}
                                 </Badge>
                               </td>
-                              <td className="px-6 py-4 text-sm text-muted-foreground">
+                              <td className="px-6 py-2 text-sm text-muted-foreground">
                                 {new Date(admin.created_at).toLocaleDateString('pt-BR')}
                               </td>
-                              <td className="px-6 py-4 text-sm">
+                              <td className="px-6 py-2 text-sm">
                                 {!admin.is_owner && (
                                   <Button
                                     onClick={() => handleOpenRemoveAdminDialog(admin.user_id, adminUser?.email || adminUser?.name || 'este administrador')}
                                     variant="ghost"
                                     size="sm"
                                     disabled={isRemovingAdmin}
-                                    className="text-destructive hover:text-destructive hover:border-destructive/30 border border-transparent cursor-pointer"
+                                    className="text-destructive hover:text-destructive hover:bg-destructive/10 border border-transparent cursor-pointer rounded-sm"
                                   >
                                     <X className="h-4 w-4" />
                                   </Button>
@@ -1643,7 +1643,7 @@ export default function AdminPage() {
                 </div>
 
                 {/* Mobile: Cards */}
-                <div className="md:hidden p-4 space-y-4">
+                <div className="md:hidden p-4 space-y-3">
                   {admins.length === 0 ? (
                     <div className="text-center py-12 text-muted-foreground">
                       Nenhum administrador encontrado
@@ -1652,7 +1652,7 @@ export default function AdminPage() {
                     admins.map((admin) => {
                       const adminUser = users.find(u => u.id === admin.user_id)
                       return (
-                        <div key={admin.id} className="bg-muted/30 border border-border/50 rounded-xl p-4 space-y-3">
+                        <div key={admin.id} className="bg-muted/30 hover:bg-primary/10 border border-border/50 rounded-sm p-4 space-y-3 transition-colors">
                           <div>
                             <p className="text-xs text-muted-foreground mb-1">E-mail</p>
                             <p className="text-sm font-medium text-foreground break-all">{adminUser?.email || 'N/A'}</p>
@@ -1670,13 +1670,12 @@ export default function AdminPage() {
                             </p>
                           </div>
                           {!admin.is_owner && (
-                            <div>
+                            <div className="pt-3 border-t border-border/50">
                               <Button
                                 onClick={() => handleOpenRemoveAdminDialog(admin.user_id, adminUser?.email || adminUser?.name || 'este administrador')}
                                 variant="ghost"
-                                size="sm"
                                 disabled={isRemovingAdmin}
-                                className="w-full text-destructive hover:text-destructive hover:bg-destructive/10 cursor-pointer"
+                                className="w-full text-destructive hover:text-destructive hover:bg-destructive/10 cursor-pointer rounded-sm"
                               >
                                 <X className="h-4 w-4 mr-2" />
                                 Remover Administrador
@@ -1703,22 +1702,22 @@ export default function AdminPage() {
                   placeholder="Procurar por assunto..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 rounded-sm"
                 />
               </div>
               <Button
                 onClick={loadEmailLogs}
                 variant="outline"
                 disabled={isLoadingEmailLogs}
-                className="flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
+                className="flex items-center justify-center cursor-pointer rounded-sm hover:bg-primary/10 transition-colors p-2 h-10 w-10"
+                title="Atualizar"
               >
                 <RefreshCw className={`h-4 w-4 ${isLoadingEmailLogs ? 'animate-spin' : ''}`} />
-                Atualizar
               </Button>
               <Button
                 onClick={() => setIsSendEmailDialogOpen(true)}
                 disabled={true}
-                className="flex items-center justify-center gap-2 cursor-not-allowed w-full sm:w-auto opacity-50"
+                className="flex items-center justify-center gap-2 cursor-not-allowed w-full sm:w-auto opacity-50 rounded-sm"
                 title="Funcionalidade desabilitada até configuração de domínio"
               >
                 <Send className="h-4 w-4" />
@@ -1727,19 +1726,19 @@ export default function AdminPage() {
             </div>
 
             {/* Lista de emails enviados */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               {isLoadingEmailLogs ? (
-                <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-12 text-center">
+                <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-sm p-12 text-center">
                   <div className="flex justify-center mb-4">
                     <div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
                   </div>
                   <p className="text-muted-foreground">Carregando histórico de emails...</p>
                 </div>
               ) : emailLogs.length === 0 ? (
-                <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-8 md:p-12 text-center">
+                <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-sm p-8 md:p-12 text-center">
                   <Mail className="h-10 w-10 md:h-12 md:w-12 text-muted-foreground mx-auto mb-4" />
                   <p className="text-sm text-muted-foreground mb-3">Nenhum email enviado ainda</p>
-                  <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 text-left">
+                  <div className="bg-amber-500/10 border border-amber-500/20 rounded-sm p-3 text-left">
                     <p className="text-xs text-amber-600 dark:text-amber-400 font-medium mb-1">⚠️ Funcionalidade em Desenvolvimento</p>
                     <p className="text-xs text-amber-600/80 dark:text-amber-400/80">A funcionalidade de envio de emails estará disponível quando um domínio personalizado for configurado no Resend. Por enquanto, o sistema está usando o domínio padrão (onboarding@resend.dev), que possui limitações.</p>
                   </div>
@@ -1757,7 +1756,7 @@ export default function AdminPage() {
                         setSelectedEmailLog(log)
                         setIsEmailDetailDialogOpen(true)
                       }}
-                      className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-4 md:p-6 hover:border-primary/30 transition-all cursor-pointer hover:shadow-md"
+                      className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-sm p-4 md:p-5 hover:bg-primary/10 transition-all cursor-pointer"
                     >
                       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                         {/* Conteúdo principal */}

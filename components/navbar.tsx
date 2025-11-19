@@ -690,9 +690,9 @@ export function Navbar() {
                   align="end" 
                   sideOffset={0}
                   collisionPadding={8} 
-                  className="w-56 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl p-1.5 -mt-1"
+                  className="w-64 max-h-96 bg-card/95 backdrop-blur-xl border border-border/50 shadow-xl p-0 -mt-1"
                 >
-                    <div className="px-2 py-1.5">
+                    <div className="px-4 py-3">
                       <div className="flex items-start gap-3">
                         <div className="w-10 h-10 rounded-full bg-primary/10 border-2 border-primary/20 flex items-center justify-center shrink-0">
                           <User className="h-5 w-5 text-primary" />
@@ -714,44 +714,38 @@ export function Navbar() {
                         </div>
                       </div>
                     </div>
-                    <DropdownMenuSeparator />
                     <DropdownMenuItem 
                       onClick={() => {
                         router.push("/editar-perfil")
                       }}
-                      className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                      className="flex items-center gap-3 px-4 py-1 cursor-pointer focus:bg-primary/15 hover:bg-primary/15 focus:border-primary/30 border border-transparent text-foreground hover:text-primary focus:text-primary transition-colors rounded-none m-0 text-sm"
                     >
                       <Edit className="h-3.5 w-3.5" />
                       <span>{t("nav.editar_perfil") || "Editar perfil"}</span>
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator />
                     <DropdownMenuItem 
                       onClick={() => {
                         router.push("/workspace")
                       }}
-                      className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
+                      className="flex items-center gap-3 px-4 py-1 cursor-pointer focus:bg-primary/15 hover:bg-primary/15 focus:border-primary/30 border border-transparent text-foreground hover:text-primary focus:text-primary transition-colors rounded-none m-0 text-sm"
                     >
                       <LayoutDashboard className="h-3.5 w-3.5" />
                       <span>{t("nav.meu_workspace")}</span>
                     </DropdownMenuItem>
                     {isAdmin && (
-                      <>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem 
-                          onClick={() => {
-                            router.push("/admin")
-                          }}
-                          className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent focus:border-primary/30 border border-transparent text-muted-foreground hover:text-primary focus:text-primary transition-colors rounded-lg m-0.5 text-sm"
-                        >
-                          <Shield className="h-3.5 w-3.5" />
-                          <span>{t("nav.painel_administrativo")}</span>
-                        </DropdownMenuItem>
-                      </>
+                      <DropdownMenuItem 
+                        onClick={() => {
+                          router.push("/admin")
+                        }}
+                        className="flex items-center gap-3 px-4 py-1 cursor-pointer focus:bg-primary/15 hover:bg-primary/15 focus:border-primary/30 border border-transparent text-foreground hover:text-primary focus:text-primary transition-colors rounded-none m-0 text-sm"
+                      >
+                        <Shield className="h-3.5 w-3.5" />
+                        <span>{t("nav.painel_administrativo")}</span>
+                      </DropdownMenuItem>
                     )}
-                    <DropdownMenuSeparator />
                     <DropdownMenuItem 
                       onClick={handleLogout}
-                      className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer focus:bg-transparent hover:bg-transparent hover:border-destructive/30 border border-transparent focus:border-destructive/30 text-destructive hover:text-destructive focus:text-destructive transition-colors rounded-lg m-0.5 text-sm"
+                      className="flex items-center gap-3 px-4 py-1 cursor-pointer focus:bg-destructive/15 hover:bg-destructive/15 focus:border-destructive/30 border border-transparent text-destructive hover:text-destructive focus:text-destructive transition-colors rounded-none m-0 text-sm"
                     >
                       <LogOut className="h-3.5 w-3.5" />
                       <span>{t("nav.desconectar")}</span>
