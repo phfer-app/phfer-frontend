@@ -934,7 +934,7 @@ export default function AdminPage() {
       </div>
 
       {/* Sidebar Navigation */}
-      <aside className="w-full md:w-64 h-auto md:h-screen bg-card/60 backdrop-blur-sm border-b md:border-b-0 md:border-r border-border/50 overflow-y-auto pt-16 md:pt-0 md:fixed md:left-0 md:top-0">
+      <aside className="w-full md:w-64 h-auto md:h-screen bg-card/60 backdrop-blur-sm border-b md:border-b-0 md:border-r border-border/50 overflow-y-auto pt-16 md:pt-16 md:fixed md:left-0 md:top-0">
         <nav className="flex md:flex-col gap-0 p-0 overflow-x-auto md:overflow-x-visible">
           {/* Users Button */}
           <button
@@ -1011,7 +1011,7 @@ export default function AdminPage() {
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto md:ml-64 pt-16 md:pt-0">
+      <div className="flex-1 overflow-y-auto md:ml-64 pt-16">
         <div className="w-full h-full px-4 sm:px-6 md:px-8 py-6 md:py-8 relative z-10">
 
           {/* Users Tab */}
