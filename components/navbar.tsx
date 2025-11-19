@@ -64,6 +64,12 @@ export function Navbar() {
       // Verifica se está scrollado o suficiente para aplicar estilos
       setIsScrolled(currentScrollY > 20)
       
+      // Na página admin, navbar sempre visível
+      if (pathname === '/admin') {
+        setIsVisible(true)
+        return
+      }
+      
       // Mostra navbar ao scrollar para cima, esconde ao scrollar para baixo
       if (currentScrollY < lastScrollY) {
         // Scrolling up
@@ -82,7 +88,7 @@ export function Navbar() {
     }
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [lastScrollY])
+  }, [lastScrollY, pathname])
 
   // Carregar workspaces do usuário
   useEffect(() => {
