@@ -926,7 +926,7 @@ export default function AdminPage() {
   }
 
   return (
-    <main className="relative min-h-screen flex flex-col md:flex-row overflow-hidden pt-16">
+    <main className="relative min-h-screen flex flex-col md:flex-row overflow-hidden">
       {/* Background effects */}
       <div className="absolute inset-0 -z-10 bg-background">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-radial-gradient from-primary/20 via-primary/10 to-transparent rounded-full blur-3xl" />
@@ -934,15 +934,15 @@ export default function AdminPage() {
       </div>
 
       {/* Sidebar Navigation */}
-      <aside className="w-full md:w-72 h-auto md:h-[calc(100vh-64px)] bg-card/60 backdrop-blur-sm border-b md:border-b-0 md:border-r border-border/50 overflow-y-auto">
-        <nav className="flex md:flex-col gap-2 p-4 md:p-6 overflow-x-auto md:overflow-x-visible">
+      <aside className="w-full md:w-64 h-auto md:h-screen bg-card/60 backdrop-blur-sm border-b md:border-b-0 md:border-r border-border/50 overflow-y-auto pt-16 md:pt-0 md:fixed md:left-0 md:top-0">
+        <nav className="flex md:flex-col gap-0 p-0 overflow-x-auto md:overflow-x-visible">
           {/* Users Button */}
           <button
             onClick={() => setActiveTab("users")}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal shrink-0 md:shrink font-medium text-sm ${
+            className={`flex items-center gap-3 px-4 py-3 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal shrink-0 md:shrink font-medium text-sm w-full ${
               activeTab === "users"
-                ? "border-primary bg-primary/10 text-primary"
-                : "border-border/50 bg-transparent text-muted-foreground hover:border-primary/50 hover:text-primary"
+                ? "bg-primary/10 text-primary"
+                : "bg-transparent text-muted-foreground hover:bg-primary/5 hover:text-primary"
             }`}
           >
             <Users className="h-5 w-5 shrink-0" />
@@ -953,10 +953,10 @@ export default function AdminPage() {
           {/* Tickets Button */}
           <button
             onClick={() => setActiveTab("tickets")}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal shrink-0 md:shrink font-medium text-sm ${
+            className={`flex items-center gap-3 px-4 py-3 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal shrink-0 md:shrink font-medium text-sm w-full ${
               activeTab === "tickets"
-                ? "border-primary bg-primary/10 text-primary"
-                : "border-border/50 bg-transparent text-muted-foreground hover:border-primary/50 hover:text-primary"
+                ? "bg-primary/10 text-primary"
+                : "bg-transparent text-muted-foreground hover:bg-primary/5 hover:text-primary"
             }`}
           >
             <TicketIcon className="h-5 w-5 shrink-0" />
@@ -967,10 +967,10 @@ export default function AdminPage() {
           {/* Emails Button */}
           <button
             onClick={() => setActiveTab("emails")}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal shrink-0 md:shrink font-medium text-sm ${
+            className={`flex items-center gap-3 px-4 py-3 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal shrink-0 md:shrink font-medium text-sm w-full ${
               activeTab === "emails"
-                ? "border-primary bg-primary/10 text-primary"
-                : "border-border/50 bg-transparent text-muted-foreground hover:border-primary/50 hover:text-primary"
+                ? "bg-primary/10 text-primary"
+                : "bg-transparent text-muted-foreground hover:bg-primary/5 hover:text-primary"
             }`}
           >
             <Inbox className="h-5 w-5 shrink-0" />
@@ -981,10 +981,10 @@ export default function AdminPage() {
           {/* Permissions Button */}
           <button
             onClick={() => setActiveTab("permissions")}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal shrink-0 md:shrink font-medium text-sm ${
+            className={`flex items-center gap-3 px-4 py-3 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal shrink-0 md:shrink font-medium text-sm w-full ${
               activeTab === "permissions"
-                ? "border-primary bg-primary/10 text-primary"
-                : "border-border/50 bg-transparent text-muted-foreground hover:border-primary/50 hover:text-primary"
+                ? "bg-primary/10 text-primary"
+                : "bg-transparent text-muted-foreground hover:bg-primary/5 hover:text-primary"
             }`}
           >
             <Lock className="h-5 w-5 shrink-0" />
@@ -996,10 +996,10 @@ export default function AdminPage() {
           {isOwner && (
             <button
               onClick={() => setActiveTab("admins")}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal shrink-0 md:shrink font-medium text-sm ${
+              className={`flex items-center gap-3 px-4 py-3 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal shrink-0 md:shrink font-medium text-sm w-full ${
                 activeTab === "admins"
-                  ? "border-primary bg-primary/10 text-primary"
-                  : "border-border/50 bg-transparent text-muted-foreground hover:border-primary/50 hover:text-primary"
+                  ? "bg-primary/10 text-primary"
+                  : "bg-transparent text-muted-foreground hover:bg-primary/5 hover:text-primary"
               }`}
             >
               <Shield className="h-5 w-5 shrink-0" />
@@ -1011,7 +1011,7 @@ export default function AdminPage() {
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto md:ml-64 pt-16 md:pt-0">
         <div className="w-full h-full px-4 sm:px-6 md:px-8 py-6 md:py-8 relative z-10">
 
           {/* Users Tab */}
