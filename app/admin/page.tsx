@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation"
 import { Shield, Users, Ticket as TicketIcon, Plus, X, RefreshCw, Search, Calendar, User as UserIcon, Mail, Clock, AlertCircle, Eye, CheckCircle, MessageSquare, History, CheckCircle2, XCircle, Lock, Save, Edit, Trash2, FolderPlus, Send, Filter, Settings, ChevronDown, ChevronUp, Inbox } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -927,63 +926,97 @@ export default function AdminPage() {
   }
 
   return (
-    <main className="relative min-h-screen flex overflow-hidden pt-16">
+    <main className="relative min-h-screen flex flex-col md:flex-row overflow-hidden pt-16">
       {/* Background effects */}
       <div className="absolute inset-0 -z-10 bg-background">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-radial-gradient from-primary/20 via-primary/10 to-transparent rounded-full blur-3xl" />
         <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-secondary/15 rounded-full blur-3xl opacity-60" />
       </div>
 
-      <div className="w-full mx-auto px-2 sm:px-3 md:px-4 py-4 md:py-6 relative z-10">
-        {/* Tabs Navigation */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6 h-auto bg-transparent p-0">
-            <TabsTrigger 
-              value="users" 
-              className="flex flex-col sm:flex-row items-center justify-center gap-2 cursor-pointer px-3 sm:px-4 py-3 rounded-xl border-2 border-border/50 bg-card/40 hover:border-primary/50 hover:bg-card/60 data-[state=active]:border-primary data-[state=active]:bg-primary/10 transition-all duration-200 text-xs md:text-sm"
+      {/* Sidebar Navigation */}
+      <aside className="w-full md:w-72 h-auto md:h-[calc(100vh-64px)] bg-card/60 backdrop-blur-sm border-b md:border-b-0 md:border-r border-border/50 overflow-y-auto">
+        <nav className="flex md:flex-col gap-2 p-4 md:p-6 overflow-x-auto md:overflow-x-visible">
+          {/* Users Button */}
+          <button
+            onClick={() => setActiveTab("users")}
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal shrink-0 md:shrink font-medium text-sm ${
+              activeTab === "users"
+                ? "border-primary bg-primary/10 text-primary"
+                : "border-border/50 bg-transparent text-muted-foreground hover:border-primary/50 hover:text-primary"
+            }`}
+          >
+            <Users className="h-5 w-5 shrink-0" />
+            <span className="hidden md:inline">{t("admin.tabs.usuarios")}</span>
+            <span className="md:hidden">{t("admin.tabs.usuarios_short")}</span>
+          </button>
+
+          {/* Tickets Button */}
+          <button
+            onClick={() => setActiveTab("tickets")}
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal shrink-0 md:shrink font-medium text-sm ${
+              activeTab === "tickets"
+                ? "border-primary bg-primary/10 text-primary"
+                : "border-border/50 bg-transparent text-muted-foreground hover:border-primary/50 hover:text-primary"
+            }`}
+          >
+            <TicketIcon className="h-5 w-5 shrink-0" />
+            <span className="hidden md:inline">{t("admin.tabs.tickets")}</span>
+            <span className="md:hidden">{t("admin.tabs.tickets_short")}</span>
+          </button>
+
+          {/* Emails Button */}
+          <button
+            onClick={() => setActiveTab("emails")}
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal shrink-0 md:shrink font-medium text-sm ${
+              activeTab === "emails"
+                ? "border-primary bg-primary/10 text-primary"
+                : "border-border/50 bg-transparent text-muted-foreground hover:border-primary/50 hover:text-primary"
+            }`}
+          >
+            <Inbox className="h-5 w-5 shrink-0" />
+            <span className="hidden md:inline">Emails</span>
+            <span className="md:hidden">Email</span>
+          </button>
+
+          {/* Permissions Button */}
+          <button
+            onClick={() => setActiveTab("permissions")}
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal shrink-0 md:shrink font-medium text-sm ${
+              activeTab === "permissions"
+                ? "border-primary bg-primary/10 text-primary"
+                : "border-border/50 bg-transparent text-muted-foreground hover:border-primary/50 hover:text-primary"
+            }`}
+          >
+            <Lock className="h-5 w-5 shrink-0" />
+            <span className="hidden md:inline">{t("admin.tabs.permissions")}</span>
+            <span className="md:hidden">{t("admin.tabs.permissions_short")}</span>
+          </button>
+
+          {/* Admins Button (only for owner) */}
+          {isOwner && (
+            <button
+              onClick={() => setActiveTab("admins")}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all duration-200 cursor-pointer whitespace-nowrap md:whitespace-normal shrink-0 md:shrink font-medium text-sm ${
+                activeTab === "admins"
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-border/50 bg-transparent text-muted-foreground hover:border-primary/50 hover:text-primary"
+              }`}
             >
-              <Users className="h-4 w-4 md:h-5 md:w-5" />
-              <span className="font-medium hidden sm:inline">{t("admin.tabs.usuarios")}</span>
-              <span className="sm:hidden font-medium">{t("admin.tabs.usuarios_short")}</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="tickets" 
-              className="flex flex-col sm:flex-row items-center justify-center gap-2 cursor-pointer px-3 sm:px-4 py-3 rounded-xl border-2 border-border/50 bg-card/40 hover:border-primary/50 hover:bg-card/60 data-[state=active]:border-primary data-[state=active]:bg-primary/10 transition-all duration-200 text-xs md:text-sm"
-            >
-              <TicketIcon className="h-4 w-4 md:h-5 md:w-5" />
-              <span className="font-medium hidden sm:inline">{t("admin.tabs.tickets")}</span>
-              <span className="sm:hidden font-medium">{t("admin.tabs.tickets_short")}</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="emails" 
-              className="flex flex-col sm:flex-row items-center justify-center gap-2 cursor-pointer px-3 sm:px-4 py-3 rounded-xl border-2 border-border/50 bg-card/40 hover:border-primary/50 hover:bg-card/60 data-[state=active]:border-primary data-[state=active]:bg-primary/10 transition-all duration-200 text-xs md:text-sm"
-            >
-              <Inbox className="h-4 w-4 md:h-5 md:w-5" />
-              <span className="font-medium hidden sm:inline">Emails</span>
-              <span className="sm:hidden font-medium">Email</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="permissions" 
-              className="flex flex-col sm:flex-row items-center justify-center gap-2 cursor-pointer px-3 sm:px-4 py-3 rounded-xl border-2 border-border/50 bg-card/40 hover:border-primary/50 hover:bg-card/60 data-[state=active]:border-primary data-[state=active]:bg-primary/10 transition-all duration-200 text-xs md:text-sm"
-            >
-              <Lock className="h-4 w-4 md:h-5 md:w-5" />
-              <span className="font-medium hidden sm:inline">{t("admin.tabs.permissions")}</span>
-              <span className="sm:hidden font-medium">{t("admin.tabs.permissions_short")}</span>
-            </TabsTrigger>
-            {isOwner && (
-              <TabsTrigger 
-                value="admins" 
-                className="flex flex-col sm:flex-row items-center justify-center gap-2 cursor-pointer px-3 sm:px-4 py-3 rounded-xl border-2 border-border/50 bg-card/40 hover:border-primary/50 hover:bg-card/60 data-[state=active]:border-primary data-[state=active]:bg-primary/10 transition-all duration-200 text-xs md:text-sm"
-              >
-                <Shield className="h-4 w-4 md:h-5 md:w-5" />
-                <span className="font-medium hidden sm:inline">{t("admin.tabs.administradores")}</span>
-                <span className="sm:hidden font-medium">{t("admin.tabs.administradores_short")}</span>
-              </TabsTrigger>
-            )}
-          </TabsList>
+              <Shield className="h-5 w-5 shrink-0" />
+              <span className="hidden md:inline">{t("admin.tabs.administradores")}</span>
+              <span className="md:hidden">{t("admin.tabs.administradores_short")}</span>
+            </button>
+          )}
+        </nav>
+      </aside>
+
+      {/* Main Content Area */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="w-full h-full px-4 sm:px-6 md:px-8 py-6 md:py-8 relative z-10">
 
           {/* Users Tab */}
-          <TabsContent value="users" className="space-y-4">
+          {activeTab === "users" && (
+            <div className="space-y-4">
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
@@ -1097,10 +1130,12 @@ export default function AdminPage() {
                 )}
               </div>
             </div>
-          </TabsContent>
+            </div>
+          )}
 
           {/* Tickets Tab */}
-          <TabsContent value="tickets" className="space-y-4">
+          {activeTab === "tickets" && (
+            <div className="space-y-4">
             {/* Barra de busca e atualizar */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4">
               <div className="relative flex-1">
@@ -1307,10 +1342,12 @@ export default function AdminPage() {
                 </div>
               )}
             </div>
-          </TabsContent>
+            </div>
+          )}
 
           {/* Permissions Tab */}
-          <TabsContent value="permissions" className="space-y-4">
+          {activeTab === "permissions" && (
+            <div className="space-y-4">
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
@@ -1523,11 +1560,12 @@ export default function AdminPage() {
                 </div>
               </div>
             </div>
-          </TabsContent>
+            </div>
+          )}
 
           {/* Admins Tab */}
-          {isOwner && (
-            <TabsContent value="admins" className="space-y-4">
+          {activeTab === "admins" && isOwner && (
+            <div className="space-y-4">
               <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-4 md:p-6 mb-4">
                 <h3 className="text-lg font-semibold text-foreground mb-4">{t("admin.admins.add_title")}</h3>
                 <div className="flex flex-col sm:flex-row gap-3">
@@ -1651,13 +1689,14 @@ export default function AdminPage() {
                   )}
                 </div>
               </div>
-            </TabsContent>
+            </div>
           )}
 
           {/* Emails Tab */}
-          <TabsContent value="emails" className="space-y-4">
-            {/* Header com botão de enviar email e atualizar */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4">
+          {activeTab === "emails" && (
+            <div className="space-y-4">
+              {/* Header com botão de enviar email e atualizar */}
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
@@ -1797,8 +1836,9 @@ export default function AdminPage() {
                   ))
               )}
             </div>
-          </TabsContent>
-        </Tabs>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Dialog para enviar email */}
