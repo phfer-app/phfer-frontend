@@ -934,52 +934,50 @@ export default function AdminPage() {
         <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-secondary/15 rounded-full blur-3xl opacity-60" />
       </div>
 
-      <div className="w-full max-w-[95%] mx-auto px-2 sm:px-3 md:px-4 py-6 md:py-12 relative z-10">
-        {/* Header */}
-        <div className="mb-6 md:mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-              <Shield className="h-5 w-5 md:h-6 md:w-6 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold bg-linear-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
-                {t("admin.title")}
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                {t("admin.subtitle")}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Tabs */}
+      <div className="w-full mx-auto px-2 sm:px-3 md:px-4 py-4 md:py-6 relative z-10">
+        {/* Tabs Navigation */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5 mb-4 md:mb-6 h-auto">
-            <TabsTrigger value="users" className="flex items-center justify-center gap-1.5 md:gap-2 cursor-pointer text-xs md:text-sm px-2 md:px-4 py-2 md:py-3">
-              <Users className="h-3.5 w-3.5 md:h-4 md:w-4" />
-              <span className="hidden sm:inline">{t("admin.tabs.usuarios")}</span>
-              <span className="sm:hidden">{t("admin.tabs.usuarios_short")}</span>
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6 h-auto bg-transparent p-0">
+            <TabsTrigger 
+              value="users" 
+              className="flex flex-col sm:flex-row items-center justify-center gap-2 cursor-pointer px-3 sm:px-4 py-3 rounded-xl border-2 border-border/50 bg-card/40 hover:border-primary/50 hover:bg-card/60 data-[state=active]:border-primary data-[state=active]:bg-primary/10 transition-all duration-200 text-xs md:text-sm"
+            >
+              <Users className="h-4 w-4 md:h-5 md:w-5" />
+              <span className="font-medium hidden sm:inline">{t("admin.tabs.usuarios")}</span>
+              <span className="sm:hidden font-medium">{t("admin.tabs.usuarios_short")}</span>
             </TabsTrigger>
-            <TabsTrigger value="tickets" className="flex items-center justify-center gap-1.5 md:gap-2 cursor-pointer text-xs md:text-sm px-2 md:px-4 py-2 md:py-3">
-              <TicketIcon className="h-3.5 w-3.5 md:h-4 md:w-4" />
-              <span className="hidden sm:inline">{t("admin.tabs.tickets")}</span>
-              <span className="sm:hidden">{t("admin.tabs.tickets_short")}</span>
+            <TabsTrigger 
+              value="tickets" 
+              className="flex flex-col sm:flex-row items-center justify-center gap-2 cursor-pointer px-3 sm:px-4 py-3 rounded-xl border-2 border-border/50 bg-card/40 hover:border-primary/50 hover:bg-card/60 data-[state=active]:border-primary data-[state=active]:bg-primary/10 transition-all duration-200 text-xs md:text-sm"
+            >
+              <TicketIcon className="h-4 w-4 md:h-5 md:w-5" />
+              <span className="font-medium hidden sm:inline">{t("admin.tabs.tickets")}</span>
+              <span className="sm:hidden font-medium">{t("admin.tabs.tickets_short")}</span>
             </TabsTrigger>
-            <TabsTrigger value="emails" className="flex items-center justify-center gap-1.5 md:gap-2 cursor-pointer text-xs md:text-sm px-2 md:px-4 py-2 md:py-3">
-              <Inbox className="h-3.5 w-3.5 md:h-4 md:w-4" />
-              <span className="hidden sm:inline">Emails</span>
-              <span className="sm:hidden">Email</span>
+            <TabsTrigger 
+              value="emails" 
+              className="flex flex-col sm:flex-row items-center justify-center gap-2 cursor-pointer px-3 sm:px-4 py-3 rounded-xl border-2 border-border/50 bg-card/40 hover:border-primary/50 hover:bg-card/60 data-[state=active]:border-primary data-[state=active]:bg-primary/10 transition-all duration-200 text-xs md:text-sm"
+            >
+              <Inbox className="h-4 w-4 md:h-5 md:w-5" />
+              <span className="font-medium hidden sm:inline">Emails</span>
+              <span className="sm:hidden font-medium">Email</span>
             </TabsTrigger>
-            <TabsTrigger value="permissions" className="flex items-center justify-center gap-1.5 md:gap-2 cursor-pointer text-xs md:text-sm px-2 md:px-4 py-2 md:py-3">
-              <Lock className="h-3.5 w-3.5 md:h-4 md:w-4" />
-              <span className="hidden sm:inline">{t("admin.tabs.permissions")}</span>
-              <span className="sm:hidden">{t("admin.tabs.permissions_short")}</span>
+            <TabsTrigger 
+              value="permissions" 
+              className="flex flex-col sm:flex-row items-center justify-center gap-2 cursor-pointer px-3 sm:px-4 py-3 rounded-xl border-2 border-border/50 bg-card/40 hover:border-primary/50 hover:bg-card/60 data-[state=active]:border-primary data-[state=active]:bg-primary/10 transition-all duration-200 text-xs md:text-sm"
+            >
+              <Lock className="h-4 w-4 md:h-5 md:w-5" />
+              <span className="font-medium hidden sm:inline">{t("admin.tabs.permissions")}</span>
+              <span className="sm:hidden font-medium">{t("admin.tabs.permissions_short")}</span>
             </TabsTrigger>
             {isOwner && (
-              <TabsTrigger value="admins" className="flex items-center justify-center gap-1.5 md:gap-2 cursor-pointer text-xs md:text-sm px-2 md:px-4 py-2 md:py-3">
-                <Shield className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                <span className="hidden sm:inline">{t("admin.tabs.administradores")}</span>
-                <span className="sm:hidden">{t("admin.tabs.administradores_short")}</span>
+              <TabsTrigger 
+                value="admins" 
+                className="flex flex-col sm:flex-row items-center justify-center gap-2 cursor-pointer px-3 sm:px-4 py-3 rounded-xl border-2 border-border/50 bg-card/40 hover:border-primary/50 hover:bg-card/60 data-[state=active]:border-primary data-[state=active]:bg-primary/10 transition-all duration-200 text-xs md:text-sm"
+              >
+                <Shield className="h-4 w-4 md:h-5 md:w-5" />
+                <span className="font-medium hidden sm:inline">{t("admin.tabs.administradores")}</span>
+                <span className="sm:hidden font-medium">{t("admin.tabs.administradores_short")}</span>
               </TabsTrigger>
             )}
           </TabsList>

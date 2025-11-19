@@ -696,7 +696,15 @@ export function Navbar() {
                             <p className="text-sm font-semibold text-foreground truncate mb-0.5">{userName}</p>
                           )}
                           <p className="text-xs font-medium truncate">{userEmail}</p>
-                          <p className="text-xs text-muted-foreground">{t("nav.usuario_logado")}</p>
+                          <div className="mt-1">
+                            <p className="text-xs text-muted-foreground mb-1.5">{t("nav.usuario_logado")}</p>
+                            {isAdmin && (
+                              <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-primary/20 border border-primary/30 w-fit">
+                                <Shield className="h-3 w-3 text-primary" />
+                                <span className="text-[10px] font-semibold text-primary">Usuário administrativo</span>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1054,7 +1062,15 @@ export function Navbar() {
                                 <p className="text-sm font-semibold text-foreground truncate mb-0.5">{userName}</p>
                               )}
                               <p className="text-xs font-medium text-foreground truncate">{userEmail}</p>
-                              <p className="text-xs text-muted-foreground">{t("nav.usuario_logado")}</p>
+                              <div className="mt-1">
+                                <p className="text-xs text-muted-foreground mb-1.5">{t("nav.usuario_logado")}</p>
+                                {isAdmin && (
+                                  <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-primary/20 border border-primary/30 w-fit">
+                                    <Shield className="h-3 w-3 text-primary" />
+                                    <span className="text-[10px] font-semibold text-primary">Usuário administrativo</span>
+                                  </div>
+                                )}
+                              </div>
                             </div>
                           </div>
                           <button
